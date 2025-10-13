@@ -1,0 +1,421 @@
+/****************************************
+    * HEADER *
+*****************************************/
+
+.header-master {
+  background: url('/assets/images/FondoMenu.jpg');
+  background-size: cover;
+  position: fixed;
+  left: 0px;
+  top: 0px;
+  width: 350px;
+  height: 100%;
+  color: white;
+  -webkit-transition: all .40s ease-out;
+  -moz-transition: all .40s ease-out;
+  transition: all .40s ease-out;
+  z-index: 300;
+}
+
+/* .header-mobile {
+  background: url('/assets/images/FondoMenu.png');
+  background-size: cover;
+  position: fixed;
+  left: 0px;
+  top: 0px;
+  width: 200px;
+  height: 100%;
+  color: white;
+  -webkit-transition: all .40s ease-out;
+  -moz-transition: all .40s ease-out;
+  transition: all .40s ease-out;
+  z-index: 300;
+} */
+
+.header-master .left-head {
+  float: left;
+}
+
+.header-mobile .left-head {
+  float: left;
+}
+
+.header-master .left-head .logotipo-system {
+  position: absolute;
+  width: 106px;
+  height: 114px;
+  left: 47.3px;
+  top: 97px;
+}
+
+.header-mobile .left-head .logotipo-system {
+  position: absolute;
+  width: 106px;
+  height: 114px;
+  left: 47.3px;
+  top: 97px;
+}
+
+.header-master .left-head .img-menu {
+  position: absolute;
+  width: 48px;
+  height: 316px;
+  left: 10px;
+  top: 258px;
+}
+
+.header-mobile .left-head .img-menu {
+  position: absolute;
+  width: 48px;
+  height: 316px;
+  left: 10px;
+  top: 258px;
+}
+
+.header-master .right-head {
+  float: right;
+  display: flex;
+}
+
+.header-master .right-head .btn-logout {
+  width: 60px;
+  height: 60px;
+  border: none;
+  border-left: 1px solid #424242;
+  cursor: pointer;
+  outline: none;
+  background: url('/assets/images/sprite-jockey.png') 0px -300px;
+}
+
+.header-mobile .right-head .btn-logout {
+  width: 60px;
+  height: 60px;
+  border: none;
+  border-left: 1px solid #424242;
+  cursor: pointer;
+  outline: none;
+  background: url('/assets/images/sprite-jockey.png') 0px -300px;
+}
+
+.img-header-mobile {
+  z-index: 100;
+  position: absolute;
+  width: 100%;
+}
+
+.title-header-mobile {
+  position: absolute;
+  width: 100%;
+  z-index: 100;
+  padding-top: 20px;
+  font-family: MontserratLight;
+  font-weight: 600;
+  font-size: 18px;
+  line-height: 24px;
+  text-align: center;
+  color: #FFFFFF;
+  z-index: 200;
+}
+
+.header-master .right-head .name-user {
+  line-height: 60px;
+  font-size: 12px;
+  color: white;
+  border-left: 1px solid #424242;
+  padding: 0px 20px 0px 50px;
+  position: relative;
+}
+
+.header-mobile .right-head .name-user {
+  line-height: 60px;
+  font-size: 12px;
+  color: white;
+  border-left: 1px solid #424242;
+  padding: 0px 20px 0px 50px;
+  position: relative;
+}
+
+.header-master .right-head .name-user:before {
+  content: '';
+  width: 40px;
+  height: 40px;
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background: url('/assets/images/sprite-jockey.png') -10px -250px;
+}
+
+.header-mobile .right-head .name-user:before {
+  content: '';
+  width: 40px;
+  height: 40px;
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background: url('/assets/images/sprite-jockey.png') -10px -250px;
+}
+
+/****************************************
+    *   NAV FRAMEWORK  *
+*****************************************/
+
+.btn-show-nav {
+  height: 44px;
+  width: 43px;
+  position: absolute;
+  left: 14px;
+  top: 14px;
+  cursor: pointer;
+  border: none;
+  outline: none;
+  background: url('/assets/images/icon-navegation.png');
+}
+
+.btn-show-nav-mobile {
+  z-index: 201;
+  height: 44px;
+  width: 43px;
+  position: absolute;
+  left: 14px;
+  top: 14px;
+  cursor: pointer;
+  border: none;
+  outline: none;
+  background: url('/assets/images/icon-navegation.png');
+}
+
+.btn-hide-nav {
+  height: 40px;
+  width: 40px;
+  border-radius: 20px;
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  cursor: pointer;
+  border: none;
+  outline: none;
+  background: #eb0045;
+}
+
+.btn-hide-nav:before {
+  content: '';
+  width: 24px;
+  height: 24px;
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  background: url('/assets/images/close-nav.png') 5px 5px no-repeat;
+  -webkit-transition: all .40s ease-out;
+  -moz-transition: all .40s ease-out;
+  transition: all .40s ease-out;
+}
+
+.btn-hide-nav:hover:before {
+  transform: rotate(180deg);
+}
+
+.opacity {
+  display: none;
+  background: #000;
+  position: fixed;
+  top: 0px;
+  left: 0px;
+  right: 0px;
+  bottom: 0px;
+  /*z-index: 100;*/
+  opacity: 0.60;
+  cursor: pointer;
+  -webkit-transition: all .40s ease-out;
+  -moz-transition: all .40s ease-out;
+  transition: all .40s ease-out;
+  z-index: 200;
+}
+
+.nav-navegation {
+  background: url('/assets/images/FondoMenu.png');
+  background-size: cover;
+  position: fixed;
+  left: -200px;
+  top: 0px;
+  width: 200px;
+  height: 100%;
+  color: white;
+  -webkit-transition: all .40s ease-out;
+  -moz-transition: all .40s ease-out;
+  transition: all .40s ease-out;
+  z-index: 300;
+}
+
+.header-master.nav-active .nav-navegation {
+  left: 0px;
+  -webkit-transform: translateX(0%);
+  -moz-transform: translateX(0%);
+  transform: translateX(0%);
+}
+
+.header-mobile.nav-active .nav-navegation {
+  left: 0px;
+  -webkit-transform: translateX(0%);
+  -moz-transform: translateX(0%);
+  transform: translateX(0%);
+}
+
+.header-master.nav-active .opacity {
+  display: block;
+  -webkit-transition: all .40s ease-out;
+  -moz-transition: all .40s ease-out;
+  transition: all .40s ease-out;
+}
+
+.header-mobile.nav-active .opacity {
+  display: block;
+  -webkit-transition: all .40s ease-out;
+  -moz-transition: all .40s ease-out;
+  transition: all .40s ease-out;
+}
+
+.header-mobile.nav-active .opacity {
+  display: block;
+  -webkit-transition: all .40s ease-out;
+  -moz-transition: all .40s ease-out;
+  transition: all .40s ease-out;
+}
+
+.nav-navegation .logotipo-system {
+  position: absolute;
+  width: 106px;
+  height: 114px;
+  left: 47.3px;
+  top: 97px;
+}
+
+.nav-navegation .nav-custom, .nav-custom-admin {
+  position: absolute;
+  top: 225px;
+  display: block;
+  padding: 0px;
+  margin: 0px;
+  width: 80%;
+  font-family: MontserratLight;
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 18px;
+  text-align: center;
+  color: #FFFFFF;
+}
+
+.nav-navegation .nav-custom .nav-item a, .nav-item-admin a {
+  display: flex;
+  /*padding: 20px 40px 20px 20px;*/
+  padding: 0px 0px 0px 0px;
+  width: 158px;
+  color: white;
+  position: relative;
+  height: 50px;
+  text-align: center;
+  margin: auto;
+  padding-top: 10px;
+  cursor: pointer;
+}
+
+.nav-navegation .nav-custom .nav-item a:hover, .nav-item-admin a:hover {
+  text-decoration: none;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 4px;
+}
+
+.nav-navegation .nav-custom .nav-item .img-icon-menu, .img-icon-menu-admin {
+  width: 50px;
+  height: 50px;
+  margin: 0px 10px 0px 10px;
+}
+
+.nav-navegation .nav-custom .nav-item .text-menu, .text-menu-admin {
+  text-align: left;
+  margin-right: 4px;
+  padding: 0px 0px 0px 0px;
+  width: inherit;
+}
+
+.nav-navegation-scroll{
+  overflow-y: auto;  
+}
+
+.nav-navegation-scroll::-webkit-scrollbar {
+  width: 10px; /* Ancho de la barra */
+}
+
+.nav-navegation-scroll::-webkit-scrollbar-track {
+  background: #f0f0f0; /* Color del fondo de la barra */
+  border-radius: 5px;
+}
+
+.nav-navegation-scroll::-webkit-scrollbar-thumb {
+  background: #888; /* Color de la barra */
+  border-radius: 5px;
+}
+
+.nav-navegation-scroll::-webkit-scrollbar-thumb:hover {
+  background: #555; /* Color cuando se pasa el mouse por encima */
+}
+
+
+.text-menuf {
+  text-align: left;
+  margin-right: 4px;
+  padding: 0px 0px 0px 0px;
+  width: inherit;
+}
+
+.bottom-navigation {
+  z-index: 200;
+  position: absolute;
+  width: 100%;
+  bottom: 0;
+  background-color: white;
+  padding: 20px 0px;
+  border-top: 1px solid #C4C4C4;
+}
+
+.img-nav {
+  max-width: unset;
+}
+
+.modal-logout {
+  width: auto;
+  margin: auto
+}
+
+.line {
+  position: absolute;
+  top: 50%;
+  height: 1px;
+  width: 80%;
+  left: 10%;
+  background-color: #E5E5E5;
+}
+
+
+
+@media (max-width: 575.98px) {
+  .hidden-userName {
+    display: none;
+  }
+}
+
+/* Medium devices (tablets, 768px and up) */
+
+@media (min-width: 768px) {
+  .modal-logout {
+    width: 388px;
+    margin: auto
+  }
+  .modal-cancel-product {
+    width: 500px;
+  }
+}
+
+.logo-tamanio{
+  padding: 0rem;
+  width: 300px;
+}

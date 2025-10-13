@@ -1,0 +1,422 @@
+.bg-login {
+  height: unset;
+  background: url('../../../../public/assets/images/mobile/login_header.png') no-repeat;
+  align-items: center;
+  flex-direction: row-reverse;
+  font-family: MontserratMedium;
+  background-size: 100% 60%;
+}
+
+.bg-login .logo {
+  margin-top: 130px;
+  text-align: center;
+}
+
+.bg-login .logo img {
+  margin-bottom: 20px;
+}
+
+.box-logueo {
+  position: absolute;
+  width: 288px;
+  height: 307px;
+  margin-left: auto;
+  margin-right: auto;
+  left: 0;
+  right: 0;
+  top: 31%;
+  background: #FFFFFF;
+  box-shadow: none;
+  border-radius: 0px;
+}
+
+.bg-login .box-logueo .logueo-title {
+  font-family: MontserratMedium;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 19px;
+  line-height: 23px;
+  color: #3F3F41;
+  text-align: center;
+  padding: 39px 0px 15px 0px;
+}
+
+.bg-login .box-logueo .campo {
+  display: flex;
+  align-items: center;
+  padding: 15px 0px 0px 34px;
+}
+
+.bg-login .box-logueo .remember {
+  padding: 15px 0px 26px 35px;
+  text-align: left;
+  display: flex;
+}
+
+.bg-login .box-logueo .remember .span-remember {
+  font-size: 12px;
+  font-family: Montserrat;
+  font-style: normal;
+  /*font-weight:bold;*/
+  padding: 0px 16px 0px 0px;
+}
+
+.input-logueo {
+  width: 222px;
+  height: 36px;
+  outline: 0;
+  border: 1px solid #C6C6C6;
+  box-sizing: border-box;
+  border-radius: 4px;
+  font-size: 15px;
+  font-family: MontserratLight;
+  background: #FFFFFF;
+  padding: 0px 0px 0px 23px;
+  vertical-align: middle;
+}
+
+/*.btn-iniciar-sesion:focus {
+  outline: none;
+}*/
+
+.version-logueo {
+  font-size: 11px;
+  opacity: 0.4;
+  text-align: center;
+}
+
+.btn-logueo .btn-iniciar-sesion:hover, .btn-logueo .btn-iniciar-sesion:focus {
+  background: #886791;
+  outline: none;
+}
+
+.btn-logueo {
+  padding: 25px;
+  text-align: center;
+}
+
+.btn-logueo .btn-iniciar-sesion {
+  width: 110px;
+  height: 36px;
+  border: none;
+  color: white;
+  font-size: 15px;
+  font-weight: 400;
+  background: #32509d;
+  border-radius: 5px;
+  cursor: pointer;
+  outline: none;
+}
+
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 35px;
+  margin: 3px 0px 0px 0px;
+  height: 18px;
+}
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #cdc6ce;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 22px;
+  width: 22px;
+  left: 0px;
+  bottom: -1px;
+  background-color: #8C4799;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+input:checked+.slider {
+  background-color: #8C4799;
+}
+
+input:focus+.slider {
+  box-shadow: 0 0 1px #2196F3;
+}
+
+input:checked+.slider:before {
+  -webkit-transform: translateX(15px);
+  -ms-transform: translateX(15px);
+  transform: translateX(15px);
+  background-color: #6C297C;
+}
+
+/* Rounded sliders */
+
+.slider.round {
+  border-radius: 7px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
+}
+
+.bg-login .login {
+  width: 50%;
+  text-align: center;
+}
+
+.bg-login .login .bloque-login {
+  width: 430px;
+  margin: 0px auto;
+  text-align: left;
+}
+
+.bg-login .login .bloque-login .logo-login img {
+  width: 56%
+}
+
+.bg-login .login .bloque-login .slogan-login {
+  font-size: 24px;
+  line-height: normal;
+  color: #888;
+  padding: 30px 0px 30px 0px;
+}
+
+.bg-login .login .bloque-login .slogan-login span {
+  color: #F8414B;
+}
+
+.bg-login .login .bloque-login .box-login {
+  border-radius: 10px;
+  background: white;
+  -webkit-box-shadow: 0px 0px 25px 0px rgba(0, 0, 0, 0.1);
+  -moz-box-shadow: 0px 0px 25px 0px rgba(0, 0, 0, 0.1);
+  box-shadow: 0px 0px 25px 0px rgba(0, 0, 0, 0.1);
+}
+
+.bg-login .login .bloque-login .box-login .campo {
+  display: flex;
+  align-items: center;
+  padding: 19px 0px 19px 0px;
+}
+
+.bg-login .login .bloque-login .box-login .campo .ico {
+  width: 20%;
+  text-align: center;
+}
+
+.bg-login .login .bloque-login .box-login .campo .date {
+  width: 80%;
+}
+
+.bg-login .login .bloque-login .box-login .campo .date label {
+  display: block;
+  color: #777;
+  font-size: 14px;
+  margin-bottom: 0px;
+}
+
+.line-bottom {
+  border-bottom: 1px solid #DDDDDD;
+}
+
+.input-login {
+  width: 90%;
+  outline: 0;
+  border: none;
+  font-size: 16px;
+  font-family: 'Montserrat'sans-serif;
+  color: #894590;
+  font-weight: 500;
+}
+
+.input-login:focus {
+  outline: 0;
+}
+
+.input-login::-webkit-input-placeholder {
+  color: #ddd;
+  font-weight: normal;
+}
+
+.input-login:-moz-placeholder {
+  color: #ddd;
+  font-weight: normal;
+}
+
+.input-login:-ms-input-placeholder {
+  color: #ddd;
+  font-weight: normal;
+}
+
+.contrasenia {
+  padding: 15px 15px 25px 0px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.contrasenia a {
+  color: #777;
+  font-size: 14px;
+  text-decoration: underline;
+}
+
+.contrasenia a:hover {
+  text-decoration: none;
+}
+
+.is-invalid-text {
+  padding: 0px 0px 0px 36px;
+  font-family: MontserratLight;
+  font-size: small;
+  color: #FF0000;
+}
+
+.is-invalid-input {
+  border-color: #FF0000;
+}
+
+/**************** RESPONSIVE WEB DESIGN *********************/
+
+/* Medium devices (tablets, 768px and up) */
+@media (min-width: 768px) {
+  .bg-login .logo {
+    margin-top: 260px;
+    text-align: center;
+  }
+  .bg-login {
+    height: 100vh;
+    background: url('../../../../public/assets/images/fondoOnBoar.png') no-repeat;
+    align-items: center;
+    flex-direction: row-reverse;
+    font-family: MontserratMedium;
+    background-size: 100% 70%;
+  }
+
+  .box-logueo {
+    position: absolute;
+    width: 288px;
+    height: 307px;
+    margin-left: unset;
+    margin-right: unset;
+    left: unset;
+    right: unset;
+    top: 31%;
+    background: #FFFFFF;
+    box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
+    border-radius: 5px;
+  }
+}
+
+/* Large devices (desktops, 992px and up) */
+@media (min-width: 992px) {
+  .bg-login .chispas1 {
+    position: absolute;
+    left: 0;
+    top: 70.54px;
+  }
+  
+  .bg-login .chispas2 {
+    position: absolute;
+    left: 52%;
+    top: 25%;
+  }
+  
+  .bg-login .logo {
+    margin-top: unset;
+    position: absolute;
+    left: 17%;
+    top: 23.5%;
+    bottom: 46.86%;
+    text-align: center;
+  }
+}
+
+.logo-tamanio{
+    width: 80%;
+}
+
+/* Extra large devices (large desktops, 1200px and up) */
+@media (min-width: 1200px) {
+  .bg-login .chispas1 {
+    position: absolute;
+    left: 5%;
+    top: 70.54px;
+  }
+  
+  .bg-login .chispas2 {
+    position: absolute;
+    left: 52%;
+    top: 25%;
+  }
+  
+  .bg-login .logo {
+    margin-top: unset;
+    position: absolute;
+    left: 21%;
+    top: 23.5%;
+    bottom: 46.86%;
+    text-align: center;
+  }
+}
+
+/* Extra large devices (large desktops, 1200px and up) */
+@media (min-width: 1440px) {
+  .bg-login .chispas1 {
+    position: absolute;
+    left: 5%;
+    top: 70.54px;
+  }
+  
+  .bg-login .chispas2 {
+    position: absolute;
+    left: 55%;
+    top: 25%;
+  }
+  
+  .bg-login .logo {
+    position: absolute;
+    left: 23%;
+    top: 23.5%;
+    bottom: 46.86%;
+    text-align: center;
+  }
+}
+
+
+:host {
+  display: block;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* Elimina el margen negativo del row de bootstrap */
+.row {
+  margin-left: 0;
+  margin-right: 0;
+}
+
+/* Asegura que las columnas no sumen más ancho del viewport */
+[class*="col-"] {
+  padding-left: 0;
+  padding-right: 0;
+}
+
+/* Controla imágenes para que nunca se salgan */
+.bg-login img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}

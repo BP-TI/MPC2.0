@@ -1,0 +1,311 @@
+<!--<header *ngIf="!bandejaActive"
+  [className]="isNavRipley ? 'header-master nav-active d-none d-md-block nav-navegation-scroll' : 'header-master d-none d-md-block nav-navegation-scroll' ">
+  <div class="opacity" (click)="hideNav()"></div>
+  <div class="left-head">
+    <button type="button" class="btn-show-nav" (click)="showNav()" *ngIf="showTransaction();"></button>
+    <div class="logotipo-system2">
+      <img class="logo-tamanio" src="../../../assets/images/LOGOBLANCO SINFONDO.png" />      
+    </div>
+    <div class="img-menu" *ngIf="showTransaction();">
+      <ng-container *ngIf="isProducts"><img class="img-nav" src="/assets/images/Group 147.png" /></ng-container>
+      <img class="img-nav" *ngIf="isSimulacion" src="/assets/images/SimulacionMenu.png" />
+      <img class="img-nav" *ngIf="isClientsDetails" src="/assets/images/ClientDetails.png" />
+      <img class="img-nav" *ngIf="isVerificacion" src="/assets/images/VerificacionResumen.png" />
+      <img class="img-nav" *ngIf="isValidacion" src="/assets/images/VerificacionMenu.png" />
+    </div>
+    <div class="nav-custom-admin nav-item-admin" *ngIf="!showTransaction();">
+      <a *ngFor="let menu of arrayMenu" (click)="goToRoute(menu.menuUrl)">
+        <div class="img-icon-menu-admin"><img src={{menu.menuImage}} /></div>
+        <div class="text-menu-admin">{{menu.menuName}}</div>
+      </a>
+    </div>
+  </div>
+  <nav class='nav-navegation nav-navegation-scroll'>
+    <button type="button" class="btn-show-nav" (click)="hideNav()"></button>
+    <div class="logotipo-system">
+      <img src="../../../assets/images/logoprincipal.png" />
+    </div>
+    <ul class='nav-custom'>
+      <li class="nav-item" *ngFor="let menu of arrayMenu">
+        <a (click)="goToRoute(menu.menuUrl)">
+          <div class="img-icon-menu"><img src={{menu.menuImage}} /></div>
+          <div class="text-menuf">{{menu.menuName}}</div>
+        </a>
+      </li>
+    </ul>
+  </nav>
+</header>
+<header *ngIf="!bandejaActive" class="header-mobile d-block d-md-none"
+  [className]="isNavRipley ? 'header-mobile nav-active d-block d-md-none' : 'header-mobile d-block d-md-none' ">
+  <button type="button" class="btn-show-nav-mobile" (click)="showNav()"></button>
+  <div class="opacity" (click)="hideNav()"></div>
+  <ng-container *ngIf="showTransaction();">
+    <div class="title-header-mobile" *ngIf="isProducts">Búsqueda</div>
+    <div class="title-header-mobile" *ngIf="isSimulacion">Simulador</div>
+    <div class="title-header-mobile" *ngIf="isClientsDetails">Cliente</div>
+    <div class="title-header-mobile" *ngIf="isVerificacion">Resumen</div>
+    <div class="title-header-mobile" *ngIf="isValidacion && !finalizacionActive">Validación</div>
+    <div class="title-header-mobile" *ngIf="isValidacion && finalizacionActive">Finalización</div>
+  </ng-container>
+  <img class="img-header-mobile" src="assets/images/mobile/simulator_header.png">
+  <nav class='nav-navegation nav-navegation-scroll'>
+    <button type="button" class="btn-show-nav" (click)="showNav()" *ngIf="showTransaction();"></button>
+    <div class="logotipo-system">
+      <img src="../../../assets/images/boticasperu.png" />
+    </div>
+    <div class="nav-custom-admin nav-item-admin" *ngIf="!showTransaction();">
+      <a *ngFor="let menu of arrayMenu" (click)="goToRoute(menu.menuUrl)">
+        <div class="img-icon-menu-admin"><img src={{menu.menuImage}} /></div>
+        <div class="text-menu-admin">{{menu.menuName}}</div>
+      </a>
+    </div>
+  </nav>
+  <nav class='nav-navegation nav-navegation-scroll' *ngIf="showTransaction();">
+    <button type="button" class="btn-show-nav" (click)="hideNav()"></button>
+    <div class="logotipo-system">
+      <img src="../../../assets/images/boticasperu.png" />
+    </div>
+
+    <ul class='nav-custom'>
+      <li class="nav-item" *ngFor="let menu of arrayMenu">
+        <a (click)="goToRoute(menu.menuUrl)">
+          <div class="img-icon-menu"><img src={{menu.menuImage}} /></div>
+          <div class="text-menuf">{{menu.menuName}}</div>
+        </a>
+      </li>
+    </ul>
+  </nav>
+</header>
+
+<div class="bottom-navigation d-block d-md-none" *ngIf="showTransaction();">
+  <div class="line"></div>
+  <div class="row justify-content-center">
+    <div class="col-2 text-center">
+      <img *ngIf="!isProducts" src="../../../../assets/images/mobile/icon-mobile-search.png">
+      <img *ngIf="isProducts" src="../../../../assets/images/mobile/icon-mobile-search-check.png">
+    </div>
+    <div class="col-2 text-center">
+      <img *ngIf="!isSimulacion" src="../../../../assets/images/mobile/icon-mobile-simulator.png">
+      <img *ngIf="isSimulacion" src="../../../../assets/images/mobile/icon-mobile-simulator-check.png">
+    </div>
+    <div class="col-2 text-center">
+      <img *ngIf="!isClientsDetails" src="../../../../assets/images/mobile/icon-mobile-client.png">
+      <img *ngIf="isClientsDetails" src="../../../../assets/images/mobile/icon-mobile-client-check.png">
+    </div>
+    <div class="col-2 text-center">
+      <img *ngIf="!isVerificacion" src="../../../../assets/images/mobile/icon-mobile-verification.png">
+      <img *ngIf="isVerificacion" src="../../../../assets/images/mobile/icon-mobile-verification-check.png">
+    </div>
+    <div class="col-2 text-center">
+      <img *ngIf="!isValidacion" src="../../../../assets/images/mobile/icon-mobile-validation.png">
+      <img *ngIf="isValidacion" src="../../../../assets/images/mobile/icon-mobile-validation-check.png">
+    </div>
+  </div>
+</div>
+<div class="modal fade" bsModal [config]="{ backdrop: 'static', keyboard: false,animated:false}"
+  #prototipoModal="bs-modal" tabindex="-1">
+  <div class="modal-dialog modal-sm" style="top: 211px;">
+    <div class="modal-content modal-logout">
+      <div class="modal-body text-center">
+        <div class="title-logout-modal">¿Está seguro de salir del sistema?</div>
+        <div class="row" style="padding-bottom: 22px;">
+          <div class="offset-1 col-5">
+            <button class="button-logout pull-right" (click)="cancelLogout()">Cancelar</button>
+          </div>
+          <div class="col-5">
+            <button class="button-logout pull-left" (click)="confirmLogout()">Aceptar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal fade" bsModal [config]="{backdrop: 'static', keyboard: false,animated:false}"
+  #invalidateModal="bs-modal" tabindex="-1">
+  <div class="modal-dialog modal-cancel-product">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title pull-left">
+          <span style="padding: 0 0 0 10px;">
+            Anular producto
+          </span>
+        </h5>
+      </div>
+      <div class="modal-body">
+        <div class="col-10" style="margin:auto;">
+          <div class="row">
+            <div class="col-12">
+              <div class="title-rechazo text-center">
+                Seleccionar motivo de anulación
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-12" *ngFor="let item of motivosAnulacion;let indice=index" style="padding: 12px 0 12px 0;">
+              <label class="radio-inline" style="margin: 0 10px;">
+                <input type="radio" [(ngModel)]="motivoAnulacionForm" value="{{item.tabDetCode001}}">&nbsp;&nbsp;
+                <span class="motivo-rechazo">{{item.tabDetCode002}}</span>
+              </label>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-12 textarea-rechazo">
+              <textarea class="form-control plaholder-estilo" cols="40" rows="5" placeholder="Comentarios"
+                [(ngModel)]="comentarioAnulacionForm"></textarea>
+            </div>
+          </div>
+          <div class="row" style="align-items:center">
+            <div class="col-6 col-md-5 text-right"><button class="button-text" title="Cancelar"
+                (click)="closeAnulacion()">Cancelar</button></div>
+            <div class="col-6 col-md-5 text-right"><button class="button-general" title="Enviar"
+                (click)="sendAnulacion()">Enviar</button></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal fade" bsModal [config]="{backdrop: 'static', keyboard: false}" #passwordModal="bs-modal"
+  tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title pull-left">{{modalTitle}}</h5>
+      </div>
+      <form [formGroup]="resetPasswordForm">
+        <div class="modal-body">
+          <div class="row">
+            <div class="form-group col-md-12">
+              <label for="currentPassword">Contraseña actual:</label>
+              <input class="form-control" id="currentPassword" formControlName="currentPassword" type="password" />
+              <div class="form-control-feedback required" *ngIf="resetPasswordForm.get('currentPassword')?.errors">
+                {{formErrors['currentPassword']}}
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="form-group col-md-12">
+              <label for="newPassword">Nueva contraseña:</label>
+              <input class="form-control" id="newPassword" formControlName="newPassword" type="password" />
+              <div class="form-control-feedback required"
+                *ngIf="resetPasswordForm.get('newPassword')?.errors || equalsPassword">
+                {{formErrors['newPassword']}}
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="form-group col-md-12">
+              <label for="confirmNewPassword">Repetir nueva contraseña:</label>
+              <input class="form-control" id="confirmNewPassword" formControlName="confirmNewPassword"
+                type="password" />
+              <div class="form-control-feedback required"
+                *ngIf="resetPasswordForm.get('confirmNewPassword')?.errors || equalsPassword">
+                {{formErrors['confirmNewPassword']}}
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer" style="text-align:center;">
+          <div class="row justify-content-center w-100">
+            <div class="col-6 col-md-4">
+              <button type="button" class="button-general" style="margin:auto;display:block;" (click)="changePassword()"
+                title="Guardar">Guardar</button>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+<loading *ngIf="loading"></loading>-->
+
+
+<div id="wrapper">
+        <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+
+       
+            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="home">
+                <div class="sidebar-brand-text mx-3">
+                  <img class="logo-tamanio" src="../../../assets/images/LOGOBLANCO SINFONDO.png" />
+                </div>
+            </a>
+            <hr class="sidebar-divider">
+            
+            <li class="nav-item" *ngFor="let menu of arrayMenu">
+                <a type="button" class="nav-link collapsed" (click)="goToRoute(menu.menuUrl)">
+                    <img src={{menu.menuImage}} />
+                    <span class="p-1">{{menu.menuName}}</span>
+                </a>
+                
+            </li>
+            <div class="text-center d-none d-md-inline">
+                <button class="rounded-circle border-0" id="sidebarToggle"></button>
+            </div>
+        </ul>
+
+
+        <div id="content-wrapper" class="d-flex flex-column">
+            <div id="content">
+                <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+
+                    <ul class="navbar-nav ml-auto">
+                        <div class="topbar-divider d-none d-sm-block"></div>
+                        <!-- Nav Item - User Information -->
+                        <li class="nav-item dropdown no-arrow">
+                            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
+                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">Douglas McGee</span>
+                                <img class="img-profile rounded-circle"
+                                    src="img/undraw_profile.svg">
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
+                                aria-labelledby="userDropdown">
+                                
+                                <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
+                                    <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+                                    Logout
+                                </a>
+                            </div>
+                        </li>
+
+                    </ul>
+
+                </nav>
+                <!-- aqui va el router-link -->
+				
+
+                
+
+            </div>
+            <footer class="sticky-footer bg-white">
+                <div class="container my-auto">
+                    <div class="copyright text-center my-auto">
+                        <span>Copyright &copy; Boticas Perú {{anio}}</span>
+                    </div>
+                </div>
+            </footer>            
+        </div>        
+    </div>    
+    
+    <a class="scroll-to-top rounded" href="#page-top">
+        <i class="fas fa-angle-up"></i>
+    </a>
+
+    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                    <a class="btn btn-primary" href="login.html">Logout</a>
+                </div>
+            </div>
+        </div>
+    </div>

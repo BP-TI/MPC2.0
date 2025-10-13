@@ -1,0 +1,29 @@
+<ul class="custom-menu" *ngIf="visible" [ngStyle]="{ top: y + 'px', left: x + 'px' }">
+  <li (click)="onAction('view')">🔍 Ver Sustitutos</li>
+  <li (click)="onAction('filters')">🎛️ Mostrar Filtros</li>
+  <li (click)="onAction('excel')">📊 Copiar a Excel</li>
+  <li (click)="onAction('add')">➕ Adicionar Producto</li>
+  <li (click)="onAction('delete')">🗑️ Eliminar Producto</li>
+  <li (click)="onAction('updateQty')">🔢 Actualizar Cantidad O/C (item)</li>
+  <li (click)="onAction('updateReason')">🧾 Actualizar Motivo O/C (Masivo)</li>
+  <li (click)="onAction('updateVVF')">📦 Actualizar VVF</li>
+  <li (click)="onAction('stockDetail')">🏥 Detallar Stock Botica</li>
+  <li (click)="onAction('infraStock')">📉 Detallar Infrastock</li>
+  <li (click)="onAction('finalZero')">0️⃣ Compra Final 0</li>
+  <li (click)="onAction('discounts')">💰 Ver Descuentos Desagregados (Item)</li>
+</ul>
+
+<!--<ul class="custom-menu" *ngIf="visible" [ngStyle]="{ top: y + 'px', left: x + 'px' }">
+  <li (click)="onAction('view')"><i class="fa-solid fa-magnifying-glass"></i> Ver Sustitutos</li>
+  <li (click)="onAction('filters')"><i class="fa-solid fa-filter"></i> Mostrar Filtros</li>
+  <li (click)="onAction('excel')"><i class="fa-regular fa-file-excel"></i> Copiar a Excel</li>
+  <li (click)="onAction('add')"><i class="fa-solid fa-plus"></i> Adicionar Producto</li>
+  <li (click)="onAction('delete')"><i class="fa-solid fa-trash"></i> Eliminar Producto</li>
+  <li (click)="onAction('updateQty')"><i class="fa-solid fa-list-ol"></i> Actualizar Cantidad O/C (item)</li>
+  <li (click)="onAction('updateReason')"><i class="fa-solid fa-file-pen"></i> Actualizar Motivo O/C (Masivo)</li>
+  <li (click)="onAction('updateVVF')"><i class="fa-solid fa-box"></i> Actualizar VVF</li>
+  <li (click)="onAction('stockDetail')"><i class="fa-solid fa-store"></i> Detallar Stock Botica</li>
+  <li (click)="onAction('infraStock')"><i class="fa-solid fa-chart-line"></i> Detallar Infrastock</li>
+  <li (click)="onAction('finalZero')"><i class="fa-solid">0</i> Compra Final 0</li>
+  <li (click)="onAction('discounts')"><i class="fa-solid fa-percent"></i> Ver Descuentos Desagregados (Item)</li>
+</ul>-->

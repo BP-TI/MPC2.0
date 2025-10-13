@@ -1,0 +1,57 @@
+/*
+app-layout {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 80px; 
+  z-index: 1000;
+}
+
+
+.page {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+
+.page-content {
+  flex: 0;
+  margin-top: 1%; 
+  padding-left: 10%; 
+  overflow: auto; 
+}
+
+
+.wrap-view {
+  padding: 10px; 
+}*/
+.custom-material .form-control:focus + label {
+  color: #8C4799;
+}
+
+.custom-material .has-float-label label {
+  color: #7E7E7E;
+}
+
+
+.datatable-header-cell:before {
+  content: "";
+  display: block;
+  background: #c4c4c4;
+  width: 1px;
+  height: 29px;
+  position: absolute;
+  left: 0;
+  top: 50%;
+  margin-top: -14.5px;
+}
+
+.datatable-header-cell:first-child:before {
+  display: none;
+}
+.logo-tamanio{
+  padding: 0rem;
+  width: 300px;
+}

@@ -1,0 +1,181 @@
+.btn-tam3 {
+  width: 130px;
+}
+
+.inf-user {
+  text-align: right;
+}
+
+.ng-dropdown-panel {
+  background-color: #ffffff !important;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+  border-radius: 4px;
+}
+
+/* Ajusta padding y checkbox */
+.option-checkbox {
+  display: flex;
+  align-items: center;
+  padding: 5px 10px;
+}
+
+/* Cursor pointer */
+.option-checkbox input {
+  margin-right: 8px;
+  cursor: pointer;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #aaa;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: #777;
+}
+
+.dropdown-scroll {
+  max-height: 150px !important;
+  min-height: 150px !important;
+  overflow-y: auto !important;
+  overflow-x: hidden;
+  min-width: 250px;
+  display: block !important;
+  position: static !important;
+}
+
+.fondoSelect {
+  background-color: #fff;
+  color: #6e707e;
+  background-clip: padding-box;
+  border: 1px solid #d1d3e2;
+  border-radius: 0.35rem;
+}
+
+.form-check-label {
+  font-size: 10px;
+}
+
+select.form-control,
+select.select-tipo-documento {
+  appearance: auto !important;
+  -webkit-appearance: menulist !important;
+  -moz-appearance: menulist !important;
+  background-image: none !important;
+}
+
+:host ::ng-deep .datatable-row-group thead:hover {
+  background-color: inherit !important;
+  cursor: default !important;
+}
+
+:host ::ng-deep .button-generals:hover {
+  background-color: #32509d !important;
+  color: #fff;
+}
+
+.select-tipo-documento {
+  font-size: 13px;
+  padding: 2px 6px;
+  height: 28px;
+}
+
+.select-tipo-documento option {
+  font-size: 10px;
+  padding: 3px 6px;
+  height: 28px;
+}
+
+.select-tipo-documento {
+  border-radius: 5px;
+  background-color: #f9f9f9;
+}
+
+.ngx-datatable.material.sm {
+  font-size: 8px;
+  line-height: 6px;
+  font-family: Montserrat;
+  color: #3f3f41;
+  font-weight: bold;
+}
+
+.ngx-datatable.table-main {
+  font-size: 9px;
+
+  font-family: Montserrat;
+  color: #3f3f41;
+  font-weight: bold;
+
+}
+
+.box-white, .grid-control-custom {
+  width: 100%;
+  overflow: visible;
+}
+
+
+
+
+
+/*************/
+::ng-deep .ngx-datatable.fixed-header .datatable-header-inner,
+::ng-deep .ngx-datatable.fixed-row .datatable-body-row,
+::ng-deep .ngx-datatable.fixed-row .datatable-body-cell {
+  transform: translateZ(0);
+}
+
+::ng-deep .ngx-datatable.fixed-header .datatable-header {
+  position: sticky;
+  top: 0;
+  z-index: 3;
+}
+
+::ng-deep .datatable-body-row {
+  display: flex !important;
+}
+
+
+::ng-deep .ngx-datatable.fixed-header .datatable-header-inner {
+  transform: translateZ(0); /* mejora el render, pero no rompe la alineación */
+}
+
+::ng-deep .ngx-datatable.material .datatable-header,
+::ng-deep .ngx-datatable.material .datatable-header-inner,
+::ng-deep .ngx-datatable.material .datatable-header-cell {
+  background-color: #32509d !important;
+  color: white !important;
+  font-weight: bold;
+  text-align: center;
+  border-bottom: 1px solid #ccc;
+}
+
+/* Ajuste de las celdas */
+::ng-deep .datatable-body-cell, 
+::ng-deep .datatable-header-cell {
+  white-space: nowrap !important;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Asegura que el contenedor deje pasar el scroll */
+.table-container {
+  width: 100%;
+  overflow-x: hidden !important;
+  overflow-y: hidden !important;
+}
+
+
+.area-click {
+  background: white;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #444;
+  font-size: 10px;
+}
+

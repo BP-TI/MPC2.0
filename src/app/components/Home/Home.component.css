@@ -1,0 +1,49 @@
+.fondo-home {
+  text-align:center;
+  padding-top:2%;
+}
+
+.lbl-home {
+  font-family: Montserrat;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 20px;
+  line-height: 24px;
+  color: #523178;
+  /* position: absolute; */
+  /* left: 51.17%; */
+  /* right: 38.14%; */
+  /* top: 60.93%; */
+  /* bottom: 35.48%; */
+}
+
+.lbl-home-b {
+  font-family: Montserrat;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 30px;
+  line-height: 37px;
+  color: #523178;
+  /* position: absolute; */
+  /* left: 37.41%; */
+  /* right: 24.38%; */
+  /* top: 65.42%; */
+  /* bottom: 29.04%; */
+}
+
+/* Medium devices (tablets, 768px and up) */
+@media (min-width: 768px) {
+  .fondo-home {
+    text-align:center;
+    padding-top:7%;
+  }
+}
+/* Large devices (desktops, 992px and up) */
+@media (min-width: 992px) {
+}
+/* Extra large devices (large desktops, 1200px and up) */
+@media (min-width: 1200px) {
+}
+/* Extra large devices (large desktops, 1200px and up) */
+@media (min-width: 1440px) {
+}
