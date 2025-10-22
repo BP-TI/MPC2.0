@@ -38,7 +38,7 @@ export class LoginComponent implements OnInit {
   contrasena: string = '';
   isCordova: boolean = false;
   deviceSession: DeviceObject | null = null;
-  //appVersion: string = AppConstants.APP_VERSION;
+ 
   appVersion: string = "123";
   appCurrentVersion: string = "";
   appCurrentVersionMessage: string = "";
