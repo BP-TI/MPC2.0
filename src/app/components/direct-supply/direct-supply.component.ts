@@ -6,31 +6,14 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { PurchasePlanningService } from '../../services/PurchasePlanning/purchasePlanning.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { OrdenCompraService } from '../../services/PurchasePlanning/ordenCompra.service';
-import { OptionClickComponent } from '../../shared/components/option-click/option-click.component';
-
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-
-
 
 @Component({
-  selector: 'app-purchase-planning',
+  selector: 'app-direct-supply',
   standalone: false,
-  templateUrl: './purchase-planning.component.html',
-  styleUrls: ['./purchase-planning.component.css']
+  templateUrl: './direct-supply.component.html',
+  styleUrls: ['./direct-supply.component.css']
 })
-export class PurchasePlanningComponent implements OnInit {
-  
-
-  @ViewChild('verSustitutosModal') verSustitutosModal: any;
-
-  sustitutos = [
-    { codpro: 'P001', despro: 'Paracetamol 500mg', prisal: 1.2, stk_alm: 50, stk_alm_m: 10, codlab: 'LAB01', ubipro: 'A1', codgen: 'GEN01', moncod: 'PEN', stkfra: 5, codlam: 'L001', dtoprox: '10%', categvta: 'A' },
-    { codpro: 'P002', despro: 'Ibuprofeno 400mg', prisal: 2.5, stk_alm: 40, stk_alm_m: 15, codlab: 'LAB02', ubipro: 'B2', codgen: 'GEN02', moncod: 'PEN', stkfra: 8, codlam: 'L002', dtoprox: '5%', categvta: 'B' },
-  ];
-
-  showFilters: boolean = false; 
-  filteredRows: any[] = [];    
-  filters: { [key: string]: any } = {}; 
+export class DirectSupplyComponent implements OnInit {
 
   title:string = "";
     agencyCode: string = sessionStorage.getItem(AppConstants.Session.AGENCYCODE) ?? "";
@@ -38,7 +21,7 @@ export class PurchasePlanningComponent implements OnInit {
     usersessionId: string = sessionStorage.getItem(AppConstants.Session.USERID) ?? "";
     channelName: string = sessionStorage.getItem(AppConstants.Session.SALES_CHANNEL_DESCRIPTION) ?? "";
 
-  titulo = "Planificacion de Orden de Compra";
+  titulo = "Abastecimiento Directo";
   tableClass: string = "table-company-0";
   tableClass2: string = "table-company-4";//table-company-default
   rows:any=[];
@@ -64,12 +47,9 @@ export class PurchasePlanningComponent implements OnInit {
   proveedor="0";
   opcionesForm: FormGroup;
 
-  @ViewChild(OptionClickComponent) contextMenu!: OptionClickComponent;
-
    constructor(private fb: FormBuilder,
               private purchaseService: PurchasePlanningService,
-              private ordenCompraService: OrdenCompraService,
-            private modalService: NgbModal ) { }
+              private ordenCompraService: OrdenCompraService,) { }
 
   
   ngOnInit() {
@@ -77,8 +57,7 @@ export class PurchasePlanningComponent implements OnInit {
     this.cargarPoliticas();
     this.createColumsTableTC();
     this.createColumsTableLB();
-    this.crearGrupoChecks();    
-
+    this.crearGrupoChecks();
   }
 
   crearGrupoChecks(){
@@ -152,7 +131,7 @@ export class PurchasePlanningComponent implements OnInit {
       { name: 'Parcial', prop: 'parcial',width: 70 },
       { name: 'Igv', prop: 'igv',width: 70 },
       { name: 'Total', prop: 'totalParcial',width: 70 },
-      { name: 'Observación', prop: 'observaciones',width: 150  },
+      { name: 'Observación', prop: 'observaciones',width: 80  },
     ];
 
     this.columns = [
@@ -161,7 +140,6 @@ export class PurchasePlanningComponent implements OnInit {
         draggable: true,
         resizeable: true,
         cellClass: "text-center",
-        minWidth: col.width || 100,
       }))
     ];
 
@@ -273,64 +251,14 @@ export class PurchasePlanningComponent implements OnInit {
           alert("No se encontraton registros");
 
         }else{
-          if(response.codStatus === 1){
-            if(response.message === "OK"){
-              this.rows = response.detalleProductos;
-            }else{
-              alert(response.message);
-            }
-          }else{
-            alert(response.message);
-          }          
-        }        
+          this.rows = response;
+        }
+        
       },
       (error: HttpErrorResponse) => {
         this.loading = false;
       }
     );
-  }
-
-  openContextMenu(event: MouseEvent) {
-    event.preventDefault(); // evita el menú del navegador
-    this.contextMenu.open(event.pageX, event.pageY);
-  }
-
-  applyFilter(columnProp: string, value: string) {
-    this.filters[columnProp] = value.toLowerCase();
-
-    this.filteredRows = this.rows.filter((row: any) => {
-      return Object.keys(this.filters).every((key) => {
-        if (!this.filters[key]) return true;
-        const cellValue = row[key]?.toString().toLowerCase() || '';
-        return cellValue.includes(this.filters[key]);
-      });
-    });
-  }
-
-
-  handleMenuAction(action: string) {
-    switch (action) {
-      case 'view':
-        this.modalService.open(this.verSustitutosModal, { size: 'xl', centered: true, backdrop:false,scrollable:true }); 
-        
-        break;
-
-      case 'filters':
-      this.showFilters = !this.showFilters; 
-      if (this.showFilters) {
-        this.filteredRows = [...this.rows];
-      } else {
-        this.filters = {};
-        this.filteredRows = [...this.rows];
-      }
-      break;
-      case 'edit':
-        alert('✏️ Editar');
-        break;
-      case 'delete':
-        alert('🗑️ Eliminar');
-        break;
-    }
   }
 
 }

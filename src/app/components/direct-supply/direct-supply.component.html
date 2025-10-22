@@ -54,32 +54,23 @@
               </div>
             </div>
           </div>
-          <div class="col-4">
-            <label for="laboratiorios">Política de Inventario (Día)</label>
-            <div class="box-white">
-              <div class="grid-control-custom">
-                <div class="grid-control-custom">
-                  <div class="table-min-sm scroll-x">
-                    <ngx-datatable #tableListMot
-                      [ngClass]="tableClass"
-                          class="material colored-header sm table "
-                          [rows]="rowsLb"
-                          [columns]="columnasLb"
-                          [columnMode]="'force'"
-                          [scrollbarV]="true"
-                          [scrollbarH]="true"
-                          [footerHeight]="40"
-                          [headerHeight]="38"
-                          [footerHeight]="0"
-                          [rowHeight]="15"
-                          [limit]="2"
-                          [loadingIndicator]="loadingIndicator"
-                          [messages]="{totalMessage: '', emptyMessage: ''}">
-                    </ngx-datatable>
-                  </div>  
-                </div>  
-              </div>  
-            </div>          
+          <div class="col-3">
+            <label for="Boticas">Boticas</label>
+            <div ngbDropdown class="fondoSelect">
+              <div ngbDropdownMenu class="dropdown-scroll p-2">
+                <div *ngFor="let item of laboratorios" class="form-check">
+                  <input
+                    class="form-check-input"
+                    type="checkbox"
+                    [(ngModel)]="item.selected"
+                    id="{{ item.codigoLab }}"
+                  />
+                  <label class="form-check-label" [for]="item.descripcion">
+                    {{ item.descripcion }}
+                  </label>
+                </div>
+              </div>
+            </div>
           </div>
           <div class="col-2">
             <label for="laboratiorios">Opciones</label>
@@ -130,24 +121,25 @@
 
     <div class="box-white">
       <div class="grid-control-custom">
-        <div class="table-container area-click" (contextmenu)="openContextMenu($event)" >
-            <ngx-datatable
-              #tableListMotivo
-              [ngClass]="tableClass2"
-              class="material colored-header table-main fixed-header"
-              [rows]="rows"
-              [columns]="columns"
-              [columnMode]="'standard'"
-              [scrollbarV]="true"
-              [scrollbarH]="true"
-              [headerHeight]="50"
-              [footerHeight]="0"
-              [style.height.px]="340"
-              [rowHeight]="30"
-              [limit]="10"
-              [loadingIndicator]="loadingIndicator"
-              [messages]="{ totalMessage: '', emptyMessage: '' }">
-            </ngx-datatable>
+        <div class="table-container scroll-x">
+          <ngx-datatable
+            #tableListMotivo
+            [ngClass]="tableClass2"
+            class="material colored-header table-main"
+            [rows]="rows"
+            [columns]="columns"
+            [columnMode]="'standard'"
+            [scrollbarV]="true"
+            [scrollbarH]="true"
+            [style.width.px]="2800"
+            [headerHeight]="50"
+            [footerHeight]="0"
+            [style.height.px]="340"
+            [rowHeight]="20"
+            [limit]="10"
+            [loadingIndicator]="loadingIndicator"
+            [messages]="{ totalMessage: '', emptyMessage: '' }">
+          </ngx-datatable>
         </div>
       </div>
     </div>
@@ -155,59 +147,3 @@
     
   </div>
 <loading *ngIf="loading"></loading>
-<app-option-click (action)="handleMenuAction($event)"></app-option-click>
-
-<!-- MODAL: Ver Sustitutos -->
-<ng-template #verSustitutosModal let-modal>
-  <div class="modal-header" >
-    <h5 class="modal-title">Sustitutos del Producto</h5>
-    <button type="button" class="close" aria-label="Close">
-      <span aria-hidden="true">&times;</span>
-    </button>
-  </div>
-
-  <div class="modal-body">
-    <div class="table-responsive">
-      <table class="table table-sm table-bordered text-center">
-        <thead class="thead-light">
-          <tr>
-            <th>CodPro</th>
-            <th>DesPro</th>
-            <th>PriSal</th>
-            <th>Stk Alm</th>
-            <th>Stk Alm_M</th>
-            <th>CodLab</th>
-            <th>UbiPro</th>
-            <th>CodGen</th>
-            <th>MonCod</th>
-            <th>StkFra</th>
-            <th>CodLam</th>
-            <th>Dtoprox</th>
-            <th>CategVta</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let item of sustitutos">
-            <td>{{ item.codpro }}</td>
-            <td>{{ item.despro }}</td>
-            <td>{{ item.prisal }}</td>
-            <td>{{ item.stk_alm }}</td>
-            <td>{{ item.stk_alm_m }}</td>
-            <td>{{ item.codlab }}</td>
-            <td>{{ item.ubipro }}</td>
-            <td>{{ item.codgen }}</td>
-            <td>{{ item.moncod }}</td>
-            <td>{{ item.stkfra }}</td>
-            <td>{{ item.codlam }}</td>
-            <td>{{ item.dtoprox }}</td>
-            <td>{{ item.categvta }}</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
-
-  <div class="modal-footer">
-    <button type="button" class="btn btn-secondary" (click)="modal.close()" data-dismiss="modal">Cerrar</button>
-  </div>
-</ng-template>

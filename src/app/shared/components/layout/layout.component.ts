@@ -103,7 +103,7 @@ export class LayoutComponent implements OnInit {
       menuName: 'Planificación de Compra'
     },
     {
-      menuUrl: '/login',
+      menuUrl: '/abastecimiento-directo',
       menuImage: 'assets/images/carrito-de-compras-EXP.png',
       menuName: 'Abastecimiento Directo'
     },

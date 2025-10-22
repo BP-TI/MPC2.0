@@ -19,6 +19,8 @@ import { HttpClientModule } from '@angular/common/http';
 import { ToastaModule } from 'ngx-toasta';
 import { ToastaService } from 'ngx-toasta';
 import { OptionClickComponent } from './shared/components/option-click/option-click.component';
+import { DirectSupplyComponent } from './components/direct-supply/direct-supply.component';
+import { NgbModalModule } from '@ng-bootstrap/ng-bootstrap';
 
 
 @NgModule({
@@ -30,9 +32,11 @@ import { OptionClickComponent } from './shared/components/option-click/option-cl
     HomeComponent,
     HeaderComponent,
     PurchasePlanningComponent,
+    DirectSupplyComponent,
     OptionClickComponent
   ],
   imports: [
+    NgbModalModule,
     BrowserModule,
     AppRoutingModule,
     CommonModule,
