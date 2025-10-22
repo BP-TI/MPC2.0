@@ -5,6 +5,7 @@ import { HomeComponent } from './components/Home/Home.component';
 import { PurchasePlanningComponent } from './components/purchase-planning/purchase-planning.component';
 import { NotFoundComponent } from './shared/components/not-found/not-found.component';
 import { LayoutComponent } from './shared/components/layout/layout.component';
+import { DirectSupplyComponent } from './components/direct-supply/direct-supply.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -15,6 +16,7 @@ const routes: Routes = [
     children: [
       { path: 'home', component: HomeComponent },
       { path: 'generar-orden', component: PurchasePlanningComponent },
+      { path: 'abastecimiento-directo', component: DirectSupplyComponent },
     ]
   },
   {path: '**', component: NotFoundComponent, data: {title: 'Page Not Found'}}
