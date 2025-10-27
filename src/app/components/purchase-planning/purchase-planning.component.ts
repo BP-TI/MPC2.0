@@ -290,9 +290,9 @@ export class PurchasePlanningComponent implements OnInit {
     );
   }
 
-  openContextMenu(event: MouseEvent) {
+  openContextMenu(event: MouseEvent,opcionMenu:number) {
     event.preventDefault(); // evita el menú del navegador
-    this.contextMenu.open(event.pageX, event.pageY);
+    this.contextMenu.open(event.pageX, event.pageY,opcionMenu);
   }
 
   applyFilter(columnProp: string, value: string) {
