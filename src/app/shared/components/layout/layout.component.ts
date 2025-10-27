@@ -108,27 +108,27 @@ export class LayoutComponent implements OnInit {
     this.arrayMenu = [
       {
         menuUrl: '/generar-orden',
-        menuImage: 'fa-solid fa-cart-shopping',
+        menuImage: 'p-1 fa-solid fa-cart-shopping',
         menuName: 'Planificación de Compra'
       },
       {
         menuUrl: '/abastecimiento-directo',
-        menuImage: 'fa-solid fa-cart-plus',
+        menuImage: 'p-1 fa-solid fa-cart-plus',
         menuName: 'Abastecimiento Directo'
       },
       {
         menuUrl: '/vigencia-vencida',
-        menuImage: 'fa-solid fa-book-skull',
+        menuImage: 'p-1 fa-solid fa-book-skull',
         menuName: 'O/C Vigencia Vencida'
       },
       {
         menuUrl: '/visualizacion-ordenes',
-        menuImage: 'fa-solid fa-binoculars',
+        menuImage: 'p-1 fa-solid fa-binoculars',
         menuName: 'Visualización de O/C'
       },
       {
-        menuUrl: '/login',
-        menuImage: 'fa-solid fa-calendar-week',
+        menuUrl: '/cronograma-recepcion',
+        menuImage: 'p-1 fa-solid fa-calendar-week',
         menuName: 'Cronograma Recepción'
       }
     ];

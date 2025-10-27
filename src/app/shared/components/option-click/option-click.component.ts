@@ -15,15 +15,24 @@ export class OptionClickComponent implements OnInit {
   }
 
   visible = false;
+  visible2 = false;
+  
   x = 0;
   y = 0;
 
   @Output() action = new EventEmitter<string>();
 
-  open(x: number, y: number) {
+  open(x: number, y: number,opcionMenu:number) {
     this.x = x;
     this.y = y;
-    this.visible = true;
+    switch(opcionMenu){
+      case 1:
+        this.visible = true; break;
+      case 2:
+      case 3:
+        this.visible2 = true; break;
+    }
+    
   }
 
   close() {

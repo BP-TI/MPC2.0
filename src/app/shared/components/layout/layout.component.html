@@ -56,6 +56,7 @@
         (click)="goToRoute(menu.menuUrl, i)"
         [class.active]="selectedIndex === i"
         [ngClass]="navState ? 'button-nav-large' : 'button-nav-small'"
+        style="text-decoration: none;"
       >
         <i class="{{ menu.menuImage }}"></i>
         <div class="m-0 p-0" [ngClass]="navState ? 'text-visible' : 'text-hidden'">
