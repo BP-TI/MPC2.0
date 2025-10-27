@@ -19,6 +19,7 @@ export class LoginComponent implements OnInit {
 
   private singleExecutionSubscription: Subscription;
   public token: string;
+  public logowhite: string = 'assets/images/logo-white.svg';
 
   constructor(private fb: FormBuilder,
               private router: Router,
@@ -49,15 +50,13 @@ export class LoginComponent implements OnInit {
 
   createForm() {
         this.loginForm = this.fb.group({
-            usuario: '',
-            contrasena: ''
+            usuario: ['',Validators.required],
+            contrasena: ['',Validators.required]
         });
     }
 
   logueo(){
-    
     this.loading = true;
-
     this.loginService.getUserLogin(this.usuario,this.contrasena).subscribe(
       (response) => {
         this.loading = false;

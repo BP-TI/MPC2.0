@@ -1,0 +1,128 @@
+.container-button {
+    display: flex;
+    flex-wrap: wrap;
+    margin: 0%;
+    padding: 0%;
+    align-items: center;
+    gap: 5px;
+    justify-content: flex-start;
+}
+
+.button-header {
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    padding: 4px 24px;
+    gap: 4px;
+
+    width: auto;
+    height: 40px;
+
+    background: #FFFFFF;
+    border: 1px solid #D2D2D2;
+    border-radius: 4px;
+    font-size: 13px;
+
+    font-family: 'Neo Sans Std';
+    font-style: normal;
+
+
+    display: flex;
+    align-items: center;
+    letter-spacing: 1.25px;
+
+    color: #32509d;
+}
+
+.button-header:hover {
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    padding: 4px 24px;
+    gap: 4px;
+
+    width: auto;
+    height: 40px;
+
+    background: #32509d;
+    border: 1px solid #32509d;
+    border-radius: 4px;
+    font-size: 13px;
+
+    font-family: 'Neo Sans Std';
+    font-style: normal;
+
+
+    display: flex;
+    align-items: center;
+    letter-spacing: 1.25px;
+
+    color: #FFFFFF;
+}
+
+.button-header i {
+    width: 14px;
+}
+
+.button-header:hover i {
+    width: 14px;
+    color: #FFFFFF;
+}
+
+.subtitle {
+    font-family: 'Open Sans';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 20px;
+    line-height: 16px;
+    display: flex;
+    align-items: flex-end;
+    letter-spacing: 1.25px;
+    color: #134B97;
+}
+
+input {
+    box-sizing: border-box;
+    width: auto;
+    height: 40px;
+
+    background: #FFFFFF;
+    border: 1px solid rgba(175, 167, 167, 0.7);
+    border-radius: 4px;
+
+}
+
+.label-text {
+
+    font-family: 'Open Sans';
+    font-style: normal;
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 20px;
+    color: #3C3C3C;
+
+}
+
+.input-select {
+    box-sizing: border-box;
+    min-width: 250px;
+    max-width: auto;
+    width: auto;
+    height: 49px;
+
+    background: #FFFFFF;
+    border: 1px solid rgba(175, 167, 167, 0.7);
+    border-radius: 4px;
+
+    flex: none;
+    order: 1;
+    align-self: stretch;
+    flex-grow: 0;
+    color: #7A7A7A;
+    padding: 10px;
+    font-size: 14px;
+}

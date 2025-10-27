@@ -1,0 +1,275 @@
+.button-style {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding: 4px 24px;
+  gap: 4px;
+
+  width: auto;
+  height: 40px;
+
+  background: #134B97;
+  border: 1px solid #134B97;
+  border-radius: 4px;
+  font-size: 13px;
+
+  font-family: 'Neo Sans Std';
+  font-style: normal;
+
+
+  display: flex;
+  align-items: center;
+  letter-spacing: 1.25px;
+
+  color: white;
+
+}
+
+.button-style:hover {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding: 4px 24px;
+  gap: 4px;
+
+  width: auto;
+  height: 40px;
+
+  background: white;
+
+  border: 1px solid #134B97;
+
+  border-radius: 4px;
+  font-size: 13px;
+
+  font-family: 'Neo Sans Std';
+  font-style: normal;
+
+
+  display: flex;
+  align-items: center;
+  letter-spacing: 1.25px;
+
+  color: #134B97;
+
+}
+
+.button-style-sky-blue {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding: 4px 24px;
+  gap: 4px;
+
+  width: auto;
+  height: 40px;
+
+  background: #DCEBFF;
+  ;
+  border: 1px solid #DCEBFF;
+  ;
+  border-radius: 4px;
+  font-size: 13px;
+
+  font-family: 'Neo Sans Std';
+  font-style: normal;
+
+
+  display: flex;
+  align-items: center;
+  letter-spacing: 1.25px;
+
+  color: #134B97;
+}
+
+.button-style-sky-blue:hover {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding: 4px 24px;
+  gap: 4px;
+
+  width: auto;
+  height: 40px;
+
+  background: #134B978F;
+  ;
+  border: 1px solid #DCEBFF;
+  ;
+  border-radius: 4px;
+  font-size: 13px;
+
+  font-family: 'Neo Sans Std';
+  font-style: normal;
+
+
+  display: flex;
+  align-items: center;
+  letter-spacing: 1.25px;
+
+  color: #DCEBFF;
+}
+
+.company-data {
+  height: 26px;
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-size: 14px;
+  line-height: 20px;
+  color: #3C3C3C;
+  margin: 1px;
+}
+
+label {
+  height: 26px;
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-size: 14px;
+  line-height: 20px;
+  color: #3C3C3C;
+  margin: 1px;
+}
+
+input {
+  box-sizing: border-box;
+  width: auto;
+  height: 40px;
+
+  background: #FFFFFF;
+  border: 1px solid rgba(175, 167, 167, 0.7);
+  border-radius: 4px;
+
+}
+
+.input-select {
+  box-sizing: border-box;
+  width: auto;
+  height: 40px;
+
+  background: #FFFFFF;
+  border: 1px solid rgba(175, 167, 167, 0.7);
+  border-radius: 4px;
+
+  flex: none;
+  order: 1;
+  align-self: stretch;
+  flex-grow: 0;
+  color: #7A7A7A;
+  padding: 10px;
+  font-size: 12px;
+}
+
+/* Estilo de la tabla */
+.table-scroll {
+  overflow-x: auto;
+  overflow-y: hidden;
+  max-height: 320px;
+  border: #DCEBFF solid;
+}
+
+.table-style thead {
+  border-bottom: 2px solid #D12027 !important;
+}
+
+.table-style th,
+td {
+  width: 135px;
+  height: 48px;
+  font-family: 'Open Sans';
+  font-style: normal;
+
+  line-height: 22px;
+}
+
+.table-style th {
+  font-weight: bold;
+  font-size: 12px;
+  color: black;
+  background: white;
+}
+
+.table-style td {
+  font-size: 12px;
+  color: #3C3C3C;
+  background: white;
+}
+
+.table-style th,
+td {
+  white-space: nowrap;
+  text-align: left;
+  padding: 4px;
+}
+
+
+.table-fixed {
+  width: max-content;
+  table-layout: auto;
+}
+
+
+.table-fixed th,
+.table-fixed td {
+  text-align: left;
+  padding: 8px;
+}
+
+
+.table-fixed thead th {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+}
+
+.table-fixed thead th:nth-child(1),
+th:nth-child(2),
+th:nth-child(3) {
+  z-index: 5 !important;
+}
+
+.table-fixed th:nth-child(1),
+.table-fixed td:nth-child(1) {
+  position: sticky;
+  left: 0;
+  min-width: 60px;
+  z-index: 4;
+  background: #B0E0E6;
+}
+
+.table-fixed th:nth-child(2),
+.table-fixed td:nth-child(2) {
+  position: sticky;
+  left: 60px;
+  min-width: 120px;
+  z-index: 4;
+  background: #B0E0E6;
+}
+
+.table-fixed th:nth-child(3),
+.table-fixed td:nth-child(3) {
+  position: sticky;
+  left: 180px;
+  min-width: 180px;
+  z-index: 4;
+  background: #B0E0E6;
+}
+
+/* End estilos de la tabla */
+.text-total-value {
+  font-size: 12px;
+  color: black;
+  background: white;
+}
+
+hr {
+  margin-top: 5px;
+  margin-bottom: 10px;
+}
