@@ -76,7 +76,6 @@ export class PurchasePlanningComponent implements OnInit {
     this.cargarProveedores();
     this.cargarPoliticas();
     this.createColumsTableTC();
-    this.createColumsTableLB();
     this.crearGrupoChecks();
     this.global.setGlobalVar('Módulo planificación de compra');
   }
@@ -179,29 +178,6 @@ export class PurchasePlanningComponent implements OnInit {
       }
     }
     return offset;
-  }
-
-  private createColumsTableLB(): void {
-    const columnDefinitions = [
-      { prop: "ABC", name: "Tipo", width: 120 },
-      { prop: "puntoVenta", name: "Punto Venta", width: 40 },
-      { prop: "MaxAlmacen", name: "Maximo Almacén", width: 40 },
-      { prop: "Total", name: "Total", width: 40 }
-    ];
-
-    this.columnasLb = columnDefinitions.map((col) => ({
-      ...col,
-      draggable: false,
-      resizeable: true,
-      cellClass: (row: any) => {
-        switch (col.prop) {
-          case 'ABC':
-            return 'text-left bold-text';
-          default:
-            return 'text-center';
-        }
-      }
-    }));
   }
 
   onSearch() {

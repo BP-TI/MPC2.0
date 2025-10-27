@@ -27,19 +27,7 @@
 
   <div class="col-12 m-0 p-0">
     <!-- titulo datos principales -->
-    <div class="col-12 m-0 p-0 d-flex align-items-center">
-      <div class="col-12 m-0 p-0 subtitle">Datos principales</div>
-      <!-- icon -->
-      <a
-        type="button"
-        class="dropdown-item m-0 p-0"
-        data-toggle="modal"
-        data-target="#politicaInventario"
-      >
-        <i class="fa-solid fa-circle-info" title="Política de Inventario (Día)"> </i>
-      </a>
-      <!-- end icon -->
-    </div>
+    <div class="col-12 m-0 p-0 subtitle">Datos principales</div>
 
     <div class="col-12 m-0 p-0 d-flex align-items-start gap-3">
       <!-- proveedor -->
@@ -93,6 +81,23 @@
         </div>
       </div>
       <!-- end laboratorio -->
+      <!-- politivas invetario -->
+      <div class="m-0 p-0 d-flex d-flex align-items-center gap-2">
+        <label class="label-text" for="checkTodos">Todos los Laboratorios (Día)</label>
+        <!-- icon -->
+        <div>
+          <a
+            type="button"
+            class="dropdown-item m-0 p-0"
+            data-toggle="modal"
+            data-target="#politicaInventario"
+          >
+            <i class="fa-solid fa-circle-info" title="Política de Inventario (Día)"> </i>
+          </a>
+        </div>
+        <!-- end icon -->
+      </div>
+      <!-- End politivas invetario -->
     </div>
   </div>
 
@@ -397,9 +402,9 @@
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
       <div
-        class="modal-header d-flex align-items-baseline justify-content-between style-header-popup"
+        class="modal-header p-2 m-0 d-flex align-items-center justify-content-between style-header-popup"
       >
-        <p class="title-modal">Política de Inventario (Día)</p>
+        <p class="title-modal p-0 m-0">Política de Inventario (Día)</p>
         <button type="button" class="button-cancel" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -426,9 +431,9 @@
   <div class="modal-dialog modal-dialog-centered modal-xl">
     <div class="modal-content">
       <div
-        class="modal-header d-flex align-items-baseline justify-content-between style-header-popup"
+        class="modal-header p-2 m-0 d-flex align-items-baseline justify-content-between style-header-popup"
       >
-        <p class="title-modal">Nueva Orden de Compra</p>
+        <p class="title-modal p-0 m-0">Nueva Orden de Compra</p>
         <button type="button" class="button-cancel" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -453,9 +458,9 @@
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
       <div
-        class="modal-header d-flex align-items-baseline justify-content-between style-header-popup"
+        class="modal-header p-2 m-0 d-flex align-items-baseline justify-content-between style-header-popup"
       >
-        <p class="title-modal">Generar en base a una O/C</p>
+        <p class="title-modal m-0 p-0">Generar en base a una O/C</p>
         <button type="button" class="button-cancel" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
