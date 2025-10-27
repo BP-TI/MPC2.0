@@ -1,11 +1,11 @@
 <div id="contenedor" class="col-12 m-0 pt-3">
   <!-- botones cabecera -->
   <div class="container-button">
-    <button class="button-header" data-toggle="modal" data-target="#ordenCompra">
+    <button class="button-header">
       <i class="fa-solid fa-calculator"></i>
       Calcular Compra
     </button>
-    <button class="button-header">
+    <button class="button-header" data-toggle="modal" data-target="#ordenCompra">
       <i class="fa-solid fa-file-medical"></i>
       Generar O/C
     </button>
@@ -41,7 +41,7 @@
       <!-- end icon -->
     </div>
 
-    <div class="col-12 m-0 p-0 d-flex align-items-center gap-3">
+    <div class="col-12 m-0 p-0 d-flex align-items-start gap-3">
       <!-- proveedor -->
       <div class="m-0 p-0">
         <div>
@@ -62,28 +62,42 @@
       <!-- end proveedor -->
       <!-- laboratorio -->
       <div class="m-0 p-0">
-        <div class="form-check m-0 p-0">
-          <input class="form-check-input" type="checkbox" />
-          <label class="label-text" for="laboratorio">Laboratorios</label>
+        <div class="">
+          <form [formGroup]="opcionesForm">
+            <div class="form-check">
+              <input
+                class="form-check-input"
+                type="checkbox"
+                id="checkTodos"
+                formControlName="todos"
+                (change)="onCheckChange('todos')"
+              />
+              <label class="label-text" for="checkTodos">Todos los Laboratorios</label>
+              <br />
+            </div>
+          </form>
         </div>
-        <select class="input-select" id="laboratorios">
-          <option value="0" disabled>--Seleccione--</option>
-          <option
-            class="laboratorio-seleccionado"
-            *ngFor="let item of laboratorios"
-            [ngValue]="item.codigoLab"
-          >
-            {{ item.descripcion }}
-          </option>
-        </select>
+
+        <div ngbDropdown class="fondoSelect">
+          <div ngbDropdownMenu class="dropdown-scroll p-2">
+            <div *ngFor="let item of laboratorios" class="form-check label-check-lab">
+              <input
+                class="form-check-input"
+                type="checkbox"
+                [(ngModel)]="item.selected"
+                id="{{ item.codigoLab }}"
+              />
+              {{ item.descripcion }}
+            </div>
+          </div>
+        </div>
       </div>
       <!-- end laboratorio -->
     </div>
   </div>
-  <hr size="10px" width="100%" color="134B97" />
 
   <!-- tablas -->
-  <div class="col-12 d-flex align-items-baseline gap-4 m-0 p-0">
+  <div class="col-12 m-0 p-0 mt-2 d-flex align-items-baseline gap-4">
     <!-- tabla ultimas compras -->
     <div class="col-md-7 m-0 p-0">
       <div class="subtitle mb-3">Últimas Compras</div>
@@ -232,10 +246,8 @@
   </div>
   <!-- end tablas -->
 
-  <hr size="10px" width="100%" color="134B97" />
-
   <!-- tabla Analisis compras -->
-  <div class="col-12 m-0 p-0">
+  <div class="col-12 m-0 p-0 mt-2">
     <div class="d-flex align-items-baseline justify-content-between m-0 p-0">
       <div class="subtitle mb-3">Análisis Compras</div>
 
@@ -427,8 +439,7 @@
     </div>
   </div>
 </div>
-<!-- End modal Generar Orden de compra -->
-
+<!-- End modal Generar Orden de compra basa en otra OC -->
 <div
   class="modal fade"
   id="generarbasadaoc"
@@ -452,7 +463,7 @@
       <div class="modal-body">
         <div class="d-flex align-items-baseline gap-2">
           <label for="fechacreacion">Número de O/C</label>
-          <input type="number" placeholder="Orden de compra"/>
+          <input type="number" placeholder="Orden de compra" />
           <button class="button-style">Guardar</button>
         </div>
       </div>
