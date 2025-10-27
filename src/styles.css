@@ -14,7 +14,7 @@ html, body {
     font-family: Arial, Helvetica, sans-serif;
     background: white;
     height: 100%;
-    overflow: auto;
+    /* overflow: auto; */
 }
 
 .datatable-header {
@@ -4465,3 +4465,5 @@ ion-item {
 .box-validacion .validacion-img-msgCPFinal2 {
   margin-top: -10%;
 }
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }

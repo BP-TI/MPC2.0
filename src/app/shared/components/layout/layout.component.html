@@ -1,85 +1,100 @@
-<div class="ui-custom-gs">
-    <div id="wrapper">
-        <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
-
-       
-            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="home">
-                <div class="sidebar-brand-text mx-3">
-                  <img class="logo-tamanio" src="../../../assets/images/LOGOBLANCO SINFONDO.png" />
-                </div>
-                
-            </a>
-            <div class="text-center d-none d-md-inline">
-                <button class="rounded-circle border-0" id="sidebarToggle"></button>
-            </div>
-            <hr class="sidebar-divider">
-            
-            <li class="nav-item" *ngFor="let menu of arrayMenu">
-                <a type="button" class="nav-link collapsed" (click)="goToRoute(menu.menuUrl)">
-                    <img style="width: 18px;" src={{menu.menuImage}} />
-                    <span class="p-1">{{menu.menuName}}</span>
-                </a>
-                
-            </li>
-            <!--<div class="text-center d-none d-md-inline">
-                <button class="rounded-circle border-0" id="sidebarToggle"></button>
-            </div>-->
-        </ul>
-
-
-        <div id="content-wrapper" class="d-flex flex-column">
-            <div id="content" class="pt-3">
-                <!--
-
-                <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
-                    <ul class="navbar-nav ml-auto">
-                        <div class="topbar-divider d-none d-sm-block"></div>
-                        <li class="nav-item dropdown no-arrow">
-                            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
-                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">{{user.NombreUsuario}}</span>
-                            </a>
-                            <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
-                                aria-labelledby="userDropdown">
-                                
-                                <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
-                                    <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
-                                    Salir
-                                </a>
-                            </div>
-                        </li>
-                    </ul>
-                </nav>-->
-                <section>
-                  <router-outlet></router-outlet>
-                </section>
-				
-            </div>     
-        </div>        
-    </div>    
-    
-    <a class="scroll-to-top rounded" href="#page-top">
-        <i class="fas fa-angle-up"></i>
-    </a>
-
-    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header" style="color: #000;">
-                    <h5 class="modal-title" id="exampleModalLabel">ADVERTENCIA</h5>
-                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">×</span>
-                    </button>
-                </div>
-                <div class="modal-body" style="color: #000;">¿Esta seguro que desea salir?.</div>
-                <div class="modal-footer">
-                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancelar</button>
-                    <a class="btn btn-primary" (click)="LogoutExit()" data-dismiss="modal">Salir</a>
-                </div>
-            </div>
+<div id="contenedor" class="col-12 sticky-top p-0 m-0">
+  <!-- nav header -->
+  <nav class="navbar navbar-light bg-white shadow-sm bg-body rounded">
+    <div class="container-fluid m-0 p-0">
+      <!-- logo -->
+      <div class="d-flex align-items-center m-0 p-0 gap-3">
+        <img src="{{ logoHeader }}" class="logo-cabecera" />
+        <div class="title-header">{{ global.getGlobalVar() }}</div>
+      </div>
+      <!-- end logo -->
+      <!-- username -->
+      <div class="d-flex align-items-center gap-3">
+        <a
+          class="nav-link dropdown-toggle"
+          href="#"
+          id="userDropdown"
+          role="button"
+          data-toggle="dropdown"
+          aria-haspopup="true"
+          aria-expanded="false"
+        >
+          <span class="mr-2 d-none d-lg-inline text-gray-600 small">{{ user.NombreUsuario }}</span>
+        </a>
+        <div
+          class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
+          aria-labelledby="userDropdown"
+        >
+          <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
+            <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+            Salir
+          </a>
         </div>
+      </div>
+      <!-- end username -->
     </div>
-
-  
+  </nav>
+  <!-- end header -->
 </div>
+
+<!-- menu -->
+<div class="col-12 p-0 m-0">
+  <ul [ngClass]="navState ? 'nav-large' : 'nav-small'">
+    <a
+      type="button"
+      (click)="stateNav()"
+      class="col-12 d-flex align-items-center justify-content-center p-3"
+    >
+      <i
+        class="icon-nav"
+        [ngClass]="navState ? 'fa-solid fa-ellipsis ' : 'fa-solid fa-ellipsis-vertical'"
+      ></i>
+    </a>
+    <li *ngFor="let menu of arrayMenu; let i = index">
+      <a
+        type="button"
+        (click)="goToRoute(menu.menuUrl, i)"
+        [class.active]="selectedIndex === i"
+        [ngClass]="navState ? 'button-nav-large' : 'button-nav-small'"
+      >
+        <i class="{{ menu.menuImage }}"></i>
+        <div class="m-0 p-0" [ngClass]="navState ? 'text-visible' : 'text-hidden'">
+          {{ menu.menuName }}
+        </div>
+      </a>
+    </li>
+  </ul>
+</div>
+<!-- end menu -->
+<!-- contenedor -->
+<div class="conteiner-contenido" [ngClass]="navState ? 'container-large' : 'container-small'">
+  <router-outlet></router-outlet>
+</div>
+<!-- end contenedor -->
+
+<!-- modal -->
+<div
+  class="modal fade"
+  id="logoutModal"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header" style="color: #000">
+        <h5 class="modal-title" id="exampleModalLabel">ADVERTENCIA</h5>
+        <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">×</span>
+        </button>
+      </div>
+      <div class="modal-body" style="color: #000">¿Esta seguro que desea salir?.</div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancelar</button>
+        <a class="btn btn-primary" (click)="LogoutExit()" data-dismiss="modal">Salir</a>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- end modal -->

@@ -21,7 +21,11 @@ import { ToastaService } from 'ngx-toasta';
 import { OptionClickComponent } from './shared/components/option-click/option-click.component';
 import { DirectSupplyComponent } from './components/direct-supply/direct-supply.component';
 import { NgbModalModule } from '@ng-bootstrap/ng-bootstrap';
-
+import { DisplayOrderComponent } from './components/display-order/display-order.component';
+import { PdfViewerModule } from 'ng2-pdf-viewer';
+import { CurrentOrderComponent } from './components/current-order/current-order.component';
+import { InventoryPolicyComponent } from './components/inventory-policy/inventory-policy.component';
+import { PurchaseOrderComponent } from './components/purchase-order/purchase-order.component';
 
 @NgModule({
   declarations: [
@@ -33,7 +37,11 @@ import { NgbModalModule } from '@ng-bootstrap/ng-bootstrap';
     HeaderComponent,
     PurchasePlanningComponent,
     DirectSupplyComponent,
-    OptionClickComponent
+    OptionClickComponent,
+    DisplayOrderComponent,
+    CurrentOrderComponent,
+    InventoryPolicyComponent,
+    PurchaseOrderComponent,
   ],
   imports: [
     NgbModalModule,
@@ -45,6 +53,7 @@ import { NgbModalModule } from '@ng-bootstrap/ng-bootstrap';
     ModalModule.forRoot(),
     NgxDatatableModule,
     NgSelectModule,
+    PdfViewerModule,
     HttpClientModule,
     ToastaModule.forRoot()
   ],
@@ -52,9 +61,11 @@ import { NgbModalModule } from '@ng-bootstrap/ng-bootstrap';
     provideBrowserGlobalErrorListeners(),
     ToastaService
   ],
-  exports:[
+  exports: [
     LayoutComponent,
-    OptionClickComponent
+    OptionClickComponent,
+    InventoryPolicyComponent,
+    PurchaseOrderComponent,
   ],
   bootstrap: [App]
 })

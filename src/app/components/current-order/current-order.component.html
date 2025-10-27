@@ -1,0 +1,81 @@
+<div class="col-12 m-0 pt-3">
+  <!-- Botones cabecera -->
+  <div class="container-button">
+    <button class="button-header">
+      <i class="fa-solid fa-calculator"></i>
+      Procesar
+    </button>
+    <button class="button-header">
+      <i class="fa-solid fa-floppy-disk"></i>
+      Guardar
+    </button>
+    <button class="button-header">
+      <i class="fa-solid fa-file-export"></i>
+      Exportar
+    </button>
+    <button class="button-header">
+      <i class="fa-solid fa-eye"></i>
+      Ver Prod. Agotados
+    </button>
+  </div>
+  <!-- End botones cabecera -->
+  <hr size="10px" width="100%" color="134B97" />
+
+  <!-- Fechas de Orden de compra -->
+  <div class="col-12 m-0 p-0">
+    <div class="col-12 m-0 p-0 subtitle">Fechas de orden de compra</div>
+    <div class="col-12 m-0 p-0 pt-3 d-flex align-items-baseline gap-3">
+      <div class="row m-0 p-0">
+        <label for="desde" class="label-text">Desde:</label>
+        <input type="date" placeholder="desde" />
+      </div>
+      <div class="row m-0 p-0">
+        <label for="hasta" class="label-text">Hasta:</label>
+        <input type="date" placeholder="hasta" />
+      </div>
+    </div>
+  </div>
+  <!-- End Fechas de Orden compra -->
+  <hr size="10px" width="100%" color="134B97" />
+
+  <div class="col-12-m-0 p-0">
+    <div class="col-12 m-0 p-0 pb-3 subtitle">Opciones de filtro</div>
+    <div class="col-12 d-flex align-items-baseline justify-content-start gap-5">
+      <div class="m-0 p-0">
+        <div>
+          <label class="label-text" for="proveedor">Seleccionar Motivo</label>
+        </div>
+        <select class="input-select" id="motivo">
+          <option value="0" disabled>--Seleccione--</option>
+        </select>
+      </div>
+
+      <div class="m-0 p-0 d-flex align-items-baseline gap-3">
+        <div class="row m-0 p-0">
+          <label for="desde" class="label-text">Nueva fecha de entrega:</label>
+          <input type="date" placeholder="entrega" />
+        </div>
+      </div>
+    </div>
+
+    <div class="col-12 d-flex align-items-baseline justify-content-start gap-5">
+      <div class="m-0 p-0">
+        <div>
+          <label class="label-text" for="proveedor">Estado Producto</label>
+        </div>
+        <select class="input-select" id="estadoproducto">
+          <option value="0" disabled>--Seleccione--</option>
+        </select>
+      </div>
+
+      <div class="m-0 p-0 d-flex align-items-baseline gap-3">
+        <div class="row m-0 p-0">
+          <label for="desde" class="label-text">Nueva fecha de ingreso:</label>
+          <input type="date" placeholder="ingreso" />
+        </div>
+      </div>
+    </div>
+
+
+  </div>
+</div>

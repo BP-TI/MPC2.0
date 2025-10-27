@@ -1,0 +1,157 @@
+<div class="m-0 p-0">
+  <!-- botones  -->
+  <div class="col-md-12 d-flex align-items-baseline justify-content-between">
+    <div class="m-0 p-0">
+      <img src="{{ logoHeader }}" class="logo-cabecera" />
+    </div>
+    <div class="d-flex align-items-baseline gap-2">
+      <button class="button-style-sky-blue">
+        <i class="fa-solid fa-calendar-days"></i>
+        Cronograma recepción
+      </button>
+      <button class="button-style">Guardar</button>
+      <button class="button-style">Enviar</button>
+    </div>
+  </div>
+  <!-- end botones -->
+  <hr size="10px" width="100%" color="134B97" />
+
+  <!-- datos -->
+  <div class="d-flex justify-content-between">
+    <div class="col m-0 p-0">
+      <p class="company-data">Oficina Principal</p>
+      <p class="company-data">JR. Baltazar Grados Nº 810 - SIM - LIMA</p>
+      <p class="company-data">Teléfono principal: 206 - 7000 Anexo: 108 RUC: 20515346113</p>
+    </div>
+    <div class="col d-flex align-items-baseline">
+      <div class="row">
+        <label for="fechacreacion">Fecha Creación</label>
+        <input type="date" />
+      </div>
+      <div class="row">
+        <label for="ordecompra">Orden Compra</label>
+        <div class="m-0 p-0">
+          <input type="text" placeholder="Número de Orden" />
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- end datos -->
+  <hr size="10px" width="100%" color="134B97" />
+
+  <!-- formulario -->
+  <div class="col-12 d-flex align-items-baseline">
+    <div class="col-4 m-0 p-0">
+      <div class="row">
+        <label for="proveedor">Proveedor:</label>
+        <input type="text" placeholder="Porveedor" />
+      </div>
+      <div class="row">
+        <label for="ruc">Ruc</label>
+        <input type="text" placeholder="Ruc" />
+      </div>
+    </div>
+    <div class="col-4 m-0 p-0">
+      <div class="row">
+        <label for="factura">Factura a:</label>
+        <input type="text" placeholder="factura" />
+      </div>
+      <div class="row">
+        <label for="direccionentrega">Dirección de entrega:</label>
+        <input type="text" placeholder="Dirección" />
+      </div>
+    </div>
+    <div class="col m-0 p-0 d-flex align-items-baseline">
+      <div class="row">
+        <label for="fechacreacion">Fecha de creación:</label>
+        <input type="date" />
+      </div>
+      <div class="row">
+        <label for="condicionpago">Condicción de pago:</label>
+        <select class="input-select" id="condicionpago">
+          <option value="0" disabled>--Seleccione--</option>
+        </select>
+      </div>
+    </div>
+  </div>
+  <hr size="10px" width="100%" color="134B97" />
+  <!-- end formulario -->
+
+  <!-- tabla -->
+  <div id="container-table" class="m-0 p-0 table-scroll col-12">
+    <table id="tablaAnalisiCompra" class="table-style table-fixed">
+      <thead>
+        <tr>
+          <th>Index</th>
+          <th draggable="true" class="sticky-col second-col">First Name</th>
+          <th draggable="true">Last Name</th>
+          <th draggable="true">Age</th>
+          <th draggable="true">Enrolled Cours0</th>
+          <th draggable="true">Enrolled Course1</th>
+          <th draggable="true">Enrolled Course2</th>
+          <th draggable="true">Enrolled Course3</th>
+          <th draggable="true">Enrolled Course4</th>
+          <th draggable="true">Enrolled Course5</th>
+          <th draggable="true">Enrolled Course6</th>
+          <th draggable="true">Enrolled Course7</th>
+          <th draggable="true">Enrolled Course8</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <th>1</th>
+          <td class="sticky-col second-col">Raj</td>
+          <td>Shukla</td>
+          <td>23</td>
+          <td>Advanced Java</td>
+          <td>Advanced Java</td>
+          <td>Advanced Java</td>
+          <td>Advanced Java</td>
+          <td>Advanced Java</td>
+          <td>Advanced Java</td>
+          <td>Advanced Java</td>
+          <td>Advanced Java</td>
+          <td>Advanced Java</td>
+        </tr>
+        <tr>
+          <th>2</th>
+          <td class="sticky-col second-col">Rahul</td>
+          <td>Mishra</td>
+          <td>23</td>
+          <td>DSA In JAVA</td>
+          <td>DSA In JAVA</td>
+          <td>DSA In JAVA</td>
+          <td>DSA In JAVA</td>
+          <td>DSA In JAVA</td>
+          <td>DSA In JAVA</td>
+          <td>DSA In JAVA</td>
+          <td>DSA In JAVA</td>
+          <td>DSA In JAVA</td>
+        </tr>
+        <tr>
+          <th>3</th>
+          <td class="sticky-col second-col">Prahant</td>
+          <td>Shuka</td>
+          <td>19</td>
+          <td>Web Development</td>
+          <td>Web Development</td>
+          <td>Web Development</td>
+          <td>Web Development</td>
+          <td>Web Development</td>
+          <td>Web Development</td>
+          <td>Web Development</td>
+          <td>Web Development</td>
+          <td>Web Development</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <!-- end tabla -->
+
+  <div class="col-12 d-flex align-items-baseline justify-content-end gap-3 mt-3 mb-3">
+    <p class="text-total-value">Total Parcial: 48,1234</p>
+    <p class="text-total-value">Total IGV (18%): 8,6897</p>
+    <p class="text-total-value">Total Pagar: 40,783</p>
+  </div>
+
+</div>

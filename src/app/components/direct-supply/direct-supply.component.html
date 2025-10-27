@@ -1,149 +1,154 @@
-  <div class="page-content">
-    <div class="form-row align-items-end">      
-      <div class="form-group col-md-12">
-        <h4 class="p-0">{{titulo}}</h4>
-      </div>
-      
-      <div class="form-group col-md-12">
-        <div class="row">
-          <div class="col-2">
-            <label for="proveedor">Proveedores</label>
-            <select class="form-control select-tipo-documento" id="proveedor" [(ngModel)]="proveedor" (change)="onChangeProveedor()">
-              <option value="0" disabled>--Seleccione--</option>
-              <option *ngFor="let item of proveedores" [ngValue]="item.codigoProveedor">{{item.descripcion}}</option>
-            </select>
-          </div>          
-          <div class="col-1">
-            <form [formGroup]="opcionesForm">
-              <label>Opciones</label>
-              <div class="form-check">
-                <input
-                  class="form-check-input"
-                  type="checkbox"
-                  id="checkTodos"
-                  formControlName="todos"
-                  (change)="onCheckChange('todos')">
-                <label class="form-check-label" for="checkTodos">Todos</label>
-                <br />
-                <input
-                  class="form-check-input"
-                  type="checkbox"
-                  id="checkUnico"
-                  formControlName="unico"
-                  (change)="onCheckChange('unico')">
-                <label class="form-check-label" for="checkUnico">Único</label>
-              </div>
-            </form>
-          </div>
-          
-          <div class="col-3">
-            <label for="laboratiorios">Laboratorios</label>
-            <div ngbDropdown class="fondoSelect">
-              <div ngbDropdownMenu class="dropdown-scroll p-2">
-                <div *ngFor="let item of laboratorios" class="form-check">
-                  <input
-                    class="form-check-input"
-                    type="checkbox"
-                    [(ngModel)]="item.selected"
-                    id="{{ item.codigoLab }}"
-                  />
-                  <label class="form-check-label" [for]="item.descripcion">
-                    {{ item.descripcion }}
-                  </label>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="col-3">
-            <label for="Boticas">Boticas</label>
-            <div ngbDropdown class="fondoSelect">
-              <div ngbDropdownMenu class="dropdown-scroll p-2">
-                <div *ngFor="let item of laboratorios" class="form-check">
-                  <input
-                    class="form-check-input"
-                    type="checkbox"
-                    [(ngModel)]="item.selected"
-                    id="{{ item.codigoLab }}"
-                  />
-                  <label class="form-check-label" [for]="item.descripcion">
-                    {{ item.descripcion }}
-                  </label>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="col-2">
-            <label for="laboratiorios">Opciones</label>
-            <div class="p-1">
-              <button type="button" class="button-general"  (click)="onSearch() ">
-                <i class="fa fa-search"></i>Buscar OC
-              </button>
-            </div>
-            <div class="p-1">
-              <button type="button" class="button-general p-1" (click)="Limpiar()">
-                Importar Excel
-              </button>
-            </div>
-            <div class="p-1">
-              <button type="button" class="button-general p-1" (click)="Limpiar()">
-                Limpiar
-              </button>
-            </div>    
-          </div>      
+<div class="page-content">
+  <div class="form-row align-items-end">
+
+    <div class="form-group col-md-12">
+      <div class="row">
+        <div class="col-2">
+          <label for="proveedor">Proveedores</label>
+          <select
+            class="form-control select-tipo-documento"
+            id="proveedor"
+            [(ngModel)]="proveedor"
+            (change)="onChangeProveedor()"
+          >
+            <option value="0" disabled>--Seleccione--</option>
+            <option *ngFor="let item of proveedores" [ngValue]="item.codigoProveedor">
+              {{ item.descripcion }}
+            </option>
+          </select>
         </div>
-      </div>
-      
-      <div class="form-group col-md-12">
-        <div class="row">
-          <div class="col-2">
-            <button type="button" class="button-generals"  (click)="CalcularCompra() ">
-              <!--<i class="fa fa-search"></i>Buscar OC-->Calcular Compra
+        <div class="col-1">
+          <form [formGroup]="opcionesForm">
+            <label>Opciones</label>
+            <div class="form-check">
+              <input
+                class="form-check-input"
+                type="checkbox"
+                id="checkTodos"
+                formControlName="todos"
+                (change)="onCheckChange('todos')"
+              />
+              <label class="form-check-label" for="checkTodos">Todos</label>
+              <br />
+              <input
+                class="form-check-input"
+                type="checkbox"
+                id="checkUnico"
+                formControlName="unico"
+                (change)="onCheckChange('unico')"
+              />
+              <label class="form-check-label" for="checkUnico">Único</label>
+            </div>
+          </form>
+        </div>
+
+        <div class="col-3">
+          <label for="laboratiorios">Laboratorios</label>
+          <div ngbDropdown class="fondoSelect">
+            <div ngbDropdownMenu class="dropdown-scroll p-2">
+              <div *ngFor="let item of laboratorios" class="form-check">
+                <input
+                  class="form-check-input"
+                  type="checkbox"
+                  [(ngModel)]="item.selected"
+                  id="{{ item.codigoLab }}"
+                />
+                {{ item.descripcion }}
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-3">
+          <label for="Boticas">Boticas</label>
+          <div ngbDropdown class="fondoSelect">
+            <div ngbDropdownMenu class="dropdown-scroll p-2">
+              <div *ngFor="let item of laboratorios" class="form-check">
+                <input
+                  class="form-check-input"
+                  type="checkbox"
+                  [(ngModel)]="item.selected"
+                  id="{{ item.codigoLab }}"
+                />
+                <label class="form-check-label" [for]="item.descripcion">
+                  {{ item.descripcion }}
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-2">
+          <label for="laboratiorios">Opciones</label>
+          <div class="p-1">
+            <button type="button" class="button-general" (click)="onSearch()">
+              <i class="fa fa-search"></i>Buscar OC
             </button>
           </div>
-          <div class="col-2">
-            <button type="button" class="button-generals"  (click)="onSearch() ">Generar OC</button>
+          <div class="p-1">
+            <button type="button" class="button-general p-1" (click)="Limpiar()">
+              Importar Excel
+            </button>
           </div>
-          <div class="col-2">
-            <button type="button" class="button-generals"  (click)="onSearch() ">Ver OC</button>
+          <div class="p-1">
+            <button type="button" class="button-general p-1" (click)="Limpiar()">Limpiar</button>
           </div>
-          <div class="col-2">
-            <button type="button" class="button-generals"  (click)="onSearch() ">Compra Vs Venta</button>
-          </div>
-          <div class="col-2">
-            <button type="button" class="button-generals"  (click)="onSearch() ">Infrastock</button>
-          </div>
-          <div class="col-2">
-            <button type="button" class="button-generals"  (click)="onSearch() ">Nivel Servicio Proveedor</button>
-          </div>
-        </div>        
-      </div>
-    </div>
-
-    <div class="box-white">
-      <div class="grid-control-custom">
-        <div class="table-container scroll-x">
-          <ngx-datatable
-            #tableListMotivo
-            [ngClass]="tableClass2"
-            class="material colored-header table-main"
-            [rows]="rows"
-            [columns]="columns"
-            [columnMode]="'standard'"
-            [scrollbarV]="true"
-            [scrollbarH]="true"
-            [style.width.px]="2800"
-            [headerHeight]="50"
-            [footerHeight]="0"
-            [style.height.px]="340"
-            [rowHeight]="20"
-            [limit]="10"
-            [loadingIndicator]="loadingIndicator"
-            [messages]="{ totalMessage: '', emptyMessage: '' }">
-          </ngx-datatable>
         </div>
       </div>
     </div>
 
-    
+    <div class="form-group col-md-12">
+      <div class="row">
+        <div class="col-2">
+          <button type="button" class="button-generals" (click)="CalcularCompra()">
+            <!--<i class="fa fa-search"></i>Buscar OC-->Calcular Compra
+          </button>
+        </div>
+        <div class="col-2">
+          <button type="button" class="button-generals" (click)="onSearch()">Generar OC</button>
+        </div>
+        <div class="col-2">
+          <button type="button" class="button-generals" (click)="onSearch()">Ver OC</button>
+        </div>
+        <div class="col-2">
+          <button type="button" class="button-generals" (click)="onSearch()">
+            Compra Vs Venta
+          </button>
+        </div>
+        <div class="col-2">
+          <button type="button" class="button-generals" (click)="onSearch()">Infrastock</button>
+        </div>
+        <div class="col-2">
+          <button type="button" class="button-generals" (click)="onSearch()">
+            Nivel Servicio Proveedor
+          </button>
+        </div>
+      </div>
+    </div>
   </div>
+
+  <div class="box-white">
+    <div class="grid-control-custom">
+      <div class="table-container scroll-x">
+        <ngx-datatable
+          #tableListMotivo
+          [ngClass]="tableClass2"
+          class="material colored-header table-main"
+          [rows]="rows"
+          [columns]="columns"
+          [columnMode]="'standard'"
+          [scrollbarV]="true"
+          [scrollbarH]="true"
+          [style.width.px]="2800"
+          [headerHeight]="50"
+          [footerHeight]="0"
+          [style.height.px]="340"
+          [rowHeight]="20"
+          [limit]="10"
+          [loadingIndicator]="loadingIndicator"
+          [messages]="{ totalMessage: '', emptyMessage: '' }"
+        >
+        </ngx-datatable>
+      </div>
+    </div>
+  </div>
+</div>
 <loading *ngIf="loading"></loading>
