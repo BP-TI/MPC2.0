@@ -1,5 +1,5 @@
 <div class="m-0 p-0 d-flex justify-content-center">
-  <table class="table-style">
+  <table class="table-style" id="politicasinventario">
     <thead>
       <tr>
         <th>Tipo</th>
@@ -9,23 +9,11 @@
       </tr>
     </thead>
     <tbody>
-      <tr>
-        <td>Volumen</td>
-        <td>14</td>
-        <td>15</td>
-        <td>29</td>
-      </tr>
-      <tr>
-        <td>Propios</td>
-        <td>10</td>
-        <td>10</td>
-        <td>20</td>
-      </tr>
-      <tr>
-        <td>Preferidos</td>
-        <td>15</td>
-        <td>15</td>
-        <td>30</td>
+      <tr *ngFor="let data of rowsLb">
+        <td>{{ data.ABC }}</td>
+        <td>{{ data.puntoVenta }}</td>
+        <td>{{ data.MaxAlmacen }}</td>
+        <td>{{ data.Total }}</td>
       </tr>
     </tbody>
   </table>

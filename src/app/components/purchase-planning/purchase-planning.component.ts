@@ -2,7 +2,7 @@ import { Component, EventEmitter, OnInit, Output, TemplateRef, ViewChild, ViewEn
 import { AppConstants } from '../../shared/constants/app.constants';
 import { ReporteProductosCompra } from '../../models/ordenCompra';
 import { Laboratorios, Proveedores } from '../../models/parametros';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { PurchasePlanningService } from '../../services/PurchasePlanning/purchasePlanning.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { OrdenCompraService } from '../../services/PurchasePlanning/ordenCompra.service';
@@ -21,8 +21,6 @@ export class PurchasePlanningComponent implements OnInit {
 
   @ViewChild('verSustitutosModal') verSustitutosModal: any;
 
-
-
   sustitutos = [
     { codpro: 'P001', despro: 'Paracetamol 500mg', prisal: 1.2, stk_alm: 50, stk_alm_m: 10, codlab: 'LAB01', ubipro: 'A1', codgen: 'GEN01', moncod: 'PEN', stkfra: 5, codlam: 'L001', dtoprox: '10%', categvta: 'A' },
     { codpro: 'P002', despro: 'Ibuprofeno 400mg', prisal: 2.5, stk_alm: 40, stk_alm_m: 15, codlab: 'LAB02', ubipro: 'B2', codgen: 'GEN02', moncod: 'PEN', stkfra: 8, codlam: 'L002', dtoprox: '5%', categvta: 'B' },
@@ -37,7 +35,6 @@ export class PurchasePlanningComponent implements OnInit {
   agencyName: string = sessionStorage.getItem(AppConstants.Session.AGENCYNAME) ?? "";
   usersessionId: string = sessionStorage.getItem(AppConstants.Session.USERID) ?? "";
   channelName: string = sessionStorage.getItem(AppConstants.Session.SALES_CHANNEL_DESCRIPTION) ?? "";
-
   titulo = "Planificacion de Orden de Compra";
   tableClass: string = "table-company-0";
   tableClass2: string = "table-company-4";//table-company-default
@@ -79,14 +76,13 @@ export class PurchasePlanningComponent implements OnInit {
     this.cargarProveedores();
     this.cargarPoliticas();
     this.createColumsTableTC();
-    this.createColumsTableLB();
     this.crearGrupoChecks();
     this.global.setGlobalVar('Módulo planificación de compra');
   }
 
   crearGrupoChecks() {
     this.opcionesForm = this.fb.group({
-      todos: [false],
+      todos: new FormControl({value: false, disabled: true}) ,
       unico: [false]
     });
   }
@@ -184,29 +180,6 @@ export class PurchasePlanningComponent implements OnInit {
     return offset;
   }
 
-  private createColumsTableLB(): void {
-    const columnDefinitions = [
-      { prop: "ABC", name: "Tipo", width: 120 },
-      { prop: "puntoVenta", name: "Punto Venta", width: 40 },
-      { prop: "MaxAlmacen", name: "Maximo Almacén", width: 40 },
-      { prop: "Total", name: "Total", width: 40 }
-    ];
-
-    this.columnasLb = columnDefinitions.map((col) => ({
-      ...col,
-      draggable: false,
-      resizeable: true,
-      cellClass: (row: any) => {
-        switch (col.prop) {
-          case 'ABC':
-            return 'text-left bold-text';
-          default:
-            return 'text-center';
-        }
-      }
-    }));
-  }
-
   onSearch() {
 
   }
@@ -237,10 +210,15 @@ export class PurchasePlanningComponent implements OnInit {
     this.loading = true;
     this.rows = [];
     this.laboratorios = [];
+
+
     this.purchaseService.getLaboratorios(this.proveedor).subscribe(
       (response) => {
         this.loading = false;
         this.laboratorios = response;
+        if (this.laboratorios.length > 0) {
+          this.opcionesForm.get('todos')?.enable();
+        }
       },
       (error: HttpErrorResponse) => {
         this.loading = false;
@@ -360,8 +338,5 @@ export class PurchasePlanningComponent implements OnInit {
     }
   }
 
-  seleccionarLaboratorio(idLaboratorio: number){
-
-  }
 
 }

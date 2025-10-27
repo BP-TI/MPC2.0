@@ -39,10 +39,9 @@ i {
 
 .input-select {
   box-sizing: border-box;
-  min-width: 250px;
-  max-width: auto;
+  width: 200px;
   width: auto;
-  height: 49px;
+  height: 35px;
 
   background: #FFFFFF;
   border: 1px solid rgba(175, 167, 167, 0.7);
@@ -53,9 +52,11 @@ i {
   align-self: stretch;
   flex-grow: 0;
   color: #7A7A7A;
-  padding: 10px;
-  font-size: 14px;
+  padding: 8px;
+  font-size: 12px;
 }
+
+
 
 .container-button {
   display: flex;
@@ -132,6 +133,7 @@ i {
   overflow-x: auto;
   overflow-y: hidden;
   max-height: 320px;
+  width: 100%;
   border: #DCEBFF solid;
 }
 
@@ -141,11 +143,11 @@ i {
 
 .table-style th,
 td {
-  width: 135px;
-  height: 48px;
+  /* width: 50px; */
+  height: 40px;
   font-family: 'Montserrat';
   font-style: normal;
-  line-height: 22px;
+  /* line-height: 22px; */
 }
 
 .table-style th {
@@ -178,7 +180,7 @@ td {
 .table-fixed th,
 .table-fixed td {
   text-align: left;
-  padding: 8px;
+  padding: 4px;
 }
 
 
@@ -207,7 +209,7 @@ th:nth-child(3) {
 .table-fixed td:nth-child(2) {
   position: sticky;
   left: 60px;
-  min-width: 120px;
+  min-width: 100px;
   z-index: 4;
   background: #B0E0E6;
 }
@@ -215,18 +217,18 @@ th:nth-child(3) {
 .table-fixed th:nth-child(3),
 .table-fixed td:nth-child(3) {
   position: sticky;
-  left: 180px;
-  min-width: 180px;
+  left: 160px;
+  min-width: 150px;
   z-index: 4;
   background: #B0E0E6;
 }
 
-/* En estilos de la tabla */
+/* End estilos de la tabla */
 .title-modal {
   font-family: 'Montserrat';
   font-style: normal;
   font-weight: 700;
-  font-size: 20px;
+  font-size: 16px;
   line-height: 20px;
   padding: 0px;
 }
@@ -318,11 +320,32 @@ hr {
   font-family: 'Neo Sans Std';
   font-style: normal;
 
-
   display: flex;
   align-items: center;
   letter-spacing: 1.25px;
 
   color: white;
 
+}
+
+.fondoSelect {
+  background-color: #fff;
+  color: #6e707e;
+  background-clip: padding-box;
+  border: 1px solid #d1d3e2;
+  border-radius: 0.35rem;
+}
+
+.label-check-lab {
+  font-size: 12px;
+}
+
+.dropdown-scroll {
+  max-height: 150px !important;
+  min-height: 150px !important;
+  overflow-y: auto !important;
+  overflow-x: hidden;
+  min-width: 250px;
+  display: block !important;
+  position: static !important;
 }
