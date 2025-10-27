@@ -1,5 +1,6 @@
 .opacity-exito {
   background: url('../../../../../public/assets/images/bg-opacity.png') 0px 0px repeat;
+  /* background: url('../../../../../public/assets/images/bg-opacity.png') 0px 0px repeat; */
   position: fixed;
   top: 0px;
   left: 0px;
@@ -10,6 +11,7 @@
 
   .opacity-exito .loading {
     background: url(../../../../../public/assets/gif/loading.gif) center center no-repeat #000;
+    /* background: url(../../../../../public/assets/gif/loading.gif) center center no-repeat #000; */
     width: 25px;
     height: 25px;
     border-radius: 25px;

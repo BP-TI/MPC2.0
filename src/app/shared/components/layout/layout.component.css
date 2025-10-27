@@ -1,33 +1,8 @@
-/*
-app-layout {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 80px; 
-  z-index: 1000;
+#contenedor{
+  font-family: 'Montserrat';
 }
 
-
-.page {
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-}
-
-
-.page-content {
-  flex: 0;
-  margin-top: 1%; 
-  padding-left: 10%; 
-  overflow: auto; 
-}
-
-
-.wrap-view {
-  padding: 10px; 
-}*/
-.custom-material .form-control:focus + label {
+.custom-material .form-control:focus+label {
   color: #8C4799;
 }
 
@@ -51,7 +26,130 @@ app-layout {
 .datatable-header-cell:first-child:before {
   display: none;
 }
-.logo-tamanio{
+
+.logo-tamanio {
   padding: 0rem;
   width: 300px;
+}
+
+.menu-fixed {
+  overflow: hidden;
+}
+
+.title-header {
+  font-family: 'Montserrat';
+  font-style: normal;
+  font-weight: auto;
+  font-size: 20px;
+  line-height: 16px;
+  display: flex;
+  align-items: flex-end;
+  letter-spacing: 1.25px;
+  color: #474747;
+}
+
+.button-nav-small {
+  padding: 15px;
+}
+
+.button-nav-large {
+  padding: auto;
+  display: flex;
+  gap: 2px;
+  align-content: baseline;
+}
+
+/* ----- */
+
+.nav-small {
+  width: var(--nav-small);
+  transition: width 0.5s;
+}
+
+.nav-large {
+  width: var(--nav-large);
+  transition: width 0.5s;
+}
+
+.container-small {
+  margin-left: var(--nav-small);
+  transition: margin 0.5s;
+}
+
+.container-large {
+  margin-left: var(--nav-large);
+  transition: margin 0.5s;
+}
+
+.text-hidden {
+  visibility: hidden;
+  display: none;
+}
+
+.text-visible {
+  visibility: visible;
+}
+
+ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  /* width: 160px; */
+  background-color: #134B97;
+  position: fixed;
+  height: 100%;
+  overflow: auto;
+}
+
+li a {
+  display: block;
+  padding: 8px 16px;
+  text-decoration: none;
+  font-size: 12px;
+  color: white !important;
+}
+
+
+ul li a.active {
+  margin: 5px;
+  background-color: white;
+  color: black !important;
+  border-radius: 6px;
+  font-weight: bold;
+  display: flex;
+  align-items: baseline;
+  gap: 2px;
+}
+
+ul li a.active i {
+  color: #D12027;
+}
+
+ul li a:hover:not(.active) {
+  background-color: rgb(0, 97, 228);
+}
+
+.conteiner-contenido {
+  padding: 1px 16px;
+  height: 80vh;
+}
+
+.logo-cabecera {
+  width: 150px;
+  margin: 0%;
+  padding: 0%;
+}
+
+li:focus a {
+  background: red !important;
+}
+
+.icon-nav {
+  color: white;
+}
+
+
+:root {
+  --nav-large: 200px;
+  --nav-small: 50px;
 }

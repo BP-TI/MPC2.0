@@ -6,6 +6,7 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { PurchasePlanningService } from '../../services/PurchasePlanning/purchasePlanning.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { OrdenCompraService } from '../../services/PurchasePlanning/ordenCompra.service';
+import { GlobalService } from '../../shared/services/global.service';
 
 @Component({
   selector: 'app-direct-supply',
@@ -49,7 +50,12 @@ export class DirectSupplyComponent implements OnInit {
 
    constructor(private fb: FormBuilder,
               private purchaseService: PurchasePlanningService,
-              private ordenCompraService: OrdenCompraService,) { }
+              private ordenCompraService: OrdenCompraService,
+            public global: GlobalService,
+          ) { 
+
+                this.global.setGlobalVar('Módulo abastecimiento directo');
+              }
 
   
   ngOnInit() {
