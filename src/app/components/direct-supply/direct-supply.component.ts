@@ -3,7 +3,7 @@ import { AppConstants } from '../../shared/constants/app.constants';
 import { ReporteProductosCompra } from '../../models/ordenCompra';
 import { Laboratorios, Proveedores } from '../../models/parametros';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { PurchasePlanningService } from '../../services/PurchasePlanning/purchasePlanning.service';
+import { DirectSupplyService } from '../../services/DirectSupply/directSupply.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { OrdenCompraService } from '../../services/PurchasePlanning/ordenCompra.service';
 import { OptionClickComponent } from '../../shared/components/option-click/option-click.component';
@@ -69,7 +69,7 @@ export class DirectSupplyComponent implements OnInit {
 
 
   constructor(private fb: FormBuilder,
-    private purchaseService: PurchasePlanningService,
+    private supplyService: DirectSupplyService,
     private ordenCompraService: OrdenCompraService,
     private modalService: NgbModal,
     public global: GlobalService) { }
@@ -77,11 +77,10 @@ export class DirectSupplyComponent implements OnInit {
 
   ngOnInit() {
     this.cargarProveedores();
-    this.cargarPoliticas();
     this.createColumsTableTC();
     this.createColumsTableLB();
     this.crearGrupoChecks();
-    this.global.setGlobalVar('Módulo planificación de compra');
+    this.global.setGlobalVar('Módulo Abastecimiento Directo');
   }
 
   crearGrupoChecks() {
@@ -95,7 +94,7 @@ export class DirectSupplyComponent implements OnInit {
 
   cargarProveedores() {
     this.loading = true;
-    this.purchaseService.getProveedores().subscribe(
+    this.supplyService.getProveedores().subscribe(
       (response) => {
         this.loading = false;
         this.proveedores = response;
@@ -106,18 +105,6 @@ export class DirectSupplyComponent implements OnInit {
     );
   }
 
-  cargarPoliticas() {
-    this.loading = true;
-    this.purchaseService.getPoliticas().subscribe(
-      (response) => {
-        this.loading = false;
-        this.rowsLb = response;
-      },
-      (error: HttpErrorResponse) => {
-        this.loading = false;
-      }
-    );
-  }
 
   private createColumsTableTC(): void {
     const columnDefinitions = [
@@ -237,7 +224,7 @@ export class DirectSupplyComponent implements OnInit {
     this.loading = true;
     this.rows = [];
     this.laboratorios = [];
-    this.purchaseService.getLaboratorios(this.proveedor).subscribe(
+    this.supplyService.getLaboratorios(this.proveedor).subscribe(
       (response) => {
         this.loading = false;
         this.laboratorios = response;

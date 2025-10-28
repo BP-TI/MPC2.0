@@ -61,52 +61,84 @@
       </div>
       <!-- end proveedor -->
       <!-- laboratorio -->
-      <div class="m-0 p-0">
-        <div class="form-check m-0 p-0">
-          <input class="form-check-input" type="checkbox" />
-          <label class="label-text" for="laboratorio">Laboratorios</label>
+       <div class="m-0 p-0">
+        <div class="">
+          <form [formGroup]="opcionesForm">
+            <div class="form-check">
+              <input
+                class="form-check-input"
+                type="checkbox"
+                id="checkTodos"
+                formControlName="todos"
+                (change)="onCheckChange('todos')"
+              />
+              <label class="label-text" for="checkTodos">Todos los Laboratorios</label>
+              <br />
+            </div>
+          </form>
         </div>
-        <select class="input-select" id="laboratorios">
-          <option value="0" disabled>--Seleccione--</option>
-          <option
-            class="laboratorio-seleccionado"
-            *ngFor="let item of laboratorios"
-            [ngValue]="item.codigoLab"
-          >
-            {{ item.descripcion }}
-          </option>
-        </select>
+
+        <div ngbDropdown class="fondoSelect">
+          <div ngbDropdownMenu class="dropdown-scroll p-2">
+            <div *ngFor="let item of laboratorios" class="form-check label-check-lab">
+              <input
+                class="form-check-input"
+                type="checkbox"
+                [(ngModel)]="item.selected"
+                id="{{ item.codigoLab }}"
+              />
+              {{ item.descripcion }}
+            </div>
+          </div>
+        </div>
       </div>
       <!-- end laboratorio -->
       <!-- boticas -->
-          <div class="m-0 p-0">
-        <div class="form-check m-0 p-0">
-          <input class="form-check-input" type="checkbox" />
-          <label class="label-text" for="laboratorio">Boticas</label>
+       <div class="m-0 p-0">
+        <div class="">
+          <form [formGroup]="opcionesForm">
+            <div class="form-check">
+              <input
+                class="form-check-input"
+                type="checkbox"
+                id="checkTodos"
+                formControlName="todos"
+                (change)="onCheckChange('todos')"
+              />
+              <label class="label-text" for="checkTodos">Todos las boticas</label>
+              <br />
+            </div>
+          </form>
         </div>
-        <select class="input-select" id="laboratorios">
-          <option value="0" disabled>--Seleccione--</option>
-          <option
-            class="laboratorio-seleccionado"
-            *ngFor="let item of laboratorios"
-            [ngValue]="item.codigoLab"
-          >
-            {{ item.descripcion }}
-          </option>
-        </select>
+
+        <div ngbDropdown class="fondoSelect">
+          <div ngbDropdownMenu class="dropdown-scroll p-2">
+            <div *ngFor="let item of laboratorios" class="form-check label-check-lab">
+              <input
+                class="form-check-input"
+                type="checkbox"
+                [(ngModel)]="item.selected"
+                id="{{ item.codigoLab }}"
+              />
+              {{ item.descripcion }}
+            </div>
+          </div>
+        </div>
       </div>
       <!-- end boticas -->
     </div>
   </div>
-  <hr size="10px" width="100%" color="134B97" />
+  
+
+  
 
   <!-- tablas -->
-  <div class="col-12 d-flex align-items-baseline gap-4 m-0 p-0">
+  <div class="col-12 m-0 p-0 mt-2 d-flex align-items-baseline gap-4">
     <!-- tabla ultimas compras -->
-    <div class="col-md-7 m-0 p-0">
+    <div class="col-md-6 m-0 p-0">
       <div class="subtitle mb-3">Últimas Compras</div>
       <!-- Tabla -->
-      <div class="m-0 p-0 table-scroll">
+      <div class="m-0 p-0 table-scroll" >
         <table class="table-style">
           <thead>
             <tr>
@@ -174,7 +206,7 @@
     <!-- End tabla -->
 
     <!-- Tabla Últimos ingresos -->
-    <div class="col-md-5 m-0 p-0">
+    <div class="col-md-6 m-0 p-0">
       <div class="subtitle mb-3">Últimas ingresos</div>
       <!-- Tabla -->
       <div class="m-0 p-0 table-scroll">
@@ -253,9 +285,9 @@
   <hr size="10px" width="100%" color="134B97" />
 
   <!-- tabla Analisis compras -->
-  <div class="col-12 m-0 p-0">
+  <div class="col-12 m-0 p-0 mt-2">
     <div class="d-flex align-items-baseline justify-content-between m-0 p-0">
-      <div class="subtitle mb-3">Análisis Compras</div>
+      <div class="subtitle mb-3">Análisis de Compras</div>
 
       <!-- Filtro de la tabla de A.Compra -->
       <a
@@ -310,7 +342,7 @@
       <!-- End Filtro de la tabla de A.Compra -->
     </div>
     <!-- Tabla Analisis compras -->
-    <div id="container-table" class="m-0 p-0 table-scroll col-12">
+    <div id="container-table" class="m-0 p-0 table-scroll col-12" (contextmenu)="openContextMenu($event,1)">
       <table id="tablaAnalisiCompra" class="table-style table-fixed">
         <thead>
           <tr>
@@ -479,3 +511,4 @@
 </div>
 
 <!-- end modal -->
+<app-option-click (action)="handleMenuAction($event)"></app-option-click>
