@@ -4,3 +4,11 @@ export class ReporteProductosCompra {
     stock:string;
     precio:number;
 }
+
+export interface IUltimasComprasReq {
+    codProveedor:string;    
+    codLab:string;    
+    codProducto:string;    
+    usuarioLogin:string;    
+    codUsuario:Number;    
+}
