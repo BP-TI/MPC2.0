@@ -2,12 +2,13 @@ import { Component, EventEmitter, OnInit, Output, TemplateRef, ViewChild, ViewEn
 import { AppConstants } from '../../shared/constants/app.constants';
 import { ReporteProductosCompra } from '../../models/ordenCompra';
 import { Laboratorios, Proveedores } from '../../models/parametros';
+import { IUltimasComprasReq } from '../../models/ordenCompra';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { PurchasePlanningService } from '../../services/PurchasePlanning/purchasePlanning.service';
-import { HttpErrorResponse } from '@angular/common/http';
+import { HttpErrorResponse, JsonpClientBackend } from '@angular/common/http';
+import { GlobalService } from '../../shared/services/global.service';
 import { OrdenCompraService } from '../../services/PurchasePlanning/ordenCompra.service';
 import { OptionClickComponent } from '../../shared/components/option-click/option-click.component';
-import { GlobalService } from '../../shared/services/global.service';
 
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
@@ -38,6 +39,7 @@ export class PurchasePlanningComponent implements OnInit {
   titulo = "Planificacion de Orden de Compra";
   tableClass: string = "table-company-0";
   tableClass2: string = "table-company-4";//table-company-default
+  headTableAnalisisCompra: string[] = []
   rows: any = [];
   rowsLb: any[];
   loading: boolean = false;
@@ -73,21 +75,19 @@ export class PurchasePlanningComponent implements OnInit {
 
 
   ngOnInit() {
+    this.addHeadeTableAnalisisCompra();
     this.cargarProveedores();
-    this.cargarPoliticas();
-    this.createColumsTableTC();
     this.crearGrupoChecks();
     this.global.setGlobalVar('Módulo planificación de compra');
+    this.mostrarMes("");
   }
 
   crearGrupoChecks() {
     this.opcionesForm = this.fb.group({
-      todos: new FormControl({value: false, disabled: true}) ,
+      todos: new FormControl({ value: false, disabled: true }),
       unico: [false]
     });
   }
-
-
 
   cargarProveedores() {
     this.loading = true;
@@ -100,73 +100,6 @@ export class PurchasePlanningComponent implements OnInit {
         this.loading = false;
       }
     );
-  }
-
-  cargarPoliticas() {
-    this.loading = true;
-    this.purchaseService.getPoliticas().subscribe(
-      (response) => {
-        this.loading = false;
-        this.rowsLb = response;
-      },
-      (error: HttpErrorResponse) => {
-        this.loading = false;
-      }
-    );
-  }
-
-  private createColumsTableTC(): void {
-    const columnDefinitions = [
-      { name: 'Cód.', prop: 'codProducto', width: 70, frozenLeft: true },
-      { name: 'Descripción', prop: 'nombreProducto', width: 250, frozenLeft: true },
-      { name: 'Laboratorio', prop: 'nombreLaboratorio', width: 250, frozenLeft: true },
-      { name: 'Cant. Unid. Empaque', prop: 'unidadEmpaque', width: 70 },
-      { name: 'Condición', prop: 'condicion', width: 150 },
-      { name: 'Tipo', prop: 'ABC', width: 150 },
-      { name: 'Mayo 31', prop: 'mesQuinto', width: 70 },
-      { name: 'Jun 30', prop: 'mesCuarto', width: 70 },
-      { name: 'Jul 30', prop: 'mesTercero', width: 70 },
-      { name: 'Ago 31', prop: 'mesSegundo', width: 70 },
-      { name: 'Set 30', prop: 'mesPrimero', width: 70 },
-      { name: 'Oct 5', prop: 'mesActual', width: 70 },
-      { name: 'Oct Proy. 31', prop: 'mesActualProyeccion', width: 70 },
-      { name: 'Prom. Mes', prop: 'promMes', width: 70 },
-      { name: 'Pre Compra', prop: 'preCompra', width: 70 },
-      { name: 'Compra Final', prop: 'compraFinal', width: 70 },
-      { name: 'Boni', prop: 'bonificacion', width: 70 },
-      { name: 'Almacén', prop: 'almacen', width: 70 },
-      { name: 'Organización', prop: 'org', width: 90 },
-      { name: 'Canje', prop: 'canje', width: 70 },
-      { name: 'Logis_Inver', prop: 'logisticaInversa', width: 70 },
-      { name: 'O/C', prop: 'oc', width: 70 },
-      { name: 'Cobertura Organización', prop: 'cobOrgAct', width: 90 },
-      { name: 'Máximo Infrastock', prop: 'maxInfraStock', width: 70 },
-      { name: 'V.V.F', prop: 'VVF1', width: 70 },
-      { name: 'V.V.F Nuevo', prop: 'VVF2', width: 70 },
-      { name: 'Dscto 1', prop: 'descuento1', width: 70 },
-      { name: 'Dscto 2', prop: 'descuento2', width: 70 },
-      { name: 'Dscto 3', prop: 'descuento3', width: 70 },
-      { name: 'Dscto 4', prop: 'descuento4', width: 70 },
-      { name: 'CosCom', prop: 'cosCom', width: 70 },
-      { name: 'Parcial', prop: 'parcial', width: 70 },
-      { name: 'Igv', prop: 'igv', width: 70 },
-      { name: 'Total', prop: 'totalParcial', width: 70 },
-      { name: 'Observación', prop: 'observaciones', width: 150 },
-    ];
-
-    this.columns = [
-      ...columnDefinitions.map((col) => ({
-        ...col,
-        draggable: true,
-        resizeable: true,
-        cellClass: "text-center",
-        minWidth: col.width || 100,
-      }))
-    ];
-
-    this.totalWidth = this.columns.reduce((sum: any, col: any) => sum + (col.width || 100), 0);
-
-
   }
 
   getStickyOffset(index: number): number {
@@ -248,6 +181,7 @@ export class PurchasePlanningComponent implements OnInit {
 
     this.ordenCompraService.getCalularCompra(this.proveedor, cadenaLab, "").subscribe(
       (response) => {
+
         this.loading = false;
         if (response == null) {
           alert("No se encontraton registros");
@@ -270,9 +204,9 @@ export class PurchasePlanningComponent implements OnInit {
     );
   }
 
-  openContextMenu(event: MouseEvent,opcionMenu:number) {
+  openContextMenu(event: MouseEvent, opcionMenu: number) {
     event.preventDefault(); // evita el menú del navegador
-    this.contextMenu.open(event.pageX, event.pageY,opcionMenu);
+    this.contextMenu.open(event.pageX, event.pageY, opcionMenu);
   }
 
   applyFilter(columnProp: string, value: string) {
@@ -314,29 +248,143 @@ export class PurchasePlanningComponent implements OnInit {
   }
 
   // tabla
+  addHeadeTableAnalisisCompra() {
+    this.headTableAnalisisCompra.push('cod.');
+    this.headTableAnalisisCompra.push('Descripción');
+    this.headTableAnalisisCompra.push('Labora.');
+    this.headTableAnalisisCompra.push('Cant. Unid. Empaque');
+    this.headTableAnalisisCompra.push('Condición');
+    this.headTableAnalisisCompra.push('Tipo');
+    this.headTableAnalisisCompra.push(this.mostrarMes('mesquinto'));
+    this.headTableAnalisisCompra.push(this.mostrarMes('mescuarto'));
+    this.headTableAnalisisCompra.push(this.mostrarMes('mestercero'));
+    this.headTableAnalisisCompra.push(this.mostrarMes('messegundo'));
+    this.headTableAnalisisCompra.push(this.mostrarMes('mesprimero'));
+    this.headTableAnalisisCompra.push(this.mostrarMes('mesActual'));
+    this.headTableAnalisisCompra.push(this.mostrarMes('mesProyectado'));
+    this.headTableAnalisisCompra.push('Prom. Mes<');
+    this.headTableAnalisisCompra.push('Pre compra');
+    this.headTableAnalisisCompra.push('Compra final');
+    this.headTableAnalisisCompra.push('Boni');
+    this.headTableAnalisisCompra.push('Almacén');
+    this.headTableAnalisisCompra.push('Organización');
+    this.headTableAnalisisCompra.push('logis_inver');
+    this.headTableAnalisisCompra.push('O/C');
+    this.headTableAnalisisCompra.push('Cobertura Organizacional');
+    this.headTableAnalisisCompra.push('Maximo Infrastock');
+    this.headTableAnalisisCompra.push('V.V.F');
+    this.headTableAnalisisCompra.push('V.V.F Nuevo');
+    this.headTableAnalisisCompra.push('Dsct.1');
+    this.headTableAnalisisCompra.push('Dsct.2');
+    this.headTableAnalisisCompra.push('Dsct.3');
+    this.headTableAnalisisCompra.push('Dsct.4');
+    this.headTableAnalisisCompra.push('CosCom');
+    this.headTableAnalisisCompra.push('Parcial');
+    this.headTableAnalisisCompra.push('Igv');
+    this.headTableAnalisisCompra.push('Total');
+    this.headTableAnalisisCompra.push('Observación');
+  }
 
-
-  eliminarColumna(headColumna: string, nombreTabla: string) {
+  eliminarColumna(headColumna: string, nombreTabla: string, event: Event) {
     let tabla: any = document.getElementById(nombreTabla);
     let row = tabla.rows;
     let idColumna: number = 99999;
+    let isChecked = (event.target as HTMLInputElement).checked;
 
     for (let i = 0; i < row.length; i++) {
       let celdas = row[i].cells;
+
       for (let j = 0; j < celdas.length; j++) {
 
-        if (headColumna.includes(celdas[j].innerHTML)) {
+        if (headColumna.trim() === celdas[j].innerHTML.trim()) {
           idColumna = j;
         }
-
         if (j === idColumna) {
-          console.log(j);
-          console.log('Entro');
-          celdas[j].remove();
+          if (isChecked) {
+            let styleColumn: string = "text-align: left; padding: 4px; position: sticky; top: 0;";
+            if (j == 0) {
+              styleColumn += "z-index: 5 !important;";
+            }
+            celdas[j].setAttribute("style", styleColumn);
+          } else {
+            celdas[j].setAttribute("style", "display: none;");
+
+          }
         }
       }
     }
   }
+
+  mostrarMes(mesConsultado: string): string {
+    let diaActual = new Date();
+    let dataMes: string = "";
+
+    if (mesConsultado === "mesProyectado") {
+      diaActual.setMonth(diaActual.getMonth() + 1);
+      diaActual.setDate(0);
+      dataMes = this.global.getMonthName(diaActual.getMonth()) + " Proy. " + diaActual.getDate();
+    }
+
+    if (mesConsultado === "mesActual") { //Octubre
+      dataMes = this.global.getMonthName(diaActual.getMonth()) + " " + (diaActual.getDate() - 1);
+    }
+
+    if (mesConsultado === "mesprimero") { /*setiembre*/
+      diaActual = new Date(diaActual.getFullYear(), diaActual.getMonth(), 1);
+      diaActual.setDate(0);
+      dataMes = this.global.getMonthName(diaActual.getMonth()) + " " + diaActual.getDate();
+    }
+
+    if (mesConsultado === "messegundo") { /*agosto*/
+      diaActual = new Date(diaActual.getFullYear(), diaActual.getMonth(), 1);
+      diaActual.setMonth(diaActual.getMonth() - 1);
+      diaActual.setDate(0);
+      dataMes = this.global.getMonthName(diaActual.getMonth()) + " " + diaActual.getDate();
+    }
+
+    if (mesConsultado === "mestercero") { //julio
+      diaActual = new Date(diaActual.getFullYear(), diaActual.getMonth(), 1);
+      diaActual.setMonth(diaActual.getMonth() - 2);
+      diaActual.setDate(0);
+      dataMes = this.global.getMonthName(diaActual.getMonth()) + " " + diaActual.getDate();
+    }
+
+    if (mesConsultado === "mescuarto") { //Junio
+      diaActual = new Date(diaActual.getFullYear(), diaActual.getMonth(), 1);
+      diaActual.setMonth(diaActual.getMonth() - 3);
+      diaActual.setDate(0);
+      dataMes = this.global.getMonthName(diaActual.getMonth()) + " " + diaActual.getDate();
+    }
+
+    if (mesConsultado === "mesquinto") { //Junio
+      diaActual = new Date(diaActual.getFullYear(), diaActual.getMonth(), 1);
+      diaActual.setMonth(diaActual.getMonth() - 4);
+      diaActual.setDate(0);
+      dataMes = this.global.getMonthName(diaActual.getMonth()) + " " + diaActual.getDate();
+    }
+
+    return dataMes;
+
+  }
+
+  getTableUltimasCompras(data: any) {
+    console.log(data);
+    let dataSessionStorage = sessionStorage.getItem('USUARIOLOGIN')?.toString();
+    let dataUsuario = JSON.parse(dataSessionStorage ? dataSessionStorage : '');
+    console.log(dataUsuario);
+    let dataRequets: IUltimasComprasReq = {
+      codProveedor: this.proveedor,
+      codLab: data.codLaboratorio,
+      codProducto: data.codProducto,
+      usuarioLogin: dataUsuario.usuario,
+      codUsuario: dataUsuario.codigoUsuario
+    }
+
+  }
+
+
+
+
 
 
 }

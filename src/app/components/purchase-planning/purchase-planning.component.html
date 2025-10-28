@@ -1,7 +1,7 @@
 <div id="contenedor" class="col-12 m-0 pt-3">
   <!-- botones cabecera -->
   <div class="container-button">
-    <button class="button-header">
+    <button class="button-header" (click)="CalcularCompra()">
       <i class="fa-solid fa-calculator"></i>
       Calcular Compra
     </button>
@@ -26,9 +26,6 @@
   <hr size="10px" width="100%" color="134B97" />
 
   <div class="col-12 m-0 p-0">
-    <!-- titulo datos principales -->
-    <div class="col-12 m-0 p-0 subtitle">Datos principales</div>
-
     <div class="col-12 m-0 p-0 d-flex align-items-start gap-3">
       <!-- proveedor -->
       <div class="m-0 p-0">
@@ -66,8 +63,8 @@
           </form>
         </div>
 
-        <div ngbDropdown class="fondoSelect">
-          <div ngbDropdownMenu class="dropdown-scroll p-2">
+        <div ngbDropdown class="fondoSelect col-12">
+          <div ngbDropdownMenu class="dropdown-scroll p-2" style="width: 300px">
             <div *ngFor="let item of laboratorios" class="form-check label-check-lab">
               <input
                 class="form-check-input"
@@ -81,22 +78,42 @@
         </div>
       </div>
       <!-- end laboratorio -->
-      <!-- politivas invetario -->
-      <div class="m-0 p-0 d-flex d-flex align-items-center gap-2">
-        <label class="label-text" for="checkTodos">Todos los Laboratorios (Día)</label>
-        <!-- icon -->
-        <div>
-          <a
-            type="button"
-            class="dropdown-item m-0 p-0"
-            data-toggle="modal"
-            data-target="#politicaInventario"
-          >
-            <i class="fa-solid fa-circle-info" title="Política de Inventario (Día)"> </i>
-          </a>
+      <!-- politicas invetario -->
+      <div>
+        <div class="m-0 p-0 d-flex d-flex align-items-center gap-2">
+          <label class="label-text" for="checkTodos">Todos los Laboratorios (Día)</label>
+          <!-- icon -->
+          <div>
+            <a
+              type="button"
+              class="dropdown-item m-0 p-0"
+              data-toggle="modal"
+              data-target="#politicaInventario"
+            >
+              <i class="fa-solid fa-circle-info" title="Política de Inventario (Día)"> </i>
+            </a>
+          </div>
+          <!-- end icon -->
         </div>
-        <!-- end icon -->
+        <!-- tabla de CosCom -->
+        <div>
+          <table class="table-style">
+            <thead>
+              <tr>
+                <th>CosCom</th>
+                <th>CosCom+Impto</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>1234</td>                
+                <td>12345</td>                
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
+
       <!-- End politivas invetario -->
     </div>
   </div>
@@ -104,7 +121,7 @@
   <!-- tablas -->
   <div class="col-12 m-0 p-0 mt-2 d-flex align-items-baseline gap-4">
     <!-- tabla ultimas compras -->
-    <div class="col-md-7 m-0 p-0">
+    <div class="col-md-6 m-0 p-0">
       <div class="subtitle mb-3">Últimas Compras</div>
       <!-- Tabla -->
       <div class="m-0 p-0 table-scroll">
@@ -168,6 +185,34 @@
               <td>Web Development</td>
               <td>Web Development</td>
             </tr>
+            <tr>
+              <td>ABBOTT LABORA TORIOS S.A.</td>
+              <td>Prahant</td>
+              <td>Shuka</td>
+              <td>09/07/2025</td>
+              <td>Web Development</td>
+              <td>Web Development</td>
+              <td>Web Development</td>
+              <td>Web Development</td>
+              <td>Web Development</td>
+              <td>Web Development</td>
+              <td>Web Development</td>
+              <td>Web Development</td>
+            </tr>
+            <tr>
+              <td>ABBOTT LABORA TORIOS S.A.</td>
+              <td>Prahant</td>
+              <td>Shuka</td>
+              <td>09/07/2025</td>
+              <td>Web Development</td>
+              <td>Web Development</td>
+              <td>Web Development</td>
+              <td>Web Development</td>
+              <td>Web Development</td>
+              <td>Web Development</td>
+              <td>Web Development</td>
+              <td>Web Development</td>
+            </tr>
           </tbody>
         </table>
       </div>
@@ -175,7 +220,7 @@
     <!-- End tabla -->
 
     <!-- Tabla Últimos ingresos -->
-    <div class="col-md-5 m-0 p-0">
+    <div class="col-md-6 m-0 p-0">
       <div class="subtitle mb-3">Últimas ingresos</div>
       <!-- Tabla -->
       <div class="m-0 p-0 table-scroll">
@@ -243,6 +288,36 @@
               <td>09/07/2025</td>
               <td>09/07/2025</td>
             </tr>
+            <tr>
+              <td>12345678</td>
+              <td>ABBOTT LABORA TORIOS S.A.</td>
+              <td>Shuka</td>
+              <td>09/07/2025</td>
+              <td>12345678</td>
+              <td>ABBOTT LABORA TORIOS S.A.</td>
+              <td>Shukla</td>
+              <td>09/07/2025</td>
+              <td>09/07/2025</td>
+              <td>09/07/2025</td>
+              <td>09/07/2025</td>
+              <td>09/07/2025</td>
+              <td>09/07/2025</td>
+            </tr>
+            <tr>
+              <td>12345678</td>
+              <td>ABBOTT LABORA TORIOS S.A.</td>
+              <td>Shuka</td>
+              <td>09/07/2025</td>
+              <td>12345678</td>
+              <td>ABBOTT LABORA TORIOS S.A.</td>
+              <td>Shukla</td>
+              <td>09/07/2025</td>
+              <td>09/07/2025</td>
+              <td>09/07/2025</td>
+              <td>09/07/2025</td>
+              <td>09/07/2025</td>
+              <td>09/07/2025</td>
+            </tr>
           </tbody>
         </table>
       </div>
@@ -253,6 +328,7 @@
 
   <!-- tabla Analisis compras -->
   <div class="col-12 m-0 p-0 mt-2">
+    <!-- head y filter -->
     <div class="d-flex align-items-baseline justify-content-between m-0 p-0">
       <div class="subtitle mb-3">Análisis Compras</div>
 
@@ -267,118 +343,80 @@
         <i class="fa-solid fa-filter"></i>
       </a>
       <div
-        class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
+        class="dropdown-menu dropdown-menu-right shadow animated--grow-in filter-table"
         aria-labelledby="userDropdown"
       >
+        <!-- Listado de columnas filtro -->
+        @for(data of headTableAnalisisCompra; track data; let index = $index){ @if(index > 2){
         <div class="dropdown-item form-check" data-toggle="modal">
           <input
             class="form-check-input"
             type="checkbox"
             value=""
             id="flexCheckDefault"
-            (change)="eliminarColumna('Age', 'tablaAnalisiCompra')"
+            (change)="eliminarColumna(data, 'tablaAnalisiCompra', $event)"
             checked
           />
-          <label class="form-check-label" for="Age"> Age </label>
+          <label class="form-check-label" for="{{ data }}"> {{ data }} </label>
         </div>
-
-        <div class="dropdown-item form-check" data-toggle="modal">
-          <input
-            class="form-check-input"
-            type="checkbox"
-            value=""
-            id="flexCheckDefault"
-            (change)="eliminarColumna('Enrolled Cours0', 'tablaAnalisiCompra')"
-            checked
-          />
-          <label class="form-check-label" for="Enrolled Cours0"> Enrolled Cours0 </label>
-        </div>
-
-        <div class="dropdown-item form-check" data-toggle="modal">
-          <input
-            class="form-check-input"
-            type="checkbox"
-            value=""
-            id="flexCheckDefault"
-            (change)="eliminarColumna('Enrolled Course1', 'tablaAnalisiCompra')"
-            checked
-          />
-          <label class="form-check-label" for="Enrolled Course1"> Enrolled Course1 </label>
-        </div>
+        } }
+        <!-- End Listado de columnas filtro -->
       </div>
       <!-- End Filtro de la tabla de A.Compra -->
     </div>
-    <!-- Tabla Analisis compras -->
+    <!-- tabla -->
     <div id="container-table" class="m-0 p-0 table-scroll col-12">
       <table id="tablaAnalisiCompra" class="table-style table-fixed">
         <thead>
-          <tr>
-            <th>Index</th>
-            <th draggable="true" class="sticky-col second-col">First Name</th>
-            <th draggable="true">Last Name</th>
-            <th draggable="true">Age</th>
-            <th draggable="true">Enrolled Cours0</th>
-            <th draggable="true">Enrolled Course1</th>
-            <th draggable="true">Enrolled Course2</th>
-            <th draggable="true">Enrolled Course3</th>
-            <th draggable="true">Enrolled Course4</th>
-            <th draggable="true">Enrolled Course5</th>
-            <th draggable="true">Enrolled Course6</th>
-            <th draggable="true">Enrolled Course7</th>
-            <th draggable="true">Enrolled Course8</th>
+          <tr id="header-row">
+            <th *ngFor="let data of headTableAnalisisCompra">
+              {{ data }}
+            </th>
           </tr>
         </thead>
-        <tbody>
-          <tr>
-            <th>1</th>
-            <td class="sticky-col second-col">Raj</td>
-            <td>Shukla</td>
-            <td>23</td>
-            <td>Advanced Java</td>
-            <td>Advanced Java</td>
-            <td>Advanced Java</td>
-            <td>Advanced Java</td>
-            <td>Advanced Java</td>
-            <td>Advanced Java</td>
-            <td>Advanced Java</td>
-            <td>Advanced Java</td>
-            <td>Advanced Java</td>
-          </tr>
-          <tr>
-            <th>2</th>
-            <td class="sticky-col second-col">Rahul</td>
-            <td>Mishra</td>
-            <td>23</td>
-            <td>DSA In JAVA</td>
-            <td>DSA In JAVA</td>
-            <td>DSA In JAVA</td>
-            <td>DSA In JAVA</td>
-            <td>DSA In JAVA</td>
-            <td>DSA In JAVA</td>
-            <td>DSA In JAVA</td>
-            <td>DSA In JAVA</td>
-            <td>DSA In JAVA</td>
-          </tr>
-          <tr>
-            <th>3</th>
-            <td class="sticky-col second-col">Prahant</td>
-            <td>Shuka</td>
-            <td>19</td>
-            <td>Web Development</td>
-            <td>Web Development</td>
-            <td>Web Development</td>
-            <td>Web Development</td>
-            <td>Web Development</td>
-            <td>Web Development</td>
-            <td>Web Development</td>
-            <td>Web Development</td>
-            <td>Web Development</td>
+        <tbody id="body">
+          <tr (click)="getTableUltimasCompras(data)" *ngFor="let data of rows" >
+            <td>{{ data.codProducto }}</td>
+            <td>{{ data.nombreProducto }}</td>
+            <td>{{ data.nombreLaboratorio }}</td>
+            <td>{{ data.unidadEmpaque }}</td>
+            <td>{{ data.condicion }}</td>
+            <td>{{ data.ABC }}</td>
+            <td>{{ data.mesQuinto }}</td>
+            <td>{{ data.mesCuarto }}</td>
+            <td>{{ data.mesTercero }}</td>
+            <td>{{ data.mesSegundo }}</td>
+            <td>{{ data.mesPrimero }}</td>
+            <td>{{ data.mesActual }}</td>
+            <td>{{ data.mesActualProyeccion }}</td>
+            <td>{{ data.promMes }}</td>
+            <td>{{ data.preCompra }}</td>
+            <td>{{ data.compraFinal }}</td>
+            <td>{{ data.bonificacion }}</td>
+            <td>{{ data.almacen }}</td>
+            <td>--------</td>
+            <td>{{ data.canje }}</td>
+            <td>{{ data.logisticaInversa }}</td>
+            <td>{{ data.oc }}</td>
+            <td>{{ data.cobOrgAct }}</td>
+            <td>{{ data.maxInfraStock }}</td>
+            <td>{{ data.VVF1 }}</td>
+            <td>{{ data.VVF2 }}</td>
+            <td>{{ data.descuento1 }}</td>
+            <td>{{ data.descuento2 }}</td>
+            <td>{{ data.descuento3 }}</td>
+            <td>{{ data.descuento4 }}</td>
+            <td>{{ data.cosCom }}</td>
+            <td>{{ data.parcial }}</td>
+            <td>{{ data.igv }}</td>
+            <td>{{ data.total }}</td>
+            <td>{{ data.observaciones }}</td>
           </tr>
         </tbody>
       </table>
     </div>
-    <!-- end tabla Analisis compras -->
   </div>
+  <!-- end tabla Analisis compras -->
 
   <div class="col-12 d-flex align-items-baseline justify-content-end gap-3 mt-3 mb-3">
     <p class="text-total-value">Total Parcial: 48,1234</p>

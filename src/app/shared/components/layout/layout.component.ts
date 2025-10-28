@@ -37,8 +37,6 @@ export class LayoutComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-
-    this.titleComponent = localStorage.getItem('title-component')?.toString();
     this.loadScript('assets/js/sb-admin-2.min.js');
     this.arrayMenuOrigen();
     this.CargarSession();

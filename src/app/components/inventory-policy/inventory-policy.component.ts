@@ -23,7 +23,6 @@ export class InventoryPolicyComponent implements OnInit {
     this.loading = true;
     this.purchaseService.getPoliticas().subscribe(
       (response) => {
-        console.log(response);
         this.loading = false;
         this.rowsLb = response;
       },

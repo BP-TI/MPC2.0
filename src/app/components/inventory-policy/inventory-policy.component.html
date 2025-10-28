@@ -1,4 +1,4 @@
-<div class="m-0 p-0 d-flex justify-content-center">
+<div class="m-0 p-0 d-flex justify-content-center table-scroll">
   <table class="table-style" id="politicasinventario">
     <thead>
       <tr>
@@ -10,7 +10,7 @@
     </thead>
     <tbody>
       <tr *ngFor="let data of rowsLb">
-        <td>{{ data.ABC }}</td>
+        <td>{{ data.ABC | titlecase  }}</td>
         <td>{{ data.puntoVenta }}</td>
         <td>{{ data.MaxAlmacen }}</td>
         <td>{{ data.Total }}</td>
@@ -18,3 +18,4 @@
     </tbody>
   </table>
 </div>
+<loading *ngIf="loading"></loading>

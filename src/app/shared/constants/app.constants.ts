@@ -1,5 +1,5 @@
 export const AppConstants = {
-Session: {
+    Session: {
         ACCESS_TOKEN: 'ACCESS_TOKEN',
         USERID: 'USERID',
         USERNAME: 'USERNAME',
@@ -18,11 +18,11 @@ Session: {
         CONFIGURATION_BUS: 'CONFIGURATION_BUS',
         SELECT_TOKEN: 'SELECT_TOKEN',
         USERDOCUMENTNUMBER: 'DOCUMENTNUMBER',
-        AGENCYCODEFROMT24:'AGENCYCODEFROMT24',
+        AGENCYCODEFROMT24: 'AGENCYCODEFROMT24',
         TWOFACTOR_REQUIRED: 'TWOFACTOR_REQUIRED',
         TWOFACTOR_ENABLED: 'TWOFACTOR_ENABLED',
 
-        USUARIOLOGIN:"USUARIOLOGIN"
+        USUARIOLOGIN: "USUARIOLOGIN"
     },
     RolesCode: {
         ADMINISTRADOR: 'R0001',
@@ -50,10 +50,7 @@ Session: {
         SUPERVISOR_DE_COLOCACIONES: 'R0053',
         JEFE_DE_CONTROL_INTERNO_DEL_RIESGO: 'R0056',
     },
-
-    TitleModal:{
+    TitleModal: {
         CHANGE_PASSWORD: 'Cambiar contraseña.',
     },
-
-
 }
