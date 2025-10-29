@@ -26,7 +26,7 @@
   <hr size="10px" width="100%" color="134B97" />
 
   <div class="col-12 m-0 p-0">
-    <div class="col-12 m-0 p-0 d-flex align-items-start gap-3">
+    <div class="col-12 m-0 p-0 d-flex align-items-stretch gap-3">
       <!-- proveedor -->
       <div class="m-0 p-0">
         <div>
@@ -63,9 +63,9 @@
           </form>
         </div>
 
-        <div ngbDropdown class="fondoSelect col-12">
-          <div ngbDropdownMenu class="dropdown-scroll p-2" style="width: 300px">
-            <div *ngFor="let item of laboratorios" class="form-check label-check-lab">
+        <div ngbDropdown class="fondoSelect col-12 p-0 m-0 menu-laboratorio">
+          <div ngbDropdownMenu class="dropdown-scroll p-0 m-0" style="width: 300px;">
+            <div *ngFor="let item of laboratorios" class="form-check label-check-lab p-0 pl-4">
               <input
                 class="form-check-input"
                 type="checkbox"
@@ -79,7 +79,7 @@
       </div>
       <!-- end laboratorio -->
       <!-- politicas invetario -->
-      <div>
+      <div class="m-0 p-0 options">
         <div class="m-0 p-0 d-flex d-flex align-items-center gap-2">
           <label class="label-text" for="checkTodos">Todos los Laboratorios (Día)</label>
           <!-- icon -->
@@ -95,8 +95,8 @@
           </div>
           <!-- end icon -->
         </div>
-        <!-- tabla de CosCom 
-        <div>
+        <!-- tabla de CosCom -->
+        <div *ngIf="conscom">
           <table class="table-style">
             <thead>
               <tr>
@@ -106,12 +106,12 @@
             </thead>
             <tbody>
               <tr>
-                <td>1234</td>                
-                <td>12345</td>                
+                <td class="center-text">{{ conscom }}</td>                
+                <td class="center-text">{{ conscomImpto }}</td>                
               </tr>
             </tbody>
           </table>
-        </div>-->
+        </div>
       </div>
 
       <!-- End politivas invetario -->
@@ -125,7 +125,7 @@
       <div class="subtitle mb-3">Últimas Compras</div>
       <!-- Tabla -->
       <div class="m-0 p-0 table-scroll">
-        <table class="table-style2">
+        <table class="table-style2 m-0 p-0">
           <thead>
             <tr>
               <th>Proveedor</th>
@@ -145,14 +145,14 @@
             <tr *ngFor="let item of rowsUCompras">
               <td>{{ item.nombreProveedor }}</td>
               <td>{{ item.orden }}</td>
-              <td>{{ item.fecha }}</td>
+              <td>{{ item.fecha | date: 'dd/MM/yyyy' }}</td>
               <td>{{ item.cantE }}</td>
               <td>{{ item.cantF }}</td>
-              <td>{{ item.VVF }}</td>
-              <td>{{ item.dscto1 }}</td>
-              <td>{{ item.dscto2 }}</td>
-              <td>{{ item.dscto3 }}</td>
-              <td>{{ item.dscto4 }}</td>
+              <td>{{ item.VVF | number: '1.2-2' }}</td>
+              <td>{{ item.dscto1 | number: '1.2-2' }}</td>
+              <td>{{ item.dscto2 | number: '1.2-2' }}</td>
+              <td>{{ item.dscto3 | number: '1.2-2' }}</td>
+              <td>{{ item.dscto4 | number: '1.2-2' }}</td>
               <td>{{ item.bonificacion }}</td>
             </tr>           
           </tbody>
@@ -189,15 +189,15 @@
              <td>{{ item.invNum}}</td>
              <td>{{ item.nombreProveedor}}</td>
              <td>{{ item.documento}}</td>
-             <td>{{ item.fechaIngreso}}</td>
-             <td>{{ item.ordenCompra}}</td>
+             <td>{{ item.fechaIngreso | date: 'dd/MM/yyyy'}}</td>
+             <td>{{ item.ordenCompra | date: 'dd/MM/yyyy'}}</td>
              <td>{{ item.cantE}}</td>
              <td>{{ item.cantF}}</td>
-             <td>{{ item.VVF}}</td>
-             <td>{{ item.dscto1}}</td>
-             <td>{{ item.dscto2}}</td>
-             <td>{{ item.dscto3}}</td>
-             <td>{{ item.dscto4}}</td>
+             <td>{{ item.VVF | number: '1.2-2' }}</td>
+             <td>{{ item.dscto1 | number: '1.2-2' }}</td>
+             <td>{{ item.dscto2 | number: '1.2-2' }}</td>
+             <td>{{ item.dscto3 | number: '1.2-2' }}</td>
+             <td>{{ item.dscto4 | number: '1.2-2' }}</td>
              <td>{{ item.bonificacion}}</td>
             </tr>
          
@@ -262,37 +262,37 @@
             <td>{{ data.codProducto }}</td>
             <td>{{ data.nombreProducto }}</td>
             <td>{{ data.nombreLaboratorio }}</td>
-            <td>{{ data.unidadEmpaque }}</td>
+            <td class="center-text">{{ data.unidadEmpaque }}</td>
             <td>{{ data.condicion }}</td>
             <td>{{ data.ABC }}</td>
-            <td>{{ data.mesQuinto }}</td>
-            <td>{{ data.mesCuarto }}</td>
-            <td>{{ data.mesTercero }}</td>
-            <td>{{ data.mesSegundo }}</td>
-            <td>{{ data.mesPrimero }}</td>
-            <td>{{ data.mesActual }}</td>
-            <td>{{ data.mesActualProyeccion }}</td>
-            <td>{{ data.promMes }}</td>
-            <td>{{ data.preCompra }}</td>
-            <td>{{ data.compraFinal }}</td>
-            <td>{{ data.bonificacion }}</td>
-            <td>{{ data.almacen }}</td>
-            <td>--------</td>
-            <td>{{ data.canje }}</td>
-            <td>{{ data.logisticaInversa }}</td>
-            <td>{{ data.oc }}</td>
-            <td>{{ data.cobOrgAct }}</td>
-            <td>{{ data.maxInfraStock }}</td>
-            <td>{{ data.VVF1 }}</td>
-            <td>{{ data.VVF2 }}</td>
-            <td>{{ data.descuento1 }}</td>
-            <td>{{ data.descuento2 }}</td>
-            <td>{{ data.descuento3 }}</td>
-            <td>{{ data.descuento4 }}</td>
-            <td>{{ data.cosCom }}</td>
-            <td>{{ data.parcial }}</td>
-            <td>{{ data.igv }}</td>
-            <td>{{ data.total }}</td>
+            <td class="center-text">{{ data.mesQuinto | number: '1.2-2' }}</td>
+            <td class="center-text">{{ data.mesCuarto | number: '1.2-2' }}</td>
+            <td class="center-text">{{ data.mesTercero | number: '1.2-2' }}</td>
+            <td class="center-text">{{ data.mesSegundo | number: '1.2-2' }}</td>
+            <td class="center-text">{{ data.mesPrimero | number: '1.2-2' }}</td>
+            <td class="center-text">{{ data.mesActual | number: '1.2-2' }}</td>
+            <td class="center-text">{{ data.mesActualProyeccion | number: '1.2-2' }}</td>
+            <td class="center-text">{{ data.promMes | number: '1.2-2' }}</td>
+            <td class="center-text">{{ data.preCompra | number: '1.2-2' }}</td>
+            <td class="center-text">{{ data.compraFinal | number: '1.2-2' }}</td>
+            <td class="center-text">{{ data.bonificacion | number: '1.2-2' }}</td>
+            <td class="center-text">{{ data.almacen | number: '1.2-2' }}</td>
+            <td class="center-text">{{ data.org | number: '1.2-2'}}</td>
+            <td class="center-text">{{ data.canje | number: '1.2-2' }}</td>
+            <td class="center-text">{{ data.logisticaInversa | number: '1.2-2' }}</td>
+            <td class="center-text">{{ data.oc | number: '1.2-2' }}</td>
+            <td class="center-text">{{ data.cobOrgAct | number: '1.2-2' }}</td>
+            <td class="center-text">{{ data.maxInfraStock | number: '1.2-2' }}</td>
+            <td class="center-text">{{ data.VVF1 | number: '1.2-2' }}</td>
+            <td class="center-text">{{ data.VVF2 | number: '1.2-2' }}</td>
+            <td class="center-text">{{ data.descuento1 | number: '1.2-2' }}</td>
+            <td class="center-text">{{ data.descuento2 | number: '1.2-2' }}</td>
+            <td class="center-text">{{ data.descuento3 | number: '1.2-2' }}</td>
+            <td class="center-text">{{ data.descuento4 | number: '1.2-2' }}</td>
+            <td class="center-text">{{ data.cosCom | number: '1.2-2' }}</td>
+            <td class="center-text">{{ data.parcial | number: '1.2-2' }}</td>
+            <td class="center-text">{{ data.igv | number: '1.2-2' }}</td>
+            <td class="center-text">{{ data.total | number: '1.2-2' }}</td>
             <td>{{ data.observaciones }}</td>
           </tr>
         </tbody>

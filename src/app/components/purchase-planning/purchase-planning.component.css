@@ -9,7 +9,7 @@ i {
 }
 
 .text-total-value {
-  font-size: 11px;
+  font-size: 10px;
   color: black;
   background: white;
 }
@@ -18,7 +18,7 @@ i {
   font-family: 'Montserrat';
   font-style: normal;
   font-weight: 700;
-  font-size: 13px;
+  font-size: 12px;
   line-height: 16px;
   display: flex;
   align-items: flex-end;
@@ -31,7 +31,7 @@ i {
   font-family: 'Montserrat';
   font-style: normal;
   font-weight: 600;
-  font-size: 13px;
+  font-size: 12px;
   line-height: 20px;
   color: #3C3C3C;
 
@@ -55,8 +55,6 @@ i {
   padding: 5px;
   font-size: 10px;
 }
-
-
 
 .container-button {
   display: flex;
@@ -83,7 +81,7 @@ i {
   background: #FFFFFF;
   border: 1px solid #D2D2D2;
   border-radius: 4px;
-  font-size: 11px;
+  font-size: 10px;
 
   font-family: 'Montserrat';
   font-style: normal;
@@ -106,7 +104,7 @@ i {
   background: #32509d;
   border: 1px solid #32509d;
   border-radius: 4px;
-  font-size: 11px;
+  font-size: 10px;
 
   font-family: 'Montserrat';
   font-style: normal;
@@ -128,39 +126,49 @@ i {
   color: #FFFFFF;
 }
 
+.menu-laboratorio {
+  height: 100px;
+  overflow-x: auto;
+  overflow-y: none;
+  scrollbar-color: #B0E0E6 white !important;  
+}
+
 /* Estilo de la tabla */
 .table-scroll {
   overflow-x: auto;
   overflow-y: auto;
- max-height: 320px;
+  max-height: 320px;
   width: 100%;
+  border: #DCEBFF solid;
+  scrollbar-color: #B0E0E6 white !important;
 }
 
-.table-style{
-  border: #DCEBFF solid;
+.table-style {
+  /* border: #DCEBFF solid; */
   width: 100%;
-   min-height: 250px;
+  min-height: auto;
   max-height: 250px;
 }
 
-.table-style2{
-  border: #DCEBFF solid;
-  min-height: 110px;
+.table-style2 {
+  width: 100%;
+  /* min-height: 110px; */
+  min-height: auto;
   max-height: 110px;
 }
 
 .table-style2 thead th {
   background: #134B97;
   color: white;
-  text-align: center;  
- 
+  text-align: center;
+
 }
 
 .table-style thead th {
   background: #134B97;
   color: white;
   text-align: center;
-  
+
 }
 
 .table-style th,
@@ -179,26 +187,26 @@ td {
 
 .table-style th {
   font-weight: bold;
-  font-size: 11px;
+  font-size: 10px;
   color: black;
   background: white;
 }
 
 .table-style2 th {
   font-weight: bold;
-  font-size: 11px;
+  font-size: 10px;
   color: black;
   background: white;
 }
 
 .table-style td {
-  font-size: 11px;
+  font-size: 10px;
   color: #3C3C3C;
   background: white;
 }
 
 .table-style2 td {
-  font-size: 11px;
+  font-size: 10px;
   color: #3C3C3C;
   background: white;
 }
@@ -227,8 +235,7 @@ td {
 
 .table-fixed th,
 .table-fixed td {
-  text-align: left;
-  padding: 4px;
+  padding: 2px;
 }
 
 
@@ -276,7 +283,7 @@ th:nth-child(3) {
   font-family: 'Montserrat';
   font-style: normal;
   font-weight: 700;
-  font-size: 14px;
+  font-size: 13px;
   line-height: 20px;
   padding: 0px;
 }
@@ -297,7 +304,7 @@ th:nth-child(3) {
   background: #FB2C36;
   border: 1px solid #FB2C36;
   border-radius: 4px;
-  font-size: 13px;
+  font-size: 12px;
 
   font-family: 'Montserrat';
   font-style: normal;
@@ -320,7 +327,7 @@ th:nth-child(3) {
   background: white;
   border: 1px solid #FB2C36;
   border-radius: 4px;
-  font-size: 13px;
+  font-size: 12px;
 
   font-family: 'Montserrat';
   font-style: normal;
@@ -363,7 +370,7 @@ hr {
   background: #134B97;
   border: 1px solid #134B97;
   border-radius: 4px;
-  font-size: 11px;
+  font-size: 10px;
 
   font-family: 'Neo Sans Std';
   font-style: normal;
@@ -403,13 +410,26 @@ hr {
   overflow-y: auto;
 }
 
-::-webkit-scrollbar-thumb {
-  background: linear-gradient(180deg, #6a11cb 0%, #2575fc 100%);
-  border-radius: 10px;
-  box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
+.center-text {
+  text-align: center;
 }
 
-::-webkit-scrollbar-track {
-  background: rgba(255,255,255,0.1);
-  backdrop-filter: blur(5px);
+.options{
+  width: 100%;
+  height: 130px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
+
+.options table {
+  width: 200px;
+  border: #DCEBFF solid;
+}
+
+.options div:nth-child(2){
+  display: flex;
+  justify-content: right;
+  
+}
+
