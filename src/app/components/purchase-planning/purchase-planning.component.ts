@@ -42,6 +42,8 @@ export class PurchasePlanningComponent implements OnInit {
   headTableAnalisisCompra: string[] = []
   rows: any = [];
   rowsLb: any[];
+  rowsUCompras: any[];
+  rowsUIngresos: any[];
   loading: boolean = false;
   columns: any = [];
   columnasLb: any = [];
@@ -368,10 +370,9 @@ export class PurchasePlanningComponent implements OnInit {
   }
 
   getTableUltimasCompras(data: any) {
-    console.log(data);
     let dataSessionStorage = sessionStorage.getItem('USUARIOLOGIN')?.toString();
     let dataUsuario = JSON.parse(dataSessionStorage ? dataSessionStorage : '');
-    console.log(dataUsuario);
+   
     let dataRequets: IUltimasComprasReq = {
       codProveedor: this.proveedor,
       codLab: data.codLaboratorio,
@@ -379,6 +380,18 @@ export class PurchasePlanningComponent implements OnInit {
       usuarioLogin: dataUsuario.usuario,
       codUsuario: dataUsuario.codigoUsuario
     }
+    this.ordenCompraService.getUltimasCompras(dataRequets).subscribe( (response:any) => {
+      if(response.ultimasCompras.length > 0){
+        this.rowsUCompras = response.ultimasCompras;
+      }
+      
+      if(response.ultimosIngresos.length > 0){
+        this.rowsUIngresos = response.ultimosIngresos;
+      }
+
+    }, (error: HttpErrorResponse) => {
+        this.loading = false;
+      });
 
   }
 

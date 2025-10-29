@@ -129,7 +129,6 @@
           <thead>
             <tr>
               <th>Proveedor</th>
-              <th>First Name</th>
               <th>S-Orden</th>
               <th>Fecha</th>
               <th>Cant.-E</th>
@@ -143,76 +142,19 @@
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td>ABBOTT LABORA TORIOS S.A.</td>
-              <td>Raj</td>
-              <td>Shukla</td>
-              <td>09/07/2025</td>
-              <td>Advanced Java</td>
-              <td>Advanced Java</td>
-              <td>Advanced Java</td>
-              <td>Advanced Java</td>
-              <td>Advanced Java</td>
-              <td>Advanced Java</td>
-              <td>Advanced Java</td>
-              <td>Advanced Java</td>
-            </tr>
-            <tr>
-              <td>ABBOTT LABORA TORIOS S.A.</td>
-              <td>Rahul</td>
-              <td>Mishra</td>
-              <td>09/07/2025</td>
-              <td>DSA In JAVA</td>
-              <td>DSA In JAVA</td>
-              <td>DSA In JAVA</td>
-              <td>DSA In JAVA</td>
-              <td>DSA In JAVA</td>
-              <td>DSA In JAVA</td>
-              <td>DSA In JAVA</td>
-              <td>DSA In JAVA</td>
-            </tr>
-            <tr>
-              <td>ABBOTT LABORA TORIOS S.A.</td>
-              <td>Prahant</td>
-              <td>Shuka</td>
-              <td>09/07/2025</td>
-              <td>Web Development</td>
-              <td>Web Development</td>
-              <td>Web Development</td>
-              <td>Web Development</td>
-              <td>Web Development</td>
-              <td>Web Development</td>
-              <td>Web Development</td>
-              <td>Web Development</td>
-            </tr>
-            <tr>
-              <td>ABBOTT LABORA TORIOS S.A.</td>
-              <td>Prahant</td>
-              <td>Shuka</td>
-              <td>09/07/2025</td>
-              <td>Web Development</td>
-              <td>Web Development</td>
-              <td>Web Development</td>
-              <td>Web Development</td>
-              <td>Web Development</td>
-              <td>Web Development</td>
-              <td>Web Development</td>
-              <td>Web Development</td>
-            </tr>
-            <tr>
-              <td>ABBOTT LABORA TORIOS S.A.</td>
-              <td>Prahant</td>
-              <td>Shuka</td>
-              <td>09/07/2025</td>
-              <td>Web Development</td>
-              <td>Web Development</td>
-              <td>Web Development</td>
-              <td>Web Development</td>
-              <td>Web Development</td>
-              <td>Web Development</td>
-              <td>Web Development</td>
-              <td>Web Development</td>
-            </tr>
+            <tr *ngFor="let item of rowsUCompras">
+              <td>{{ item.nombreProveedor }}</td>
+              <td>{{ item.orden }}</td>
+              <td>{{ item.fecha }}</td>
+              <td>{{ item.cantE }}</td>
+              <td>{{ item.cantF }}</td>
+              <td>{{ item.VVF }}</td>
+              <td>{{ item.dscto1 }}</td>
+              <td>{{ item.dscto2 }}</td>
+              <td>{{ item.dscto3 }}</td>
+              <td>{{ item.dscto4 }}</td>
+              <td>{{ item.bonificacion }}</td>
+            </tr>           
           </tbody>
         </table>
       </div>
@@ -243,81 +185,22 @@
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td>12345678</td>
-              <td>ABBOTT LABORA TORIOS S.A.</td>
-              <td>Shukla</td>
-              <td>09/07/2025</td>
-              <td>12345678</td>
-              <td>ABBOTT LABORA TORIOS S.A.</td>
-              <td>Shukla</td>
-              <td>09/07/2025</td>
-              <td>09/07/2025</td>
-              <td>09/07/2025</td>
-              <td>09/07/2025</td>
-              <td>09/07/2025</td>
-              <td>09/07/2025</td>
+             <tr *ngFor="let item of rowsUIngresos">
+             <td>{{ item.invNum}}</td>
+             <td>{{ item.nombreProveedor}}</td>
+             <td>{{ item.documento}}</td>
+             <td>{{ item.fechaIngreso}}</td>
+             <td>{{ item.ordenCompra}}</td>
+             <td>{{ item.cantE}}</td>
+             <td>{{ item.cantF}}</td>
+             <td>{{ item.VVF}}</td>
+             <td>{{ item.dscto1}}</td>
+             <td>{{ item.dscto2}}</td>
+             <td>{{ item.dscto3}}</td>
+             <td>{{ item.dscto4}}</td>
+             <td>{{ item.bonificacion}}</td>
             </tr>
-            <tr>
-              <td>12345678</td>
-              <td>ABBOTT LABORA TORIOS S.A.</td>
-              <td>Mishra</td>
-              <td>09/07/2025</td>
-              <td>12345678</td>
-              <td>ABBOTT LABORA TORIOS S.A.</td>
-              <td>Shukla</td>
-              <td>09/07/2025</td>
-              <td>09/07/2025</td>
-              <td>09/07/2025</td>
-              <td>09/07/2025</td>
-              <td>09/07/2025</td>
-              <td>09/07/2025</td>
-            </tr>
-            <tr>
-              <td>12345678</td>
-              <td>ABBOTT LABORA TORIOS S.A.</td>
-              <td>Shuka</td>
-              <td>09/07/2025</td>
-              <td>12345678</td>
-              <td>ABBOTT LABORA TORIOS S.A.</td>
-              <td>Shukla</td>
-              <td>09/07/2025</td>
-              <td>09/07/2025</td>
-              <td>09/07/2025</td>
-              <td>09/07/2025</td>
-              <td>09/07/2025</td>
-              <td>09/07/2025</td>
-            </tr>
-            <tr>
-              <td>12345678</td>
-              <td>ABBOTT LABORA TORIOS S.A.</td>
-              <td>Shuka</td>
-              <td>09/07/2025</td>
-              <td>12345678</td>
-              <td>ABBOTT LABORA TORIOS S.A.</td>
-              <td>Shukla</td>
-              <td>09/07/2025</td>
-              <td>09/07/2025</td>
-              <td>09/07/2025</td>
-              <td>09/07/2025</td>
-              <td>09/07/2025</td>
-              <td>09/07/2025</td>
-            </tr>
-            <tr>
-              <td>12345678</td>
-              <td>ABBOTT LABORA TORIOS S.A.</td>
-              <td>Shuka</td>
-              <td>09/07/2025</td>
-              <td>12345678</td>
-              <td>ABBOTT LABORA TORIOS S.A.</td>
-              <td>Shukla</td>
-              <td>09/07/2025</td>
-              <td>09/07/2025</td>
-              <td>09/07/2025</td>
-              <td>09/07/2025</td>
-              <td>09/07/2025</td>
-              <td>09/07/2025</td>
-            </tr>
+         
           </tbody>
         </table>
       </div>
