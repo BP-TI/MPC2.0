@@ -31,6 +31,9 @@ export class OptionClickComponent implements OnInit {
         this.visible = true;
          break;
       case 2:
+        this.visible2=true;
+        this.visible=false;
+        break;
       case 3:
         this.visible=false;
         this.visible2 = true; 
@@ -41,6 +44,7 @@ export class OptionClickComponent implements OnInit {
 
   close() {
     this.visible = false;
+    this.visible2 = false;
   }
 
   onAction(type: string) {

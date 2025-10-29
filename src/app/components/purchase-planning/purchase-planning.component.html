@@ -1,4 +1,4 @@
-<div id="contenedor" class="col-12 m-0 pt-3">
+<div id="contenedor" class="col-12 m-0 pt-3" (contextmenu)="denyRightClick($event)">
   <!-- botones cabecera -->
   <div class="container-button">
     <button class="button-header" (click)="CalcularCompra()">
@@ -18,8 +18,12 @@
       Generar en base O/C
     </button>
     <button class="button-header">
-      <i class="fa-solid fa-file-export"></i>
-      Exportar Excel
+      <i class="fa-solid fa-file-import"></i>
+      Inportar Excel
+    </button>
+    <button class="button-header" (click)="clearField()">
+      <i class="fa-solid fa-broom"></i>
+      Limpiar
     </button>
   </div>
   <!-- End botones cabecera -->
@@ -64,8 +68,8 @@
         </div>
 
         <div ngbDropdown class="fondoSelect col-12 p-0 m-0 menu-laboratorio">
-          <div ngbDropdownMenu class="dropdown-scroll p-0 m-0" style="width: 300px;">
-            <div *ngFor="let item of laboratorios" class="form-check label-check-lab p-0 pl-4">
+          <div ngbDropdownMenu class="dropdown-scroll p-0 m-0">
+            <div *ngFor="let item of laboratorios" class="form-check label-check-lab m-0 p-0 pl-4">
               <input
                 class="form-check-input"
                 type="checkbox"
@@ -106,8 +110,8 @@
             </thead>
             <tbody>
               <tr>
-                <td class="center-text">{{ conscom }}</td>                
-                <td class="center-text">{{ conscomImpto }}</td>                
+                <td class="center-text">{{ conscom }}</td>
+                <td class="center-text">{{ conscomImpto }}</td>
               </tr>
             </tbody>
           </table>
@@ -123,38 +127,29 @@
     <!-- tabla ultimas compras -->
     <div class="col-md-6 m-0 p-0">
       <div class="subtitle mb-3">Últimas Compras</div>
-      <!-- Tabla -->
-      <div class="m-0 p-0 table-scroll">
-        <table class="table-style2 m-0 p-0">
+      <div class="m-0 p-0 table-scroll" (contextmenu)="openContextMenu($event, 2)">
+        <table id="tablaUltimasCompras" class="table-style2 m-0 p-0">
           <thead>
             <tr>
-              <th>Proveedor</th>
-              <th>S-Orden</th>
-              <th>Fecha</th>
-              <th>Cant.-E</th>
-              <th>Cant.-F</th>
-              <th>V.V.F</th>
-              <th>Dscto1(%)</th>
-              <th>Dscto2(%)</th>
-              <th>Dscto3(%)</th>
-              <th>Dscto4(%)</th>
-              <th>Boni</th>
+              <th *ngFor="let data of headTableUltimasCompras">
+                {{ data }}
+              </th>
             </tr>
           </thead>
           <tbody>
             <tr *ngFor="let item of rowsUCompras">
               <td>{{ item.nombreProveedor }}</td>
               <td>{{ item.orden }}</td>
-              <td>{{ item.fecha | date: 'dd/MM/yyyy' }}</td>
+              <td>{{ item.fecha | date : 'dd/MM/yyyy' }}</td>
               <td>{{ item.cantE }}</td>
               <td>{{ item.cantF }}</td>
-              <td>{{ item.VVF | number: '1.2-2' }}</td>
-              <td>{{ item.dscto1 | number: '1.2-2' }}</td>
-              <td>{{ item.dscto2 | number: '1.2-2' }}</td>
-              <td>{{ item.dscto3 | number: '1.2-2' }}</td>
-              <td>{{ item.dscto4 | number: '1.2-2' }}</td>
+              <td>{{ item.VVF | number : '1.2-2' }}</td>
+              <td>{{ item.dscto1 | number : '1.2-2' }}</td>
+              <td>{{ item.dscto2 | number : '1.2-2' }}</td>
+              <td>{{ item.dscto3 | number : '1.2-2' }}</td>
+              <td>{{ item.dscto4 | number : '1.2-2' }}</td>
               <td>{{ item.bonificacion }}</td>
-            </tr>           
+            </tr>
           </tbody>
         </table>
       </div>
@@ -164,43 +159,31 @@
     <!-- Tabla Últimos ingresos -->
     <div class="col-md-6 m-0 p-0 pr-4">
       <div class="subtitle mb-3">Últimas ingresos</div>
-      <!-- Tabla -->
-      <div class="m-0 p-0 table-scroll" >
-        <table class="table-style2" >
+      <div class="m-0 p-0 table-scroll" (contextmenu)="openContextMenu($event, 2)">
+        <table id="tablaUltimosIngresos" class="table-style2">
           <thead>
             <tr>
-              <th>Invnum</th>
-              <th>Proveedor</th>
-              <th>Documento</th>
-              <th>Fecha de ingreso</th>
-              <th>Orden de Compra</th>
-              <th>Cant.-E</th>
-              <th>Cant.-F</th>
-              <th>V.V.F</th>
-              <th>Dsct1(%)</th>
-              <th>Dsct2(%)</th>
-              <th>Dsct3(%)</th>
-              <th>Dsct4(%)</th>
-              <th>Boni</th>
+              <th *ngFor="let data of headTableUltimosIngresos">
+                {{ data }}
+              </th>
             </tr>
           </thead>
           <tbody>
-             <tr *ngFor="let item of rowsUIngresos">
-             <td>{{ item.invNum}}</td>
-             <td>{{ item.nombreProveedor}}</td>
-             <td>{{ item.documento}}</td>
-             <td>{{ item.fechaIngreso | date: 'dd/MM/yyyy'}}</td>
-             <td>{{ item.ordenCompra | date: 'dd/MM/yyyy'}}</td>
-             <td>{{ item.cantE}}</td>
-             <td>{{ item.cantF}}</td>
-             <td>{{ item.VVF | number: '1.2-2' }}</td>
-             <td>{{ item.dscto1 | number: '1.2-2' }}</td>
-             <td>{{ item.dscto2 | number: '1.2-2' }}</td>
-             <td>{{ item.dscto3 | number: '1.2-2' }}</td>
-             <td>{{ item.dscto4 | number: '1.2-2' }}</td>
-             <td>{{ item.bonificacion}}</td>
+            <tr *ngFor="let item of rowsUIngresos">
+              <td>{{ item.invNum }}</td>
+              <td>{{ item.nombreProveedor }}</td>
+              <td>{{ item.documento }}</td>
+              <td>{{ item.fechaIngreso | date : 'dd/MM/yyyy' }}</td>
+              <td>{{ item.ordenCompra | date : 'dd/MM/yyyy' }}</td>
+              <td>{{ item.cantE }}</td>
+              <td>{{ item.cantF }}</td>
+              <td>{{ item.VVF | number : '1.2-2' }}</td>
+              <td>{{ item.dscto1 | number : '1.2-2' }}</td>
+              <td>{{ item.dscto2 | number : '1.2-2' }}</td>
+              <td>{{ item.dscto3 | number : '1.2-2' }}</td>
+              <td>{{ item.dscto4 | number : '1.2-2' }}</td>
+              <td>{{ item.bonificacion }}</td>
             </tr>
-         
           </tbody>
         </table>
       </div>
@@ -237,7 +220,7 @@
             type="checkbox"
             value=""
             id="flexCheckDefault"
-            (change)="eliminarColumna(data, 'tablaAnalisiCompra', $event)"
+            (change)="deleteColumn(data, 'tablaAnalisiCompra', $event)"
             checked
           />
           <label class="form-check-label" for="{{ data }}"> {{ data }} </label>
@@ -248,7 +231,11 @@
       <!-- End Filtro de la tabla de A.Compra -->
     </div>
     <!-- tabla -->
-    <div id="container-table" class="m-0 p-0 table-scroll col-12">
+    <div
+      id="container-table"
+      class="m-0 p-0 table-scroll col-12"
+      (contextmenu)="openContextMenu($event, 1)"
+    >
       <table id="tablaAnalisiCompra" class="table-style table-fixed">
         <thead>
           <tr id="header-row">
@@ -258,41 +245,41 @@
           </tr>
         </thead>
         <tbody id="body">
-          <tr (click)="getTableUltimasCompras(data)" *ngFor="let data of rows" >
+          <tr (click)="getTableUltimasCompras(data)" *ngFor="let data of rows">
             <td>{{ data.codProducto }}</td>
             <td>{{ data.nombreProducto }}</td>
             <td>{{ data.nombreLaboratorio }}</td>
             <td class="center-text">{{ data.unidadEmpaque }}</td>
             <td>{{ data.condicion }}</td>
             <td>{{ data.ABC }}</td>
-            <td class="center-text">{{ data.mesQuinto | number: '1.2-2' }}</td>
-            <td class="center-text">{{ data.mesCuarto | number: '1.2-2' }}</td>
-            <td class="center-text">{{ data.mesTercero | number: '1.2-2' }}</td>
-            <td class="center-text">{{ data.mesSegundo | number: '1.2-2' }}</td>
-            <td class="center-text">{{ data.mesPrimero | number: '1.2-2' }}</td>
-            <td class="center-text">{{ data.mesActual | number: '1.2-2' }}</td>
-            <td class="center-text">{{ data.mesActualProyeccion | number: '1.2-2' }}</td>
-            <td class="center-text">{{ data.promMes | number: '1.2-2' }}</td>
-            <td class="center-text">{{ data.preCompra | number: '1.2-2' }}</td>
-            <td class="center-text">{{ data.compraFinal | number: '1.2-2' }}</td>
-            <td class="center-text">{{ data.bonificacion | number: '1.2-2' }}</td>
-            <td class="center-text">{{ data.almacen | number: '1.2-2' }}</td>
-            <td class="center-text">{{ data.org | number: '1.2-2'}}</td>
-            <td class="center-text">{{ data.canje | number: '1.2-2' }}</td>
-            <td class="center-text">{{ data.logisticaInversa | number: '1.2-2' }}</td>
-            <td class="center-text">{{ data.oc | number: '1.2-2' }}</td>
-            <td class="center-text">{{ data.cobOrgAct | number: '1.2-2' }}</td>
-            <td class="center-text">{{ data.maxInfraStock | number: '1.2-2' }}</td>
-            <td class="center-text">{{ data.VVF1 | number: '1.2-2' }}</td>
-            <td class="center-text">{{ data.VVF2 | number: '1.2-2' }}</td>
-            <td class="center-text">{{ data.descuento1 | number: '1.2-2' }}</td>
-            <td class="center-text">{{ data.descuento2 | number: '1.2-2' }}</td>
-            <td class="center-text">{{ data.descuento3 | number: '1.2-2' }}</td>
-            <td class="center-text">{{ data.descuento4 | number: '1.2-2' }}</td>
-            <td class="center-text">{{ data.cosCom | number: '1.2-2' }}</td>
-            <td class="center-text">{{ data.parcial | number: '1.2-2' }}</td>
-            <td class="center-text">{{ data.igv | number: '1.2-2' }}</td>
-            <td class="center-text">{{ data.total | number: '1.2-2' }}</td>
+            <td class="center-text">{{ data.mesQuinto | number : '1.2-2' }}</td>
+            <td class="center-text">{{ data.mesCuarto | number : '1.2-2' }}</td>
+            <td class="center-text">{{ data.mesTercero | number : '1.2-2' }}</td>
+            <td class="center-text">{{ data.mesSegundo | number : '1.2-2' }}</td>
+            <td class="center-text">{{ data.mesPrimero | number : '1.2-2' }}</td>
+            <td class="center-text">{{ data.mesActual | number : '1.2-2' }}</td>
+            <td class="center-text">{{ data.mesActualProyeccion | number : '1.2-2' }}</td>
+            <td class="center-text">{{ data.promMes | number : '1.2-2' }}</td>
+            <td class="center-text">{{ data.preCompra | number : '1.2-2' }}</td>
+            <td class="center-text">{{ data.compraFinal | number : '1.2-2' }}</td>
+            <td class="center-text">{{ data.bonificacion | number : '1.2-2' }}</td>
+            <td class="center-text">{{ data.almacen | number : '1.2-2' }}</td>
+            <td class="center-text">{{ data.org | number : '1.2-2' }}</td>
+            <td class="center-text">{{ data.canje | number : '1.2-2' }}</td>
+            <td class="center-text">{{ data.logisticaInversa | number : '1.2-2' }}</td>
+            <td class="center-text">{{ data.oc | number : '1.2-2' }}</td>
+            <td class="center-text">{{ data.cobOrgAct | number : '1.2-2' }}</td>
+            <td class="center-text">{{ data.maxInfraStock | number : '1.2-2' }}</td>
+            <td class="center-text">{{ data.VVF1 | number : '1.2-2' }}</td>
+            <td class="center-text">{{ data.VVF2 | number : '1.2-2' }}</td>
+            <td class="center-text">{{ data.descuento1 | number : '1.2-2' }}</td>
+            <td class="center-text">{{ data.descuento2 | number : '1.2-2' }}</td>
+            <td class="center-text">{{ data.descuento3 | number : '1.2-2' }}</td>
+            <td class="center-text">{{ data.descuento4 | number : '1.2-2' }}</td>
+            <td class="center-text">{{ data.cosCom | number : '1.2-2' }}</td>
+            <td class="center-text">{{ data.parcial | number : '1.2-2' }}</td>
+            <td class="center-text">{{ data.igv | number : '1.2-2' }}</td>
+            <td class="center-text">{{ data.total | number : '1.2-2' }}</td>
             <td>{{ data.observaciones }}</td>
           </tr>
         </tbody>
@@ -302,12 +289,12 @@
   <!-- end tabla Analisis compras -->
 
   <div class="col-12 d-flex align-items-baseline justify-content-end gap-3 mt-3 mb-3">
-    <p class="text-total-value">Total Parcial: 48,1234</p>
-    <p class="text-total-value">Total IGV (18%): 8,6897</p>
-    <p class="text-total-value">Total Pagar: 40,783</p>
+    <p class="text-total-value">Total Parcial: {{ totalParcial | number : '1.2-2' }}</p>
+    <p class="text-total-value">Total IGV (18%): {{ totalIGV | number : '1.2-2' }}</p>
+    <p class="text-total-value">Total Pagar: {{ totalPagar | number : '1.2-2' }}</p>
   </div>
 </div>
-
+  
 <!-- MODAL -->
 <!-- modal politicas de inventario -->
 <div
@@ -396,5 +383,6 @@
     </div>
   </div>
 </div>
-
+<!-- end modal -->
+<app-option-click (action)="handleMenuAction($event)"></app-option-click>
 <!-- end modal -->

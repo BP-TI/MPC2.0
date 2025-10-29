@@ -35,7 +35,8 @@
 /* Para navegadores Firefox */
 .custom-menu {
   scrollbar-width: thin;           /* "auto" | "thin" | "none" */
-  scrollbar-color: #555 cyan;   /* thumb | track */
+  /* scrollbar-color: #555 cyan;    */
+  scrollbar-color: #B0E0E6 white;   /* thumb | track */
 }
 
 .custom-menu li {
