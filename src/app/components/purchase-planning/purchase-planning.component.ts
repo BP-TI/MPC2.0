@@ -42,6 +42,10 @@ export class PurchasePlanningComponent implements OnInit {
   headTableAnalisisCompra: string[] = []
   rows: any = [];
   rowsLb: any[];
+  rowsUCompras: any[];
+  rowsUIngresos: any[];
+  conscom: any = undefined;
+  conscomImpto: any = undefined;
   loading: boolean = false;
   columns: any = [];
   columnasLb: any = [];
@@ -268,6 +272,7 @@ export class PurchasePlanningComponent implements OnInit {
     this.headTableAnalisisCompra.push('Boni');
     this.headTableAnalisisCompra.push('Almacén');
     this.headTableAnalisisCompra.push('Organización');
+    this.headTableAnalisisCompra.push('Canje');
     this.headTableAnalisisCompra.push('logis_inver');
     this.headTableAnalisisCompra.push('O/C');
     this.headTableAnalisisCompra.push('Cobertura Organizacional');
@@ -368,10 +373,9 @@ export class PurchasePlanningComponent implements OnInit {
   }
 
   getTableUltimasCompras(data: any) {
-    console.log(data);
     let dataSessionStorage = sessionStorage.getItem('USUARIOLOGIN')?.toString();
     let dataUsuario = JSON.parse(dataSessionStorage ? dataSessionStorage : '');
-    console.log(dataUsuario);
+
     let dataRequets: IUltimasComprasReq = {
       codProveedor: this.proveedor,
       codLab: data.codLaboratorio,
@@ -379,6 +383,24 @@ export class PurchasePlanningComponent implements OnInit {
       usuarioLogin: dataUsuario.usuario,
       codUsuario: dataUsuario.codigoUsuario
     }
+    this.ordenCompraService.getUltimasCompras(dataRequets).subscribe((response: any) => {
+
+      if (response.codStatus == 1) {
+        if (response.ultimasCompras.length > 0) {
+          this.rowsUCompras = response.ultimasCompras;
+        }
+
+        if (response.ultimosIngresos.length > 0) {
+          this.rowsUIngresos = response.ultimosIngresos;
+        }
+
+        this.conscom = response.costoCompra;
+        this.conscomImpto = response.costoCompraIGV;
+      }
+
+    }, (error: HttpErrorResponse) => {
+      this.loading = false;
+    });
 
   }
 
