@@ -1,11 +1,11 @@
 <div id="contenedor" class="col-12 m-0 pt-3">
   <!-- botones cabecera -->
   <div class="container-button">
-    <button class="button-header" data-toggle="modal" data-target="#ordenCompra">
+    <button class="button-header" (click)="CalcularCompra()">
       <i class="fa-solid fa-calculator"></i>
       Calcular Compra
     </button>
-    <button class="button-header">
+    <button class="button-header" data-toggle="modal" data-target="#ordenCompra">
       <i class="fa-solid fa-file-medical"></i>
       Generar O/C
     </button>
@@ -139,7 +139,7 @@
       <div class="subtitle mb-3">Últimas Compras</div>
       <!-- Tabla -->
       <div class="m-0 p-0 table-scroll" >
-        <table class="table-style">
+        <table class="table-style" (contextmenu)="openContextMenu($event,2)">
           <thead>
             <tr>
               <th>Proveedor</th>
@@ -210,7 +210,7 @@
       <div class="subtitle mb-3">Últimas ingresos</div>
       <!-- Tabla -->
       <div class="m-0 p-0 table-scroll">
-        <table class="table-style">
+        <table class="table-style" (contextmenu)="openContextMenu($event,2)">
           <thead>
             <tr>
               <th>Invnum</th>
@@ -286,7 +286,7 @@
 
   <!-- tabla Analisis compras -->
   <div class="col-12 m-0 p-0 mt-2">
-    <div class="d-flex align-items-baseline justify-content-between m-0 p-0">
+    <div class="d-flex align-items-baseline justify-content-between m-0 p-0  ">
       <div class="subtitle mb-3">Análisis de Compras</div>
 
       <!-- Filtro de la tabla de A.Compra -->

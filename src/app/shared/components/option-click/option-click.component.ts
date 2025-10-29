@@ -27,10 +27,14 @@ export class OptionClickComponent implements OnInit {
     this.y = y;
     switch(opcionMenu){
       case 1:
-        this.visible = true; break;
+        this.visible2=false;
+        this.visible = true;
+         break;
       case 2:
       case 3:
-        this.visible2 = true; break;
+        this.visible=false;
+        this.visible2 = true; 
+         break;
     }
     
   }

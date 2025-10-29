@@ -1,4 +1,4 @@
-<ul class="custom-menu" *ngIf="visible" [ngStyle]="{ top: y + 'px', left: x + 'px' }">
+<ul class="custom-menu" *ngIf="visible" [ngStyle]="{ top: y + 'px', left: x + 'px' }" style="height: 180px;">
   <li (click)="onAction('view')" >🔍 Ver Sustitutos</li>
   <li (click)="onAction('filters')">🎛️ Mostrar Filtros</li>
   <li (click)="onAction('excel')">📊 Exportar a Excel</li>
@@ -10,6 +10,6 @@
   <li (click)="onAction('discounts')">💰 Ver Descuentos Desagregados (Item)</li>
 </ul>
 
-<ul class="custom-menu" *ngIf="visible2" [ngStyle]="{ top: y + 'px', left: x + 'px' }">
+<ul class="custom-menu" *ngIf="visible2" [ngStyle]="{ top: y + 'px', left: x + 'px' }" style="height: 32px;">
   <li (click)="onAction('excel')">📊 Exportar a Excel</li>
 </ul>
