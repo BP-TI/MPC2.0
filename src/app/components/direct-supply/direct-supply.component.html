@@ -26,22 +26,7 @@
   <hr size="10px" width="100%" color="134B97" />
 
   <div class="col-12 m-0 p-0">
-    <!-- titulo datos principales -->
-    <div class="col-12 m-0 p-0 d-flex align-items-center">
-      <div class="col-12 m-0 p-0 subtitle">Datos principales</div>
-      <!-- icon -->
-      <a
-        type="button"
-        class="dropdown-item m-0 p-0"
-        data-toggle="modal"
-        data-target="#politicaInventario"
-      >
-        <i class="fa-solid fa-circle-info" title="Política de Inventario (Día)"> </i>
-      </a>
-      <!-- end icon -->
-    </div>
-
-    <div class="col-12 m-0 p-0 d-flex align-items-center gap-3">
+    <div class="col-12 m-0 p-0 d-flex align-items-stretch gap-3">
       <!-- proveedor -->
       <div class="m-0 p-0">
         <div>
@@ -86,6 +71,7 @@
                 type="checkbox"
                 [(ngModel)]="item.selected"
                 id="{{ item.codigoLab }}"
+                (change)="onChangeLaboratorios()"
               />
               {{ item.descripcion }}
             </div>
@@ -113,14 +99,14 @@
 
         <div ngbDropdown class="fondoSelect">
           <div ngbDropdownMenu class="dropdown-scroll p-2">
-            <div *ngFor="let item of laboratorios" class="form-check label-check-lab">
+            <div *ngFor="let item of boticas" class="form-check label-check-lab">
               <input
                 class="form-check-input"
                 type="checkbox"
-                [(ngModel)]="item.selected"
-                id="{{ item.codigoLab }}"
+                [(ngModel)]="item.selected"                
+                id="{{ item.codAlmacen }}"
               />
-              {{ item.descripcion }}
+              {{ item.descripcionAlmacen }}
             </div>
           </div>
         </div>
@@ -139,7 +125,7 @@
       <div class="subtitle mb-3">Últimas Compras</div>
       <!-- Tabla -->
       <div class="m-0 p-0 table-scroll" >
-        <table class="table-style" (contextmenu)="openContextMenu($event,2)">
+        <table class="table-style2 m-0 p-0" (contextmenu)="openContextMenu($event,2)">
           <thead>
             <tr>
               <th>Proveedor</th>
@@ -206,11 +192,11 @@
     <!-- End tabla -->
 
     <!-- Tabla Últimos ingresos -->
-    <div class="col-md-6 m-0 p-0">
+    <div class="col-md-6 m-0 p-0 pr-4">
       <div class="subtitle mb-3">Últimas ingresos</div>
       <!-- Tabla -->
       <div class="m-0 p-0 table-scroll">
-        <table class="table-style" (contextmenu)="openContextMenu($event,2)">
+        <table class="table-style2" (contextmenu)="openContextMenu($event,2)">
           <thead>
             <tr>
               <th>Invnum</th>

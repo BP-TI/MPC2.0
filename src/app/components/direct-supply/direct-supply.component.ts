@@ -1,11 +1,11 @@
 import { Component, EventEmitter, OnInit, Output, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
 import { AppConstants } from '../../shared/constants/app.constants';
 import { ReporteProductosCompra } from '../../models/ordenCompra';
-import { Laboratorios, Proveedores } from '../../models/parametros';
+import { Laboratorios, Proveedores, Boticas } from '../../models/parametros';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { DirectSupplyService } from '../../services/DirectSupply/directSupply.service';
 import { HttpErrorResponse } from '@angular/common/http';
-import { OrdenCompraService } from '../../services/PurchasePlanning/ordenCompra.service';
+import { OrdenCompraAbadiService } from '../../services/DirectSupply/ordenCompraAbadi.service';
 import { OptionClickComponent } from '../../shared/components/option-click/option-click.component';
 import { GlobalService } from '../../shared/services/global.service';
 
@@ -42,6 +42,7 @@ export class DirectSupplyComponent implements OnInit {
   tableClass: string = "table-company-0";
   tableClass2: string = "table-company-4";//table-company-default
   rows: any = [];
+
   rowsLb: any[];
   loading: boolean = false;
   columns: any = [];
@@ -52,6 +53,7 @@ export class DirectSupplyComponent implements OnInit {
   nroDocumento: string;
   proveedores: Proveedores[];
   laboratorios: Laboratorios[];
+  boticas: Boticas[];
   labotaroiosSeleccionados: number[]; //Eliminar
   //bsModalRef: BsModalRef;
   loadingIndicator: boolean = false;
@@ -70,7 +72,7 @@ export class DirectSupplyComponent implements OnInit {
 
   constructor(private fb: FormBuilder,
     private supplyService: DirectSupplyService,
-    private ordenCompraService: OrdenCompraService,
+    private ordenCompraService: OrdenCompraAbadiService,
     private modalService: NgbModal,
     public global: GlobalService) { }
 
@@ -234,6 +236,21 @@ export class DirectSupplyComponent implements OnInit {
       }
     );
 
+  }
+  onChangeLaboratorios(){
+     this.loading = true;
+    this.boticas = [];
+    let labChecks = this.laboratorios?.filter(p => p.selected === true) || [];
+    let cadenaLab = labChecks.map(p => p.codigoLab).join(',');
+    this.supplyService.getBoticas(this.proveedor,cadenaLab).subscribe(
+      (response) => {
+        this.loading = false;
+        this.boticas = response;
+      },
+      (error: HttpErrorResponse) => {
+        this.loading = false;
+      }
+    );
 
   }
 

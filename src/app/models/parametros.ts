@@ -16,7 +16,8 @@ export class Politicas{
     Total:number;
 }
 export class Boticas{
-    codigoProveedor: String
-    codigoLaboratorio: String
+    codAlmacen: String
+    descripcionAlmacen: String
+    selected: boolean =false;
 }
 
