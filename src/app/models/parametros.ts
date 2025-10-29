@@ -4,7 +4,6 @@ export class Laboratorios {
     selected: boolean = false;
   
 }
-
 export class Proveedores {
     codigoProveedor: string;
     descripcion: string;    
@@ -15,5 +14,9 @@ export class Politicas{
     puntoVenta:number;
     MaxAlmacen:number;
     Total:number;
+}
+export class Boticas{
+    codigoProveedor: String
+    codigoLaboratorio: String
 }
 

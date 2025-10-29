@@ -1,11 +1,24 @@
-import { Injectable, signal } from '@angular/core';
+import { Injectable, numberAttribute, signal } from '@angular/core';
 
 @Injectable({
   providedIn: 'root'
 })
 export class GlobalService {
   componenteTitle = signal<string>('');
-
+  month:string[] = [
+    'Enero',
+    'Febrero',
+    'Marzo',
+    'Abril',
+    'Mayo',
+    'Junio',
+    'Julio',
+    'Agosto',
+    'Setiembre',
+    'Octubre',
+    'Noviembre',
+    'Diciembre',
+  ];
   constructor() { }
 
   // Métodos auxiliares (opcionales)
@@ -20,4 +33,12 @@ export class GlobalService {
   getGlobalVar() {
     return this.componenteTitle();
   }
+
+  getMonthName(monthNumber: number): string{
+    if(monthNumber>=0 &&  monthNumber <=11) {    
+      return this.month[monthNumber];
+    }     
+    return '';
+  }
+
 }

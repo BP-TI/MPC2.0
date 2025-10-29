@@ -3,16 +3,15 @@ import { HelperService } from '../../shared/services/helper.service';
 import { environment } from '../../../environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { IUltimasComprasReq } from '../../models/ordenCompra';
 
 @Injectable({
   providedIn: 'root'
 })
-export class OrdenCompraService {
+export class OrdenCompraAbadiService {
 
   constructor(private httpClient: HttpClient) { }
 
-  private POST_ENDPOINT: string = 'OrdenCompra';
+  private POST_ENDPOINT: string = 'OrdenCompraAbadi';
   private BASE_URL: string = HelperService.buildRequestURL(environment.apiUrl);
   private REQUEST_URL: string = `${this.BASE_URL}/${this.POST_ENDPOINT}`;
 
@@ -25,11 +24,6 @@ export class OrdenCompraService {
     };
     return this.httpClient.post<any>(`${this.REQUEST_URL}/GetCalculoCompra`, request);
   }
-
-  getUltimasCompras(request: IUltimasComprasReq): Observable<any> {
-    return this.httpClient.post<any>(`${this.REQUEST_URL}/GetUltimasCompras`, request);
-  }
-
 
 
 }

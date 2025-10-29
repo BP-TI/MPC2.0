@@ -181,12 +181,12 @@ input {
 
 .table-style th,
 td {
-  width: 135px;
-  height: 48px;
-  font-family: 'Open Sans';
-  font-style: normal;
 
-  line-height: 22px;
+  font-family: 'Montserrat' !important;
+  font-style: normal;
+  padding: 4px !important;
+  margin: 0px !important;
+  /* line-height: 22px; */
 }
 
 .table-style th {
@@ -206,7 +206,6 @@ td {
 td {
   white-space: nowrap;
   text-align: left;
-  padding: 4px;
 }
 
 
