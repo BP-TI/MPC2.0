@@ -72,10 +72,10 @@ i {
   flex-direction: row;
   justify-content: center;
   align-items: center;
-  padding: 3px 10px;
-  gap: 8px;
+  padding: 3px 7px;
+  gap: 6px;
 
-  width: 210PX;
+  width: 170PX;
   height: 40px;
 
   background: #FFFFFF;
@@ -128,7 +128,7 @@ i {
 
 .menu-laboratorio {
   height: 100px;
-  overflow-x: auto;
+  overflow-x: none;
   overflow-y: none;
   scrollbar-color: #B0E0E6 white !important;  
 }
@@ -393,17 +393,20 @@ hr {
 
 .label-check-lab {
   font-size: 10px;
+  height: 9px !important;
 }
 
 .dropdown-scroll {
-  max-height: 150px !important;
-  min-height: 150px !important;
+  max-height: 95px !important;
+  min-height: 50px !important;
   overflow-y: auto !important;
-  overflow-x: hidden;
+  overflow-x: none !important;
   min-width: 250px;
+  width: 300px;
   display: block !important;
   position: static !important;
 }
+
 
 .filter-table {
   height: 200px;

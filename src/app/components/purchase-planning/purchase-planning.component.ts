@@ -8,6 +8,7 @@ import { PurchasePlanningService } from '../../services/PurchasePlanning/purchas
 import { HttpErrorResponse, JsonpClientBackend } from '@angular/common/http';
 import { GlobalService } from '../../shared/services/global.service';
 import { OrdenCompraService } from '../../services/PurchasePlanning/ordenCompra.service';
+// import { OptionClickComponent } from '../../shared/components/option-click/option-click.component';
 import { OptionClickComponent } from '../../shared/components/option-click/option-click.component';
 
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
@@ -31,15 +32,9 @@ export class PurchasePlanningComponent implements OnInit {
   filteredRows: any[] = [];
   filters: { [key: string]: any } = {};
 
-  title: string = "";
-  agencyCode: string = sessionStorage.getItem(AppConstants.Session.AGENCYCODE) ?? "";
-  agencyName: string = sessionStorage.getItem(AppConstants.Session.AGENCYNAME) ?? "";
-  usersessionId: string = sessionStorage.getItem(AppConstants.Session.USERID) ?? "";
-  channelName: string = sessionStorage.getItem(AppConstants.Session.SALES_CHANNEL_DESCRIPTION) ?? "";
-  titulo = "Planificacion de Orden de Compra";
-  tableClass: string = "table-company-0";
-  tableClass2: string = "table-company-4";//table-company-default
   headTableAnalisisCompra: string[] = []
+  headTableUltimasCompras: string[] = []
+  headTableUltimosIngresos: string[] = []
   rows: any = [];
   rowsLb: any[];
   rowsUCompras: any[];
@@ -47,27 +42,17 @@ export class PurchasePlanningComponent implements OnInit {
   conscom: any = undefined;
   conscomImpto: any = undefined;
   loading: boolean = false;
-  columns: any = [];
-  columnasLb: any = [];
-  tipoDocumento: string = "1";
-  //client: ResponseGetClientT24;
-  nombres: string = "";
-  nroDocumento: string;
   proveedores: Proveedores[];
   laboratorios: Laboratorios[];
-  labotaroiosSeleccionados: number[]; //Eliminar
-  //bsModalRef: BsModalRef;
-  loadingIndicator: boolean = false;
-  currentFilter: string = "active";
-  totalWidth = 0;
-
   validaCorreo: boolean = false;
-  @ViewChild("actionTemplate") actionTemplate: TemplateRef<any>;
+  totalParcial: number = 0;
+  totalIGV: number = 0;
+  totalPagar: number = 0;
 
-  selectedProveedores: string[] = [];
   proveedor = "0";
   opcionesForm: FormGroup;
 
+  @ViewChild("actionTemplate") actionTemplate: TemplateRef<any>;
   @ViewChild(OptionClickComponent) contextMenu!: OptionClickComponent;
 
 
@@ -79,11 +64,10 @@ export class PurchasePlanningComponent implements OnInit {
 
 
   ngOnInit() {
-    this.addHeadeTableAnalisisCompra();
+    this.addHeadeTable();
     this.cargarProveedores();
     this.crearGrupoChecks();
     this.global.setGlobalVar('Módulo planificación de compra');
-    this.mostrarMes("");
   }
 
   crearGrupoChecks() {
@@ -104,25 +88,6 @@ export class PurchasePlanningComponent implements OnInit {
         this.loading = false;
       }
     );
-  }
-
-  getStickyOffset(index: number): number {
-    let offset = 0;
-    for (let i = 0; i < index; i++) {
-      if (this.columns[i].sticky) {
-        const width = parseInt(this.columns[i].width.replace('px', ''), 10);
-        offset += width;
-      }
-    }
-    return offset;
-  }
-
-  onSearch() {
-
-  }
-
-  onSelectAccount(row: any) {
-
   }
 
   onCheckChange(opcion: string) {
@@ -147,7 +112,7 @@ export class PurchasePlanningComponent implements OnInit {
     this.loading = true;
     this.rows = [];
     this.laboratorios = [];
-
+    this.clearField();
 
     this.purchaseService.getLaboratorios(this.proveedor).subscribe(
       (response) => {
@@ -161,15 +126,6 @@ export class PurchasePlanningComponent implements OnInit {
         this.loading = false;
       }
     );
-
-
-  }
-
-  Limpiar() {
-    this.proveedor = "0";
-    this.laboratorios = [];
-    this.crearGrupoChecks();
-    this.rows = [];
   }
 
   CalcularCompra() {
@@ -197,6 +153,7 @@ export class PurchasePlanningComponent implements OnInit {
             } else {
               alert(response.message);
             }
+            this.calculateTotal();
           } else {
             alert(response.message);
           }
@@ -206,11 +163,6 @@ export class PurchasePlanningComponent implements OnInit {
         this.loading = false;
       }
     );
-  }
-
-  openContextMenu(event: MouseEvent, opcionMenu: number) {
-    event.preventDefault(); // evita el menú del navegador
-    this.contextMenu.open(event.pageX, event.pageY, opcionMenu);
   }
 
   applyFilter(columnProp: string, value: string) {
@@ -224,7 +176,6 @@ export class PurchasePlanningComponent implements OnInit {
       });
     });
   }
-
 
   handleMenuAction(action: string) {
     switch (action) {
@@ -252,45 +203,77 @@ export class PurchasePlanningComponent implements OnInit {
   }
 
   // tabla
-  addHeadeTableAnalisisCompra() {
-    this.headTableAnalisisCompra.push('cod.');
-    this.headTableAnalisisCompra.push('Descripción');
-    this.headTableAnalisisCompra.push('Labora.');
-    this.headTableAnalisisCompra.push('Cant. Unid. Empaque');
-    this.headTableAnalisisCompra.push('Condición');
-    this.headTableAnalisisCompra.push('Tipo');
-    this.headTableAnalisisCompra.push(this.mostrarMes('mesquinto'));
-    this.headTableAnalisisCompra.push(this.mostrarMes('mescuarto'));
-    this.headTableAnalisisCompra.push(this.mostrarMes('mestercero'));
-    this.headTableAnalisisCompra.push(this.mostrarMes('messegundo'));
-    this.headTableAnalisisCompra.push(this.mostrarMes('mesprimero'));
-    this.headTableAnalisisCompra.push(this.mostrarMes('mesActual'));
-    this.headTableAnalisisCompra.push(this.mostrarMes('mesProyectado'));
-    this.headTableAnalisisCompra.push('Prom. Mes<');
-    this.headTableAnalisisCompra.push('Pre compra');
-    this.headTableAnalisisCompra.push('Compra final');
-    this.headTableAnalisisCompra.push('Boni');
-    this.headTableAnalisisCompra.push('Almacén');
-    this.headTableAnalisisCompra.push('Organización');
-    this.headTableAnalisisCompra.push('Canje');
-    this.headTableAnalisisCompra.push('logis_inver');
-    this.headTableAnalisisCompra.push('O/C');
-    this.headTableAnalisisCompra.push('Cobertura Organizacional');
-    this.headTableAnalisisCompra.push('Maximo Infrastock');
-    this.headTableAnalisisCompra.push('V.V.F');
-    this.headTableAnalisisCompra.push('V.V.F Nuevo');
-    this.headTableAnalisisCompra.push('Dsct.1');
-    this.headTableAnalisisCompra.push('Dsct.2');
-    this.headTableAnalisisCompra.push('Dsct.3');
-    this.headTableAnalisisCompra.push('Dsct.4');
-    this.headTableAnalisisCompra.push('CosCom');
-    this.headTableAnalisisCompra.push('Parcial');
-    this.headTableAnalisisCompra.push('Igv');
-    this.headTableAnalisisCompra.push('Total');
-    this.headTableAnalisisCompra.push('Observación');
+  addHeadeTable() {
+    this.headTableAnalisisCompra = [
+      'cod.',
+      'Descripción',
+      'Labora.',
+      'Cant. Unid. Empaque',
+      'Condición',
+      'Tipo',
+      this.showMonth('mesquinto'),
+      this.showMonth('mescuarto'),
+      this.showMonth('mestercero'),
+      this.showMonth('messegundo'),
+      this.showMonth('mesprimero'),
+      this.showMonth('mesActual'),
+      this.showMonth('mesProyectado'),
+      'Prom. Mes',
+      'Pre compra',
+      'Compra final',
+      'Boni',
+      'Almacén',
+      'Organización',
+      'Canje',
+      'logis_inver',
+      'O/C',
+      'Cobertura Organizacional',
+      'Maximo Infrastock',
+      'V.V.F',
+      'V.V.F Nuevo',
+      'Dsct.1',
+      'Dsct.2',
+      'Dsct.3',
+      'Dsct.4',
+      'CosCom',
+      'Parcial',
+      'Igv',
+      'Total',
+      'Observación',
+    ];
+
+    this.headTableUltimasCompras = [
+      'Proveedor',
+      ' S - Orden',
+      ' Fecha',
+      ' Cant.-E',
+      ' Cant.- F',
+      ' V.V.F',
+      ' Dscto1(%)',
+      ' Dscto2(%)',
+      ' Dscto3(%)',
+      ' Dscto4(%)',
+      ' Boni',
+    ];
+
+    this.headTableUltimosIngresos = [
+      'Invnum',
+      'Proveedor',
+      'Documento',
+      'Fecha de ingreso',
+      'Orden de Compra',
+      'Cant.-E',
+      'Cant.-F',
+      'V.V.F',
+      'Dsct1(%)',
+      'Dsct2(%)',
+      'Dsct3(%)',
+      'Dsct4(%)',
+      'Boni',
+    ];
   }
 
-  eliminarColumna(headColumna: string, nombreTabla: string, event: Event) {
+  deleteColumn(headColumna: string, nombreTabla: string, event: Event) {
     let tabla: any = document.getElementById(nombreTabla);
     let row = tabla.rows;
     let idColumna: number = 99999;
@@ -320,7 +303,7 @@ export class PurchasePlanningComponent implements OnInit {
     }
   }
 
-  mostrarMes(mesConsultado: string): string {
+  showMonth(mesConsultado: string): string {
     let diaActual = new Date();
     let dataMes: string = "";
 
@@ -373,6 +356,10 @@ export class PurchasePlanningComponent implements OnInit {
   }
 
   getTableUltimasCompras(data: any) {
+    this.loading = true;
+    this.rowsUCompras = [];
+    this.rowsUIngresos = [];
+    this.conscom = undefined;
     let dataSessionStorage = sessionStorage.getItem('USUARIOLOGIN')?.toString();
     let dataUsuario = JSON.parse(dataSessionStorage ? dataSessionStorage : '');
 
@@ -397,16 +384,51 @@ export class PurchasePlanningComponent implements OnInit {
         this.conscom = response.costoCompra;
         this.conscomImpto = response.costoCompraIGV;
       }
-
+      this.loading = false;
     }, (error: HttpErrorResponse) => {
       this.loading = false;
     });
 
   }
 
+  openContextMenu(event: MouseEvent, opcionMenu: number) {
+    event.preventDefault();
+    this.contextMenu.open(event.pageX, event.pageY, opcionMenu);
+  }
 
+  denyRightClick(event: MouseEvent) {
+    event.preventDefault();
+  }
 
+  clearField() {
+    this.rowsUCompras = [];
+    this.rowsUIngresos = [];
+    this.conscom = undefined;
+    this.conscomImpto = undefined;
+    this.laboratorios = [];
+    this.rows = [];
+    this.opcionesForm.get('todos')?.disable();
+    this.totalIGV = 0;
+    this.totalPagar = 0;
+    this.totalParcial = 0;
+  }
 
+  calculateTotal() {
+    let sumaParcial: number = 0;
+    let sumaIGV: number = 0;
+    let sumaPagar: number = 0;
 
+    this.rows.forEach((data: any) => {
+      if (parseFloat(data.promMes) > 0) {
+        sumaParcial += parseFloat(data.parcial);
+        sumaIGV += parseFloat(data.igv);
+        sumaPagar += parseFloat(data.total);
+      }
+    });
+
+    this.totalParcial = sumaParcial;
+    this.totalIGV = sumaIGV;
+    this.totalPagar = sumaPagar;
+  }
 
 }
