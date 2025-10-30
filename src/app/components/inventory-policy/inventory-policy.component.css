@@ -2,36 +2,46 @@
   overflow-x: auto;
   height: 150px;
   border: #DCEBFF solid;
+  scrollbar-color: #B0E0E6 white !important;
 }
 
 /* Estilo de la tabla */
-table{
-  border: #DCEBFF solid;
-}
 .table-style thead th {
-    background: #134B97;
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  padding: 0px;
+  margin: 0px;
+}
+
+.table-style {
+  width: 200%;
+  min-height: auto;
+  max-height: 300px;
+}
+
+.table-style thead th {
+  background: #134B97;
   color: white;
 }
 
 .table-style th,
 td {
   width: 135px;
-  height: 48px;
   font-family: 'Open Sans';
   font-style: normal;
-
   line-height: 22px;
 }
 
 .table-style th {
   font-weight: bold;
-  font-size: 13px;
+  font-size: 10px;
   color: black;
   background: white;
 }
 
 .table-style td {
-  font-size: 12px;
+  font-size: 10px;
   color: #3C3C3C;
   background: white;
 }
@@ -39,8 +49,8 @@ td {
 .table-style th,
 td {
   white-space: nowrap;
-  text-align: left;
-  padding: 4px;
+  padding: 0px;
+  text-align: center;
 }
 
 /* En estiñlos de la tabla */

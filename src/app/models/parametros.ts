@@ -21,3 +21,8 @@ export class Boticas{
     selected: boolean =false;
 }
 
+export class Condiciones {
+    codigoCondicion: string;
+    descripcion: string;
+}
+

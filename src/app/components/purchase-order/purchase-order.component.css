@@ -6,10 +6,8 @@
   align-items: center;
   padding: 4px 24px;
   gap: 4px;
-
   width: auto;
   height: 40px;
-
   background: #134B97;
   border: 1px solid #134B97;
   border-radius: 4px;
@@ -101,9 +99,7 @@
   height: 40px;
 
   background: #134B978F;
-  ;
   border: 1px solid #DCEBFF;
-  ;
   border-radius: 4px;
   font-size: 13px;
 
@@ -186,7 +182,6 @@ td {
   font-style: normal;
   padding: 4px !important;
   margin: 0px !important;
-  /* line-height: 22px; */
 }
 
 .table-style th {
