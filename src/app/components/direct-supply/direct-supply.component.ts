@@ -42,7 +42,7 @@ export class DirectSupplyComponent implements OnInit {
   tableClass: string = "table-company-0";
   tableClass2: string = "table-company-4";//table-company-default
   rows: any = [];
-
+  headTableAnalisisCompra: string[] = []
   rowsLb: any[];
   loading: boolean = false;
   columns: any = [];
@@ -82,6 +82,7 @@ export class DirectSupplyComponent implements OnInit {
     this.createColumsTableTC();
     this.createColumsTableLB();
     this.crearGrupoChecks();
+    this.addHeadeTable();
     this.global.setGlobalVar('Módulo Abastecimiento Directo');
   }
 
@@ -260,6 +261,18 @@ export class DirectSupplyComponent implements OnInit {
     this.crearGrupoChecks();
     this.rows = [];
   }
+    clearField() {
+    /*this.rowsUCompras = [];
+    this.rowsUIngresos = [];
+    this.conscom = undefined;
+    this.conscomImpto = undefined;*/
+    this.laboratorios = [];
+    this.rows = [];
+    this.opcionesForm.get('todos')?.disable();
+    /*this.totalIGV = 0;
+    this.totalPagar = 0;
+    this.totalParcial = 0;*/
+  }
 
   CalcularCompra() {
     this.loading = true;
@@ -269,10 +282,18 @@ export class DirectSupplyComponent implements OnInit {
       alert("Debes seleccionar al menos un laboratorio para continuar");
       return;
     }
+     let BotChecks = this.boticas?.filter(p => p.selected === true) || [];
+    if (BotChecks.length === 0) {
+      this.loading = false;
+      alert("Debes seleccionar al menos un akmacen para continuar");
+      return;
+    }
+
 
     let cadenaLab = labChecks.map(p => p.codigoLab).join(',');
+    let cadenaBot = BotChecks.map(p => p.codAlmacen).join(',');
 
-    this.ordenCompraService.getCalularCompra(this.proveedor, cadenaLab, "").subscribe(
+    this.ordenCompraService.getCalularCompra(this.proveedor, cadenaLab, "","",cadenaBot).subscribe(
       (response) => {
         this.loading = false;
         if (response == null) {
@@ -340,6 +361,118 @@ export class DirectSupplyComponent implements OnInit {
   }
 
   // tabla
+
+  addHeadeTable() {
+    this.headTableAnalisisCompra = [
+      '#R',
+      'cod.',
+      'Descripción',
+      'Labora.',
+      'Establecimiento',
+      'Cant. Unid. Empaque',
+      'Condición',
+      this.showMonth('mesquinto'),
+      this.showMonth('mescuarto'),
+      this.showMonth('mestercero'),
+      this.showMonth('messegundo'),
+      this.showMonth('mesprimero'),
+      this.showMonth('mesActual'),
+      this.showMonth('mesProyectado'),
+      'Prom. Mes',
+      'Pre compra',
+      'Compra final',
+      'Boni',
+      'Botica',
+      'O/C Vigente',
+      'O/C Vencida',
+      'O/C',
+      'Botica + O/C',
+      'Cobertura Botica (Dia)',
+      'Observación',
+    ];
+  }
+
+  deleteColumn(headColumna: string, nombreTabla: string, event: Event) {
+    let tabla: any = document.getElementById(nombreTabla);
+    let row = tabla.rows;
+    let idColumna: number = 99999;
+    let isChecked = (event.target as HTMLInputElement).checked;
+
+    for (let i = 0; i < row.length; i++) {
+      let celdas = row[i].cells;
+
+      for (let j = 0; j < celdas.length; j++) {
+
+        if (headColumna.trim() === celdas[j].innerHTML.trim()) {
+          idColumna = j;
+        }
+        if (j === idColumna) {
+          if (isChecked) {
+            let styleColumn: string = "text-align: left; padding: 4px; position: sticky; top: 0;";
+            if (j == 0) {
+              styleColumn += "z-index: 5 !important;";
+            }
+            celdas[j].setAttribute("style", styleColumn);
+          } else {
+            celdas[j].setAttribute("style", "display: none;");
+
+          }
+        }
+      }
+    }
+  }
+
+  showMonth(mesConsultado: string): string {
+    let diaActual = new Date();
+    let dataMes: string = "";
+
+    if (mesConsultado === "mesProyectado") {
+      diaActual.setMonth(diaActual.getMonth() + 1);
+      diaActual.setDate(0);
+      dataMes = this.global.getMonthName(diaActual.getMonth()) + " Proy. " + diaActual.getDate();
+    }
+
+    if (mesConsultado === "mesActual") { //Octubre
+      dataMes = this.global.getMonthName(diaActual.getMonth()) + " " + (diaActual.getDate() - 1);
+    }
+
+    if (mesConsultado === "mesprimero") { /*setiembre*/
+      diaActual = new Date(diaActual.getFullYear(), diaActual.getMonth(), 1);
+      diaActual.setDate(0);
+      dataMes = this.global.getMonthName(diaActual.getMonth()) + " " + diaActual.getDate();
+    }
+
+    if (mesConsultado === "messegundo") { /*agosto*/
+      diaActual = new Date(diaActual.getFullYear(), diaActual.getMonth(), 1);
+      diaActual.setMonth(diaActual.getMonth() - 1);
+      diaActual.setDate(0);
+      dataMes = this.global.getMonthName(diaActual.getMonth()) + " " + diaActual.getDate();
+    }
+
+    if (mesConsultado === "mestercero") { //julio
+      diaActual = new Date(diaActual.getFullYear(), diaActual.getMonth(), 1);
+      diaActual.setMonth(diaActual.getMonth() - 2);
+      diaActual.setDate(0);
+      dataMes = this.global.getMonthName(diaActual.getMonth()) + " " + diaActual.getDate();
+    }
+
+    if (mesConsultado === "mescuarto") { //Junio
+      diaActual = new Date(diaActual.getFullYear(), diaActual.getMonth(), 1);
+      diaActual.setMonth(diaActual.getMonth() - 3);
+      diaActual.setDate(0);
+      dataMes = this.global.getMonthName(diaActual.getMonth()) + " " + diaActual.getDate();
+    }
+
+    if (mesConsultado === "mesquinto") { //Junio
+      diaActual = new Date(diaActual.getFullYear(), diaActual.getMonth(), 1);
+      diaActual.setMonth(diaActual.getMonth() - 4);
+      diaActual.setDate(0);
+      dataMes = this.global.getMonthName(diaActual.getMonth()) + " " + diaActual.getDate();
+    }
+
+    return dataMes;
+
+  }
 
 
   eliminarColumna(headColumna: string, nombreTabla: string) {

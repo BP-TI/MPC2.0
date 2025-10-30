@@ -21,6 +21,10 @@
       <i class="fa-solid fa-file-export"></i>
       Exportar Excel
     </button>
+        <button class="button-header" (click)="clearField()">
+      <i class="fa-solid fa-broom"></i>
+      Limpiar
+    </button>
   </div>
   <!-- End botones cabecera -->
   <hr size="10px" width="100%" color="134B97" />
@@ -328,74 +332,90 @@
       <!-- End Filtro de la tabla de A.Compra -->
     </div>
     <!-- Tabla Analisis compras -->
-    <div id="container-table" class="m-0 p-0 table-scroll col-12" (contextmenu)="openContextMenu($event,1)">
+       <div class="col-12 m-0 p-0 mt-2">
+    <!-- head y filter -->
+    <div class="d-flex align-items-baseline justify-content-between m-0 p-0">
+      <div class="subtitle mb-3">Análisis Compras</div>
+
+      <!-- Filtro de la tabla de A.Compra -->
+      <a
+        class="dropdown-toggle"
+        id="userDropdown"
+        role="button"
+        data-toggle="dropdown"
+        data-bs-auto-close="false"
+      >
+        <i class="fa-solid fa-filter"></i>
+      </a>
+      <div
+        class="dropdown-menu dropdown-menu-right shadow animated--grow-in filter-table"
+        aria-labelledby="userDropdown"
+      >
+        <!-- Listado de columnas filtro -->
+        @for(data of headTableAnalisisCompra; track data; let index = $index){ @if(index > 2){
+        <div class="dropdown-item form-check" data-toggle="modal">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            value=""
+            id="flexCheckDefault"
+            (change)="deleteColumn(data, 'tablaAnalisiCompra', $event)"
+            checked
+          />
+          <label class="form-check-label" for="{{ data }}"> {{ data }} </label>
+        </div>
+        } }
+        <!-- End Listado de columnas filtro -->
+      </div>
+      <!-- End Filtro de la tabla de A.Compra -->
+    </div>
+    <!-- tabla -->
+    <div
+      id="container-table"
+      class="m-0 p-0 table-scroll col-12"
+      (contextmenu)="openContextMenu($event, 1)"
+    >
       <table id="tablaAnalisiCompra" class="table-style table-fixed">
         <thead>
-          <tr>
-            <th>Index</th>
-            <th draggable="true" class="sticky-col second-col">First Name</th>
-            <th draggable="true">Last Name</th>
-            <th draggable="true">Age</th>
-            <th draggable="true">Enrolled Cours0</th>
-            <th draggable="true">Enrolled Course1</th>
-            <th draggable="true">Enrolled Course2</th>
-            <th draggable="true">Enrolled Course3</th>
-            <th draggable="true">Enrolled Course4</th>
-            <th draggable="true">Enrolled Course5</th>
-            <th draggable="true">Enrolled Course6</th>
-            <th draggable="true">Enrolled Course7</th>
-            <th draggable="true">Enrolled Course8</th>
+          <tr id="header-row">
+            <th *ngFor="let data of headTableAnalisisCompra">
+              {{ data }}
+            </th>
           </tr>
         </thead>
-        <tbody>
-          <tr>
-            <th>1</th>
-            <td class="sticky-col second-col">Raj</td>
-            <td>Shukla</td>
-            <td>23</td>
-            <td>Advanced Java</td>
-            <td>Advanced Java</td>
-            <td>Advanced Java</td>
-            <td>Advanced Java</td>
-            <td>Advanced Java</td>
-            <td>Advanced Java</td>
-            <td>Advanced Java</td>
-            <td>Advanced Java</td>
-            <td>Advanced Java</td>
-          </tr>
-          <tr>
-            <th>2</th>
-            <td class="sticky-col second-col">Rahul</td>
-            <td>Mishra</td>
-            <td>23</td>
-            <td>DSA In JAVA</td>
-            <td>DSA In JAVA</td>
-            <td>DSA In JAVA</td>
-            <td>DSA In JAVA</td>
-            <td>DSA In JAVA</td>
-            <td>DSA In JAVA</td>
-            <td>DSA In JAVA</td>
-            <td>DSA In JAVA</td>
-            <td>DSA In JAVA</td>
-          </tr>
-          <tr>
-            <th>3</th>
-            <td class="sticky-col second-col">Prahant</td>
-            <td>Shuka</td>
-            <td>19</td>
-            <td>Web Development</td>
-            <td>Web Development</td>
-            <td>Web Development</td>
-            <td>Web Development</td>
-            <td>Web Development</td>
-            <td>Web Development</td>
-            <td>Web Development</td>
-            <td>Web Development</td>
-            <td>Web Development</td>
+        <tbody id="body">
+          <tr *ngFor="let data of rows">
+            <td>{{data.relacionado}}</td>
+            <td class="center-text">{{ data.codProducto }}</td>
+            <td>{{ data.nombreProducto }}</td>
+            <td>{{ data.nombreLaboratorio }}</td>
+            <td>{{data.establecimiento}}</td>
+            <td class="center-text">{{ data.unidadEmpaque }}</td>
+            <td>{{ data.condicion }}</td>
+            <td class="center-text">{{ data.mesQuinto | number : '1.2-2' }}</td>
+            <td class="center-text">{{ data.mesCuarto | number : '1.2-2' }}</td>
+            <td class="center-text">{{ data.mesTercero | number : '1.2-2' }}</td>
+            <td class="center-text">{{ data.mesSegundo | number : '1.2-2' }}</td>
+            <td class="center-text">{{ data.mesPrimero | number : '1.2-2' }}</td>
+            <td class="center-text">{{ data.mesActual | number : '1.2-2' }}</td>
+            <td class="center-text">{{ data.mesActualProyeccion | number : '1.2-2' }}</td>
+            <td class="center-text">{{ data.promMes | number : '1.2-2' }}</td>
+            <td class="center-text">{{ data.preCompra | number : '1.2-2' }}</td>
+            <td class="center-text">{{ data.compraFinal | number : '1.2-2' }}</td>
+            <td class="center-text">{{ data.bonificacion | number : '1.2-2' }}</td>
+            <td class="center-text">{{ data.botica | number : '1.2-2' }}</td>
+            <td class="center-text">{{ data.ocVigente | number : '1.2-2' }}</td>
+            <td class="center-text">{{ data.ocVencido | number : '1.2-2' }}</td>
+            <td class="center-text">{{ data.oc | number : '1.2-2' }}</td>
+            <td class="center-text">{{ data.total | number : '1.2-2' }}</td>
+            <td class="center-text">{{ data.cobOrgAct | number : '1.2-2' }}</td>
+            <td>{{ data.observacionesAbadi }}</td>
           </tr>
         </tbody>
       </table>
     </div>
+  </div>
+
     <!-- end tabla Analisis compras -->
   </div>
 

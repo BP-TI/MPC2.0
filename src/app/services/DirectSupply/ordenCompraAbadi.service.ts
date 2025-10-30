@@ -16,10 +16,11 @@ export class OrdenCompraAbadiService {
   private REQUEST_URL: string = `${this.BASE_URL}/${this.POST_ENDPOINT}`;
 
 
-  getCalularCompra(proveedor: string, laboratorios: string, usuario: string): Observable<any> {
+  getCalularCompra(proveedor: string, laboratorios: string,producto: string="", usuario: string, almacenes:string): Observable<any> {
     var request = {
       codProveedor: proveedor,
       codLab: laboratorios,
+      codigoAlmacen: almacenes,
       usuarioLogin: usuario
     };
     return this.httpClient.post<any>(`${this.REQUEST_URL}/GetCalculoCompra`, request);
