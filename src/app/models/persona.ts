@@ -1,4 +1,4 @@
-import { BaseModel } from "../shared/models/base.model"; 
+import { BaseModel } from "../shared/models/base.model";
 
 export class Cliente {
     Nombres: string;
@@ -20,4 +20,16 @@ export class UserPasswordModel extends BaseModel {
     currentPassword: string;
     newPassword: string;
     confirmNewPassword: string;
+}
+
+export class UserDataLogin {
+    NombreUsuario: string;
+    cargoUsuario: string;
+    codigo: string;
+    codigoGrupo: string;
+    codigoUsuario: string;
+    message: string;
+    permisos: string;
+    siscod: string;
+    usuario: string;
 }

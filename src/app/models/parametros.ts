@@ -20,3 +20,8 @@ export class Boticas{
     codigoLaboratorio: String
 }
 
+export class Condiciones {
+    codigoCondicion: string;
+    descripcion: string;
+}
+

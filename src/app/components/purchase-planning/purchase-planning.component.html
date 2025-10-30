@@ -43,7 +43,11 @@
           (change)="onChangeProveedor()"
         >
           <option value="0" disabled>--Seleccione--</option>
-          <option *ngFor="let item of proveedores" [ngValue]="item.codigoProveedor">
+          <option
+            *ngFor="let item of proveedores"
+            [ngValue]="item.codigoProveedor"
+            [disabled]="proveedor == item.codigoProveedor"
+          >
             {{ item.descripcion }}
           </option>
         </select>
@@ -85,7 +89,7 @@
       <!-- politicas invetario -->
       <div class="m-0 p-0 options">
         <div class="m-0 p-0 d-flex d-flex align-items-center gap-2">
-          <label class="label-text" for="checkTodos">Todos los Laboratorios (Día)</label>
+          <label class="label-text" for="checkTodos">Política de Inventario (Día)</label>
           <!-- icon -->
           <div>
             <a
@@ -233,7 +237,7 @@
     <!-- tabla -->
     <div
       id="container-table"
-      class="m-0 p-0 table-scroll col-12"
+      class="m-0 p-0 table-scroll-AC col-12"
       (contextmenu)="openContextMenu($event, 1)"
     >
       <table id="tablaAnalisiCompra" class="table-style table-fixed">
@@ -245,13 +249,36 @@
           </tr>
         </thead>
         <tbody id="body">
-          <tr (click)="getTableUltimasCompras(data)" *ngFor="let data of rows">
-            <td>{{ data.codProducto }}</td>
-            <td>{{ data.nombreProducto }}</td>
-            <td>{{ data.nombreLaboratorio }}</td>
+          <tr
+            (click)="getTableUltimasCompras(data)"
+            *ngFor="let data of rows; let i = index"
+            (mouseenter)="isHovering = true"
+            (mouseleave)="isNotRowHover()"
+            (mouseover)="onRowHover(i)"
+            (click)="isRowSelected = i"
+            [class.selected]="isRowSelected === i"
+          >
+            <td [ngClass]="siRowSelectedHover(i)">{{ data.codProducto }}</td>
+            <td [ngClass]="siRowSelectedHover(i)">{{ data.nombreProducto }}</td>
+            <td [ngClass]="siRowSelectedHover(i)">{{ data.nombreLaboratorio }}</td>
             <td class="center-text">{{ data.unidadEmpaque }}</td>
-            <td>{{ data.condicion }}</td>
-            <td>{{ data.ABC }}</td>
+            <!-- <td class="center-text">{{ data.condicion }}</td> --> <!--Eliminar -->
+            <td class="center-text">
+              <select
+                class="input-select-table-AC"
+                id="proveedor"
+                [(ngModel)]="data.condicion"
+              >
+                <option value="0" disabled>--Seleccione--</option>
+                <option
+                  *ngFor="let data of condiciones"
+                  [ngValue]="data.codigoCondicion"                  
+                >
+                  {{ data.descripcion }}
+                </option>
+              </select>
+            </td>
+            <td class="center-text">{{ data.ABC }}</td>
             <td class="center-text">{{ data.mesQuinto | number : '1.2-2' }}</td>
             <td class="center-text">{{ data.mesCuarto | number : '1.2-2' }}</td>
             <td class="center-text">{{ data.mesTercero | number : '1.2-2' }}</td>
@@ -294,7 +321,7 @@
     <p class="text-total-value">Total Pagar: {{ totalPagar | number : '1.2-2' }}</p>
   </div>
 </div>
-  
+
 <!-- MODAL -->
 <!-- modal politicas de inventario -->
 <div

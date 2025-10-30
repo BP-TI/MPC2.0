@@ -1,14 +1,11 @@
-import { Component, EventEmitter, OnInit, Output, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
-import { AppConstants } from '../../shared/constants/app.constants';
-import { ReporteProductosCompra } from '../../models/ordenCompra';
-import { Laboratorios, Proveedores } from '../../models/parametros';
+import { Component, OnInit, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
+import { Laboratorios, Proveedores, Condiciones } from '../../models/parametros';
 import { IUltimasComprasReq } from '../../models/ordenCompra';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { PurchasePlanningService } from '../../services/PurchasePlanning/purchasePlanning.service';
 import { HttpErrorResponse, JsonpClientBackend } from '@angular/common/http';
 import { GlobalService } from '../../shared/services/global.service';
 import { OrdenCompraService } from '../../services/PurchasePlanning/ordenCompra.service';
-// import { OptionClickComponent } from '../../shared/components/option-click/option-click.component';
 import { OptionClickComponent } from '../../shared/components/option-click/option-click.component';
 
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
@@ -48,13 +45,15 @@ export class PurchasePlanningComponent implements OnInit {
   totalParcial: number = 0;
   totalIGV: number = 0;
   totalPagar: number = 0;
-
   proveedor = "0";
   opcionesForm: FormGroup;
+  condiciones: Condiciones[] = [];
+  isHovering: boolean = false;
+  isRowHover: Number = -1;
+  isRowSelected: Number = -1;
 
   @ViewChild("actionTemplate") actionTemplate: TemplateRef<any>;
   @ViewChild(OptionClickComponent) contextMenu!: OptionClickComponent;
-
 
   constructor(private fb: FormBuilder,
     private purchaseService: PurchasePlanningService,
@@ -67,6 +66,7 @@ export class PurchasePlanningComponent implements OnInit {
     this.addHeadeTable();
     this.cargarProveedores();
     this.crearGrupoChecks();
+    this.getCondiciones();
     this.global.setGlobalVar('Módulo planificación de compra');
   }
 
@@ -112,7 +112,7 @@ export class PurchasePlanningComponent implements OnInit {
     this.loading = true;
     this.rows = [];
     this.laboratorios = [];
-    this.clearField();
+    this.clearDataTablesSecond();
 
     this.purchaseService.getLaboratorios(this.proveedor).subscribe(
       (response) => {
@@ -130,6 +130,8 @@ export class PurchasePlanningComponent implements OnInit {
 
   CalcularCompra() {
     this.loading = true;
+    this.clearDataTablesSecond();
+
     let labChecks = this.laboratorios?.filter(p => p.selected === true) || [];
     if (labChecks.length === 0) {
       this.loading = false;
@@ -202,7 +204,7 @@ export class PurchasePlanningComponent implements OnInit {
     }
   }
 
-  // tabla
+  // ------ * -----
   addHeadeTable() {
     this.headTableAnalisisCompra = [
       'cod.',
@@ -356,20 +358,27 @@ export class PurchasePlanningComponent implements OnInit {
   }
 
   getTableUltimasCompras(data: any) {
+
+    if (this.isRowHover == this.isRowSelected) {
+      return;
+    }
+
     this.loading = true;
     this.rowsUCompras = [];
     this.rowsUIngresos = [];
     this.conscom = undefined;
-    let dataSessionStorage = sessionStorage.getItem('USUARIOLOGIN')?.toString();
-    let dataUsuario = JSON.parse(dataSessionStorage ? dataSessionStorage : '');
+    this.conscomImpto = undefined;
+
+    let dataUsuario = this.global.getDataUserLogin();
 
     let dataRequets: IUltimasComprasReq = {
       codProveedor: this.proveedor,
       codLab: data.codLaboratorio,
       codProducto: data.codProducto,
       usuarioLogin: dataUsuario.usuario,
-      codUsuario: dataUsuario.codigoUsuario
+      codUsuario: Number(dataUsuario.codigoUsuario)
     }
+
     this.ordenCompraService.getUltimasCompras(dataRequets).subscribe((response: any) => {
 
       if (response.codStatus == 1) {
@@ -411,6 +420,16 @@ export class PurchasePlanningComponent implements OnInit {
     this.totalIGV = 0;
     this.totalPagar = 0;
     this.totalParcial = 0;
+    this.proveedor = "0";
+    this.isRowSelected = -1;
+  }
+
+  clearDataTablesSecond() {
+    this.isRowSelected = -1;
+    this.rowsUCompras = [];
+    this.rowsUIngresos = [];
+    this.conscom = undefined;
+    this.conscomImpto = undefined;
   }
 
   calculateTotal() {
@@ -430,5 +449,42 @@ export class PurchasePlanningComponent implements OnInit {
     this.totalIGV = sumaIGV;
     this.totalPagar = sumaPagar;
   }
+
+  getCondiciones() {
+    this.loading = true;
+    this.purchaseService.getCondiciones().subscribe((response: any) => {
+      this.loading = false;
+      if (response.length > 0) {
+        this.condiciones = response;
+      }
+    }, (error: HttpErrorResponse) => {
+      this.loading = false;
+    });
+  }
+
+  // hover tabla Analisis Compra
+  onRowHover(index: number) {
+    this.isRowHover = index;
+  }
+
+  siRowSelectedHover(index: number) {
+    let rowStyle = 'background-white-fixed-column';
+
+    if (this.isRowSelected == index) {
+      rowStyle = 'background-selected-column';
+    }
+
+    if (this.isRowHover == index) {
+      rowStyle = 'background-hover-fixed-column';
+    }
+
+    return rowStyle;
+  }
+
+  isNotRowHover() {
+    this.isHovering = false;
+    this.isRowHover = -1;
+  }
+  // End hover tabla Analisis Compra
 
 }

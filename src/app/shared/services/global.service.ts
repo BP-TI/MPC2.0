@@ -1,11 +1,12 @@
 import { Injectable, numberAttribute, signal } from '@angular/core';
+import { UserDataLogin } from '../../models/persona';
 
 @Injectable({
   providedIn: 'root'
 })
 export class GlobalService {
   componenteTitle = signal<string>('');
-  month:string[] = [
+  month: string[] = [
     'Enero',
     'Febrero',
     'Marzo',
@@ -19,6 +20,7 @@ export class GlobalService {
     'Noviembre',
     'Diciembre',
   ];
+
   constructor() { }
 
   // Métodos auxiliares (opcionales)
@@ -34,11 +36,29 @@ export class GlobalService {
     return this.componenteTitle();
   }
 
-  getMonthName(monthNumber: number): string{
-    if(monthNumber>=0 &&  monthNumber <=11) {    
+  getMonthName(monthNumber: number): string {
+    if (monthNumber >= 0 && monthNumber <= 11) {
       return this.month[monthNumber];
-    }     
+    }
     return '';
+  }
+
+  getDataUserLogin():UserDataLogin {
+    let dataSessionStorage = sessionStorage.getItem('USUARIOLOGIN')?.toString();
+    let dataUsuario = JSON.parse(dataSessionStorage ? dataSessionStorage : '');
+
+    let data: UserDataLogin = {
+      NombreUsuario: dataUsuario.NombreUsuario,
+      cargoUsuario: dataUsuario.cargoUsuario, 
+      codigo: dataUsuario.codigo,
+      codigoGrupo: dataUsuario.codigoGrupo,
+      codigoUsuario: dataUsuario.codigoUsuario,
+      message: dataUsuario.message,
+      permisos: dataUsuario.permisos,
+      siscod: dataUsuario.siscod,
+      usuario: dataUsuario.usuario,
+    }
+    return data;
   }
 
 }
