@@ -914,7 +914,7 @@ select {
     -webkit-appearance: none !important;
     -moz-appearance: none !important;
     -ms-appearance: none !important;
-    background-image: url(/public/assets/images/ic_arrow_down.png) !important;
+    background-image: url('/assets/images/ic_arrow_down.png') !important;
     background-repeat: no-repeat !important;
     background-position-x: 94% !important;
     background-position-y: center !important;
