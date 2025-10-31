@@ -59,7 +59,12 @@ export class DirectSupplyComponent implements OnInit {
   loadingIndicator: boolean = false;
   currentFilter: string = "active";
   totalWidth = 0;
-
+  totalParcial: number = 0;
+  totalIGV: number = 0;
+  totalPagar: number = 0;
+  isHovering: boolean = false;
+  isRowHover: Number = -1;
+  isRowSelected: Number = -1;
   validaCorreo: boolean = false;
   @ViewChild("actionTemplate") actionTemplate: TemplateRef<any>;
 
@@ -223,6 +228,25 @@ export class DirectSupplyComponent implements OnInit {
     }
   }
 
+    onCheckChangeBot(opcion: string) {
+    if (opcion === 'todosBot') {
+      if (this.opcionesForm.value.todosBot) {
+        this.opcionesForm.patchValue({ unico: false });
+        this.boticas.forEach(p => {
+          p.selected = true;
+        });
+      } else {
+        this.boticas.forEach(p => {
+          p.selected = false;
+        });
+      }
+    }
+    if (opcion === 'unico' && this.opcionesForm.value.unico) {
+      this.opcionesForm.patchValue({ todos: false });
+    }
+  }
+
+
   onChangeProveedor() {
     this.loading = true;
     this.rows = [];
@@ -255,23 +279,38 @@ export class DirectSupplyComponent implements OnInit {
 
   }
 
-  Limpiar() {
-    this.proveedor = "0";
-    this.laboratorios = [];
-    this.crearGrupoChecks();
-    this.rows = [];
-  }
     clearField() {
     /*this.rowsUCompras = [];
     this.rowsUIngresos = [];
     this.conscom = undefined;
     this.conscomImpto = undefined;*/
     this.laboratorios = [];
+    this.boticas=[];
     this.rows = [];
     this.opcionesForm.get('todos')?.disable();
-    /*this.totalIGV = 0;
+    this.totalIGV = 0;
     this.totalPagar = 0;
-    this.totalParcial = 0;*/
+    this.totalParcial = 0;
+    this.proveedor = "0";
+    this.isRowSelected = -1;
+  }
+
+    calculateTotal() {
+    let sumaParcial: number = 0;
+    let sumaIGV: number = 0;
+    let sumaPagar: number = 0;
+
+    this.rows.forEach((data: any) => {
+      if (parseFloat(data.compraFinal) > 0) {
+        sumaParcial += parseFloat(data.parcial);
+        sumaIGV += parseFloat(data.igv);
+        sumaPagar += parseFloat(data.total);
+      }
+    });
+
+    this.totalParcial = sumaParcial;
+    this.totalIGV = sumaIGV;
+    this.totalPagar = sumaPagar;
   }
 
   CalcularCompra() {
@@ -500,5 +539,30 @@ export class DirectSupplyComponent implements OnInit {
   seleccionarLaboratorio(idLaboratorio: number){
 
   }
+
+   // hover tabla Analisis Compra
+  onRowHover(index: number) {
+    this.isRowHover = index;
+  }
+
+  siRowSelectedHover(index: number) {
+    let rowStyle = 'background-white-fixed-column';
+
+    if (this.isRowSelected == index) {
+      rowStyle = 'background-selected-column';
+    }
+
+    if (this.isRowHover == index) {
+      rowStyle = 'background-hover-fixed-column';
+    }
+
+    return rowStyle;
+  }
+
+  isNotRowHover() {
+    this.isHovering = false;
+    this.isRowHover = -1;
+  }
+  // End hover tabla Analisis Compra
 
 }
