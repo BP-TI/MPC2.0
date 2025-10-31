@@ -39,7 +39,7 @@ i {
 
 .input-select {
   box-sizing: border-box;
-  width: 200px;
+  /* width: 200px; */
   width: auto;
   height: 35px;
 
@@ -53,6 +53,24 @@ i {
   flex-grow: 0;
   color: #7A7A7A;
   padding: 5px;
+  font-size: 10px;
+}
+
+.input-select-table-AC {
+  box-sizing: border-box;
+  width: auto;
+  height: 25px;
+
+  background: #FFFFFF;
+  border: 0.5px solid rgba(175, 167, 167, 0.7);
+  border-radius: 4px;
+
+  flex: none;
+  order: 1;
+  align-self: stretch;
+  flex-grow: 0;
+  color: #7A7A7A;
+  padding: 3px;
   font-size: 10px;
 }
 
@@ -72,10 +90,10 @@ i {
   flex-direction: row;
   justify-content: center;
   align-items: center;
-  padding: 3px 10px;
-  gap: 8px;
+  padding: 3px 7px;
+  gap: 6px;
 
-  width: 210PX;
+  width: 170PX;
   height: 40px;
 
   background: #FFFFFF;
@@ -128,7 +146,7 @@ i {
 
 .menu-laboratorio {
   height: 100px;
-  overflow-x: auto;
+  overflow-x: none;
   overflow-y: none;
   scrollbar-color: #B0E0E6 white !important;  
 }
@@ -137,24 +155,35 @@ i {
 .table-scroll {
   overflow-x: auto;
   overflow-y: auto;
-  max-height: 320px;
+  height: 145px;
+  width: 100%;
+  border: #DCEBFF solid;
+  scrollbar-color: #B0E0E6 white !important;
+}
+
+.table-scroll-AC {
+  overflow-x: auto;
+  overflow-y: auto;
+  height: 240px;
   width: 100%;
   border: #DCEBFF solid;
   scrollbar-color: #B0E0E6 white !important;
 }
 
 .table-style {
-  /* border: #DCEBFF solid; */
-  width: 100%;
+  width: 200%;
   min-height: auto;
   max-height: 250px;
 }
 
 .table-style2 {
-  width: 100%;
-  /* min-height: 110px; */
-  min-height: auto;
-  max-height: 110px;
+  width: 180%;
+  /* height: 100%; */
+  table-layout: fixed; /* == */
+}
+
+.table-style2 tr{
+  height: 5px !important; /* == */
 }
 
 .table-style2 thead th {
@@ -168,7 +197,6 @@ i {
   background: #134B97;
   color: white;
   text-align: center;
-
 }
 
 .table-style th,
@@ -180,7 +208,7 @@ td {
 
 .table-style2 th,
 td {
-  height: 10px;
+  overflow: hidden; 
   font-family: 'Montserrat';
   font-style: normal;
 }
@@ -189,26 +217,26 @@ td {
   font-weight: bold;
   font-size: 10px;
   color: black;
-  background: white;
 }
 
 .table-style2 th {
   font-weight: bold;
   font-size: 10px;
   color: black;
-  background: white;
 }
 
 .table-style td {
   font-size: 10px;
   color: #3C3C3C;
-  background: white;
+  /* background: white; */
 }
 
 .table-style2 td {
   font-size: 10px;
   color: #3C3C3C;
   background: white;
+  vertical-align: top;
+  text-align: center;
 }
 
 .table-style th,
@@ -221,9 +249,7 @@ td {
 .table-style2 th,
 td {
   white-space: nowrap;
-  text-align: left;
-  padding: 2px;
-  border-bottom: 0.5px solid #DCEBFF;
+  padding: 0px;
 }
 
 
@@ -257,7 +283,7 @@ th:nth-child(3) {
   left: 0;
   min-width: 60px;
   z-index: 4;
-  background: #B0E0E6;
+  background: white;
 }
 
 .table-fixed th:nth-child(2),
@@ -266,7 +292,8 @@ th:nth-child(3) {
   left: 60px;
   min-width: 200px;
   z-index: 4;
-  background: #B0E0E6;
+  /* background: #B0E0E6; */
+  background: white;
 }
 
 .table-fixed th:nth-child(3),
@@ -275,7 +302,31 @@ th:nth-child(3) {
   left: 250px;
   min-width: 100px;
   z-index: 4;
-  background: #B0E0E6;
+  background-color: white;
+}
+
+/* === Estilos para el sombreado del hover y select de la tabla AC === */
+#tablaAnalisiCompra tbody tr{
+  background: white;
+}
+#tablaAnalisiCompra tbody tr:hover{
+  cursor: pointer;
+  background: #B0E0E6 !important;
+}
+
+.selected{
+  background: #D7E3F3 !important;
+}
+
+/* para las tres columnas fijas */
+.background-hover-fixed-column {
+  background-color: #B0E0E6 !important;
+}
+.background-white-fixed-column {
+  background-color: white !important;
+}
+.background-selected-column {
+  background-color: #D7E3F3 !important;
 }
 
 /* End estilos de la tabla */
@@ -393,17 +444,20 @@ hr {
 
 .label-check-lab {
   font-size: 10px;
+  height: 9px !important;
 }
 
 .dropdown-scroll {
-  max-height: 150px !important;
-  min-height: 150px !important;
+  max-height: 95px !important;
+  min-height: 50px !important;
   overflow-y: auto !important;
-  overflow-x: hidden;
+  overflow-x: none !important;
   min-width: 250px;
+  width: 300px;
   display: block !important;
   position: static !important;
 }
+
 
 .filter-table {
   height: 200px;

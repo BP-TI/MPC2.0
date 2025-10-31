@@ -27,7 +27,7 @@
     </button>
   </div>
   <!-- End botones cabecera -->
-  <hr size="10px" width="100%" color="134B97" />
+  <hr size="10px" width="100%" color="134B97"  />
 
   <div class="col-12 m-0 p-0">
     <div class="col-12 m-0 p-0 d-flex align-items-stretch gap-3">
@@ -43,7 +43,9 @@
           (change)="onChangeProveedor()"
         >
           <option value="0" disabled>--Seleccione--</option>
-          <option *ngFor="let item of proveedores" [ngValue]="item.codigoProveedor">
+          <option *ngFor="let item of proveedores"
+            [ngValue]="item.codigoProveedor"
+            [disabled]="proveedor == item.codigoProveedor">
             {{ item.descripcion }}
           </option>
         </select>
@@ -93,7 +95,7 @@
                 type="checkbox"
                 id="checkTodos"
                 formControlName="todos"
-                (change)="onCheckChange('todos')"
+                (change)="onCheckChange('todosBot')"
               />
               <label class="label-text" for="checkTodos">Todos las boticas</label>
               <br />
@@ -276,65 +278,8 @@
 
   <!-- tabla Analisis compras -->
   <div class="col-12 m-0 p-0 mt-2">
-    <div class="d-flex align-items-baseline justify-content-between m-0 p-0  ">
-      <div class="subtitle mb-3">Análisis de Compras</div>
-
-      <!-- Filtro de la tabla de A.Compra -->
-      <a
-        class="dropdown-toggle"
-        id="userDropdown"
-        role="button"
-        data-toggle="dropdown"
-        data-bs-auto-close="false"
-      >
-        <i class="fa-solid fa-filter"></i>
-      </a>
-      <div
-        class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
-        aria-labelledby="userDropdown"
-      >
-        <div class="dropdown-item form-check" data-toggle="modal">
-          <input
-            class="form-check-input"
-            type="checkbox"
-            value=""
-            id="flexCheckDefault"
-            (change)="eliminarColumna('Age', 'tablaAnalisiCompra')"
-            checked
-          />
-          <label class="form-check-label" for="Age"> Age </label>
-        </div>
-
-        <div class="dropdown-item form-check" data-toggle="modal">
-          <input
-            class="form-check-input"
-            type="checkbox"
-            value=""
-            id="flexCheckDefault"
-            (change)="eliminarColumna('Enrolled Cours0', 'tablaAnalisiCompra')"
-            checked
-          />
-          <label class="form-check-label" for="Enrolled Cours0"> Enrolled Cours0 </label>
-        </div>
-
-        <div class="dropdown-item form-check" data-toggle="modal">
-          <input
-            class="form-check-input"
-            type="checkbox"
-            value=""
-            id="flexCheckDefault"
-            (change)="eliminarColumna('Enrolled Course1', 'tablaAnalisiCompra')"
-            checked
-          />
-          <label class="form-check-label" for="Enrolled Course1"> Enrolled Course1 </label>
-        </div>
-      </div>
-      <!-- End Filtro de la tabla de A.Compra -->
-    </div>
-    <!-- Tabla Analisis compras -->
-       <div class="col-12 m-0 p-0 mt-2">
     <!-- head y filter -->
-    <div class="d-flex align-items-baseline justify-content-between m-0 p-0">
+     <div class="d-flex align-items-baseline justify-content-between m-0 p-0">
       <div class="subtitle mb-3">Análisis Compras</div>
 
       <!-- Filtro de la tabla de A.Compra -->
@@ -348,7 +293,7 @@
         <i class="fa-solid fa-filter"></i>
       </a>
       <div
-        class="dropdown-menu dropdown-menu-right shadow animated--grow-in filter-table"
+        class="dropdown-menu dropdown-menu-right shadow  filter-table"
         aria-labelledby="userDropdown"
       >
         <!-- Listado de columnas filtro -->
@@ -378,16 +323,22 @@
       <table id="tablaAnalisiCompra" class="table-style table-fixed">
         <thead>
           <tr id="header-row">
-            <th *ngFor="let data of headTableAnalisisCompra">
+            <th draggable="true" *ngFor="let data of headTableAnalisisCompra" >
               {{ data }}
             </th>
           </tr>
         </thead>
         <tbody id="body">
-          <tr *ngFor="let data of rows">
-            <td>{{data.relacionado}}</td>
-            <td class="center-text">{{ data.codProducto }}</td>
-            <td>{{ data.nombreProducto }}</td>
+          <tr *ngFor="let data of rows; let i = index"
+            (mouseenter)="isHovering = true"
+            (mouseleave)="isNotRowHover()"
+            (mouseover)="onRowHover(i)"
+            (click)="isRowSelected = i"
+            [class.selected]="isRowSelected === i">
+
+            <td [ngClass]="siRowSelectedHover(i)">{{data.relacionado}}</td>
+            <td [ngClass]="siRowSelectedHover(i)" class="center-text">{{ data.codProducto }}</td>
+            <td [ngClass]="siRowSelectedHover(i)">{{ data.nombreProducto }}</td>
             <td>{{ data.nombreLaboratorio }}</td>
             <td>{{data.establecimiento}}</td>
             <td class="center-text">{{ data.unidadEmpaque }}</td>
@@ -415,14 +366,12 @@
       </table>
     </div>
   </div>
-
-    <!-- end tabla Analisis compras -->
-  </div>
+      <!-- end tabla Analisis compras -->
 
   <div class="col-12 d-flex align-items-baseline justify-content-end gap-3 mt-3 mb-3">
-    <p class="text-total-value">Total Parcial: 48,1234</p>
-    <p class="text-total-value">Total IGV (18%): 8,6897</p>
-    <p class="text-total-value">Total Pagar: 40,783</p>
+    <p class="text-total-value">Total Parcial: {{ totalParcial | number : '1.2-2' }}</p>
+    <p class="text-total-value">Total IGV (18%): {{ totalIGV | number : '1.2-2' }}</p>
+    <p class="text-total-value">Total Pagar: {{ totalPagar | number : '1.2-2' }}</p>
   </div>
 </div>
 
