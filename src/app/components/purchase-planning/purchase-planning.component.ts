@@ -1,4 +1,4 @@
-import { Component, OnInit, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnInit, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
 import { Laboratorios, Proveedores, Condiciones } from '../../models/parametros';
 import { IUltimasComprasReq } from '../../models/ordenCompra';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
@@ -7,8 +7,8 @@ import { HttpErrorResponse, JsonpClientBackend } from '@angular/common/http';
 import { GlobalService } from '../../shared/services/global.service';
 import { OrdenCompraService } from '../../services/PurchasePlanning/ordenCompra.service';
 import { OptionClickComponent } from '../../shared/components/option-click/option-click.component';
-
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { OptionsCLickHeadMenuAC } from '../../shared/models/option-click';
 
 @Component({
   selector: 'app-purchase-planning',
@@ -16,7 +16,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
   templateUrl: './purchase-planning.component.html',
   styleUrls: ['./purchase-planning.component.css'],
 })
-export class PurchasePlanningComponent implements OnInit {
+export class PurchasePlanningComponent implements OnInit, AfterViewInit {
 
   @ViewChild('verSustitutosModal') verSustitutosModal: any;
 
@@ -52,6 +52,7 @@ export class PurchasePlanningComponent implements OnInit {
   isRowHover: Number = -1;
   isRowSelected: Number = -1;
 
+
   @ViewChild("actionTemplate") actionTemplate: TemplateRef<any>;
   @ViewChild(OptionClickComponent) contextMenu!: OptionClickComponent;
 
@@ -59,7 +60,8 @@ export class PurchasePlanningComponent implements OnInit {
     private purchaseService: PurchasePlanningService,
     private ordenCompraService: OrdenCompraService,
     private modalService: NgbModal,
-    public global: GlobalService) { }
+    public global: GlobalService,
+    private el: ElementRef) { }
 
 
   ngOnInit() {
@@ -68,6 +70,54 @@ export class PurchasePlanningComponent implements OnInit {
     this.crearGrupoChecks();
     this.getCondiciones();
     this.global.setGlobalVar('Módulo planificación de compra');
+
+  }
+
+  // Para poder mover las columnas de la tabla Analisis de compra
+  ngAfterViewInit() {
+    const tabla = this.el.nativeElement.querySelector('#tablaAnalisiCompra');
+    let columnaOrigen: HTMLElement | null = null;
+
+    tabla.querySelectorAll('th').forEach((th: HTMLElement) => {
+      th.addEventListener('dragstart', e => {
+        columnaOrigen = th;
+        (e as DragEvent).dataTransfer!.effectAllowed = 'move';
+      });
+
+      th.addEventListener('dragover', e => e.preventDefault());
+
+      th.addEventListener('drop', e => {
+        e.preventDefault();
+        if (columnaOrigen === th) return;
+
+        const ths = Array.from(th.parentNode!.children);
+        const origenIndex = ths.indexOf(columnaOrigen!);
+        const destinoIndex = ths.indexOf(th);
+        if (origenIndex < 3) return;
+        if (destinoIndex < 3) return;
+        // Mover encabezado
+        if (origenIndex > destinoIndex) {
+          th.parentNode!.insertBefore(columnaOrigen!, th);
+        } else {
+          th.parentNode!.insertBefore(columnaOrigen!, th.nextSibling);
+        }
+
+        // Mover celdas
+        tabla.querySelectorAll('tbody tr').forEach((tr: HTMLElement) => {
+          const celdas = Array.from(tr.children);
+          const celdaOrigen = celdas[origenIndex];
+          const celdaDestino = celdas[destinoIndex];
+
+          if (origenIndex > destinoIndex) {
+            tr.insertBefore(celdaOrigen, celdaDestino);
+          } else {
+            tr.insertBefore(celdaOrigen, celdaDestino.nextSibling);
+          }
+        });
+      });
+    });
+
+
   }
 
   crearGrupoChecks() {
@@ -180,6 +230,7 @@ export class PurchasePlanningComponent implements OnInit {
   }
 
   handleMenuAction(action: string) {
+    console.log(action);
     switch (action) {
       case 'view':
         this.modalService.open(this.verSustitutosModal, { size: 'xl', centered: true, backdrop: false, scrollable: true });
@@ -205,6 +256,8 @@ export class PurchasePlanningComponent implements OnInit {
   }
 
   // ------ * -----
+
+
   addHeadeTable() {
     this.headTableAnalisisCompra = [
       'cod.',
@@ -358,7 +411,6 @@ export class PurchasePlanningComponent implements OnInit {
   }
 
   getTableUltimasCompras(data: any) {
-
     if (this.isRowHover == this.isRowSelected) {
       return;
     }
@@ -380,13 +432,14 @@ export class PurchasePlanningComponent implements OnInit {
     }
 
     this.ordenCompraService.getUltimasCompras(dataRequets).subscribe((response: any) => {
+      console.log(response);
 
       if (response.codStatus == 1) {
-        if (response.ultimasCompras.length > 0) {
+        if (response.ultimasCompras != null && response.ultimasCompras.length > 0) {
           this.rowsUCompras = response.ultimasCompras;
         }
 
-        if (response.ultimosIngresos.length > 0) {
+        if (response.ultimosIngresos != null && response.ultimosIngresos.length > 0) {
           this.rowsUIngresos = response.ultimosIngresos;
         }
 
@@ -438,7 +491,7 @@ export class PurchasePlanningComponent implements OnInit {
     let sumaPagar: number = 0;
 
     this.rows.forEach((data: any) => {
-      if (parseFloat(data.promMes) > 0) {
+      if (parseFloat(data.compraFinal) > 0) {
         sumaParcial += parseFloat(data.parcial);
         sumaIGV += parseFloat(data.igv);
         sumaPagar += parseFloat(data.total);
@@ -452,14 +505,34 @@ export class PurchasePlanningComponent implements OnInit {
 
   getCondiciones() {
     this.loading = true;
+    let menuOptionCondiciones: OptionsCLickHeadMenuAC[] = [];
+
     this.purchaseService.getCondiciones().subscribe((response: any) => {
       this.loading = false;
       if (response.length > 0) {
         this.condiciones = response;
+        response.forEach((element: any) => {
+          menuOptionCondiciones.push({
+            codCondicion: element.codCondicion,
+            description: element.descripcion,
+            check: true,
+          });
+        });
+
+        this.contextMenu.condiciones = menuOptionCondiciones;
+        
+        
       }
     }, (error: HttpErrorResponse) => {
       this.loading = false;
     });
+  }
+
+  getNameCondicion(cod: string): string {
+    let filtrado = this.condiciones.find(condicion =>
+      condicion.codigoCondicion.toString().trim() == cod.trim()
+    );
+    return filtrado ? filtrado.descripcion : '';
   }
 
   // hover tabla Analisis Compra
