@@ -210,7 +210,7 @@
         data-toggle="dropdown"
         data-bs-auto-close="false"
       >
-        <i class="fa-solid fa-filter"></i>
+        <i class="fa-solid fa-filter .icon-filter-colunm-hidden"></i>
       </a>
       <div
         class="dropdown-menu dropdown-menu-right shadow animated--grow-in filter-table"
@@ -243,8 +243,11 @@
       <table id="tablaAnalisiCompra" class="table-style table-fixed">
         <thead>
           <tr id="header-row">
-            <th *ngFor="let data of headTableAnalisisCompra">
+            <th draggable="true" *ngFor="let data of headTableAnalisisCompra">
               {{ data }}
+              @if( data == 'Condición' ){
+                <i class="fa-solid fa-filter text-light" (click)="openContextMenu($event, 4)"></i>
+              }
             </th>
           </tr>
         </thead>
@@ -262,22 +265,20 @@
             <td [ngClass]="siRowSelectedHover(i)">{{ data.nombreProducto }}</td>
             <td [ngClass]="siRowSelectedHover(i)">{{ data.nombreLaboratorio }}</td>
             <td class="center-text">{{ data.unidadEmpaque }}</td>
-            <!-- <td class="center-text">{{ data.condicion }}</td> --> <!--Eliminar -->
+            @if(isRowSelected === i){
             <td class="center-text">
-              <select
-                class="input-select-table-AC"
-                id="proveedor"
-                [(ngModel)]="data.condicion"
-              >
+              <select class="input-select-table-AC" id="proveedor" [(ngModel)]="data.condicion">
                 <option value="0" disabled>--Seleccione--</option>
-                <option
-                  *ngFor="let data of condiciones"
-                  [ngValue]="data.codigoCondicion"                  
-                >
+                <option *ngFor="let data of condiciones" [ngValue]="data.codigoCondicion">
                   {{ data.descripcion }}
                 </option>
               </select>
             </td>
+            } @else {
+
+            <td class="center-text">{{ getNameCondicion(data.condicion) }}</td>
+            }
+
             <td class="center-text">{{ data.ABC }}</td>
             <td class="center-text">{{ data.mesQuinto | number : '1.2-2' }}</td>
             <td class="center-text">{{ data.mesCuarto | number : '1.2-2' }}</td>
@@ -288,8 +289,36 @@
             <td class="center-text">{{ data.mesActualProyeccion | number : '1.2-2' }}</td>
             <td class="center-text">{{ data.promMes | number : '1.2-2' }}</td>
             <td class="center-text">{{ data.preCompra | number : '1.2-2' }}</td>
+            <!-- Compra Final -->
+            @if(isRowSelected === i){
+            <td class="center-text">
+              <input
+                type="number"
+                placeholder=""
+                class="input-table-AC"
+                [(ngModel)]="data.compraFinal"
+              />
+            </td>
+            } @else {
             <td class="center-text">{{ data.compraFinal | number : '1.2-2' }}</td>
+            }
+            <!-- End Compra Final -->
+
+            <!-- Bonificación -->
+            @if(isRowSelected === i){
+            <td class="center-text">
+              <input
+                type="number"
+                placeholder=""
+                class="input-table-AC"
+                [(ngModel)]="data.bonificacion"
+              />
+            </td>
+            } @else{
             <td class="center-text">{{ data.bonificacion | number : '1.2-2' }}</td>
+            }
+            <!-- End Bonificación -->
+
             <td class="center-text">{{ data.almacen | number : '1.2-2' }}</td>
             <td class="center-text">{{ data.org | number : '1.2-2' }}</td>
             <td class="center-text">{{ data.canje | number : '1.2-2' }}</td>
@@ -298,12 +327,91 @@
             <td class="center-text">{{ data.cobOrgAct | number : '1.2-2' }}</td>
             <td class="center-text">{{ data.maxInfraStock | number : '1.2-2' }}</td>
             <td class="center-text">{{ data.VVF1 | number : '1.2-2' }}</td>
+            <!-- VVF2 -->
+            @if(isRowSelected === i){
+            <td class="center-text">
+              <input type="number" placeholder="" class="input-table-AC" [(ngModel)]="data.VVF2" />
+            </td>
+            } @else {
             <td class="center-text">{{ data.VVF2 | number : '1.2-2' }}</td>
+            }
+            <!-- End VVF2 -->
+
+            <!-- Descuento1 -->
+            @if(isRowSelected === i){
+            <td class="center-text">
+              <input
+                type="number"
+                placeholder=""
+                class="input-table-AC"
+                [(ngModel)]="data.descuento1"
+              />
+            </td>
+            }@else{
             <td class="center-text">{{ data.descuento1 | number : '1.2-2' }}</td>
+            }
+            <!-- End Descuento1 -->
+
+            <!-- Descuento2 -->
+            @if(isRowSelected === i){
+            <td class="center-text">
+              <input
+                type="number"
+                placeholder=""
+                class="input-table-AC"
+                [(ngModel)]="data.descuento2"
+              />
+            </td>
+            } @else{
             <td class="center-text">{{ data.descuento2 | number : '1.2-2' }}</td>
+            }
+            <!-- ENd Descuento2 -->
+
+            <!-- Descuento3 -->
+            @if(isRowSelected === i){
+            <td class="center-text">
+              <input
+                type="number"
+                placeholder=""
+                class="input-table-AC"
+                [(ngModel)]="data.descuento3"
+              />
+            </td>
+            }@else{
             <td class="center-text">{{ data.descuento3 | number : '1.2-2' }}</td>
+            }
+            <!-- End Descuento 3 -->
+
+            <!-- Descuento4 -->
+            @if(isRowSelected === i){
+            <td class="center-text">
+              <input
+                type="number"
+                placeholder=""
+                class="input-table-AC"
+                [(ngModel)]="data.descuento4"
+              />
+            </td>
+            }@else{
             <td class="center-text">{{ data.descuento4 | number : '1.2-2' }}</td>
+            }
+            <!-- End Descuento4 -->
+
+            <!-- CosCom -->
+            @if(isRowSelected === i){
+            <td class="center-text">
+              <input
+                type="number"
+                placeholder=""
+                class="input-table-AC"
+                [(ngModel)]="data.cosCom"
+              />
+            </td>
+            }@else{
             <td class="center-text">{{ data.cosCom | number : '1.2-2' }}</td>
+            }
+            <!-- End Coscom -->
+
             <td class="center-text">{{ data.parcial | number : '1.2-2' }}</td>
             <td class="center-text">{{ data.igv | number : '1.2-2' }}</td>
             <td class="center-text">{{ data.total | number : '1.2-2' }}</td>
