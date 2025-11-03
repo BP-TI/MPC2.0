@@ -3,6 +3,7 @@
   background: white;
   color: #1e1e1e;
   border-radius: 10px;
+  margin: 0;
   padding: 1px 0;
   width: 250px;
   overflow-y: auto;
@@ -55,7 +56,7 @@
 
 .custom-menu li:hover {
   color: white;
-  background: #32509d;
+  background: #32509d !important;
   font-weight: bold;
 }
 
@@ -68,19 +69,41 @@
   margin-right: 8px;
 }
 
+.menu-filter li:nth-child(1) {
+  position: sticky;
+  top: 0;
+  background: white;
+  z-index: 1001;
+}
+
+.menu-filter li:nth-child(2) {
+  border-bottom: 0.5px solid #555;
+  position: sticky;
+  top: 26px;
+  background: white;
+  z-index: 1002;
+}
+
+.menu-filter li:last-child {
+  border-top: 0.5px solid #555;
+  position: sticky;
+  bottom: 0;
+  background: white;
+  z-index: 1001;
+}
+
 .menu-filter li:nth-child(3),
 .menu-filter li:nth-child(4) {
-  border-top: 0.5px solid #555;
   margin: 0px 5px;
 }
 
 .menu-filter li:nth-child(3):hover {
-  background: none !important;
+  background: white !important;
   color: #555 !important;
 }
 
 .menu-filter li:nth-child(4):hover {
-  background: none !important;
+  background: white !important;
   color: #555 !important;
 }
 
@@ -94,8 +117,42 @@
   background: #32509d;
 }
 
-.buttons-filter {
+.container-buttons-filter {
   display: flex;
   align-items: baseline;
   gap: 10px;
+}
+
+.container-buttons-filter button {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding: 4px 4px;
+  width: auto;
+  background: #134B97;
+  border: 1px solid #134B97;
+  border-radius: 4px;
+  font-size: 8px;
+  font-family: 'Montserrat';
+  font-style: normal;
+  color: white;
+}
+
+.container-buttons-filter button:hover {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding: 4px 4px;
+  width: auto;
+  background: white;
+  border: 1px solid #134B97;
+  border-radius: 4px;
+  font-size: 8px;
+  font-family: 'Montserrat';
+  font-style: normal;
+  color: #134B97;
 }
