@@ -213,7 +213,7 @@
         <i class="fa-solid fa-filter .icon-filter-colunm-hidden"></i>
       </a>
       <div
-        class="dropdown-menu dropdown-menu-right shadow animated--grow-in filter-table"
+        class="dropdown-menu dropdown-menu-right shadow filter-table"
         aria-labelledby="userDropdown"
       >
         <!-- Listado de columnas filtro -->
@@ -245,8 +245,8 @@
           <tr id="header-row">
             <th draggable="true" *ngFor="let data of headTableAnalisisCompra">
               {{ data }}
-              @if( data == 'Condición' ){
-                <i class="fa-solid fa-filter text-light" (click)="openContextMenu($event, 4)"></i>
+              @if( data == 'Descripción' || data == 'Tipo'){
+                <i class="fa-solid fa-filter text-light" (click)="openContextMenu($event, 4, data)"></i>
               }
             </th>
           </tr>
@@ -261,9 +261,9 @@
             (click)="isRowSelected = i"
             [class.selected]="isRowSelected === i"
           >
-            <td [ngClass]="siRowSelectedHover(i)">{{ data.codProducto }}</td>
-            <td [ngClass]="siRowSelectedHover(i)">{{ data.nombreProducto }}</td>
-            <td [ngClass]="siRowSelectedHover(i)">{{ data.nombreLaboratorio }}</td>
+            <td [ngClass]="siRowSelectedHover(i, data.codProducto )">{{ data.codProducto }}</td>
+            <td [ngClass]="siRowSelectedHover(i, data.codProducto )">{{ data.nombreProducto }}</td>
+            <td [ngClass]="siRowSelectedHover(i, data.codProducto )">{{ data.nombreLaboratorio }}</td>
             <td class="center-text">{{ data.unidadEmpaque }}</td>
             @if(isRowSelected === i){
             <td class="center-text">
@@ -519,5 +519,7 @@
   </div>
 </div>
 <!-- end modal -->
-<app-option-click (action)="handleMenuAction($event)"></app-option-click>
+<app-option-click (action)="handleMenuAction($event)"
+                  (filter) = "filterData($event)"
+></app-option-click>
 <!-- end modal -->

@@ -25,26 +25,38 @@
 </ul>
 
 <ul
+  class="lista-filtro"
   class="custom-menu menu-filter"
   *ngIf="visible4"
   [ngStyle]="{ top: y + 'px', left: x + 'px' }"
-  style="height: 150px"
+  style="height: 200px"
 >
   <li (click)="onAction('O-AZ')"><i class="fa-solid fa-arrow-up-a-z"></i> Ordernar de A a Z</li>
-  <li (click)="onAction('O-AZ')"><i class="fa-solid fa-arrow-down-z-a"></i> Ordernar de Z a A</li>
+  <li (click)="onAction('O-ZA')"><i class="fa-solid fa-arrow-down-z-a"></i> Ordernar de Z a A</li>
   <li>
     <div class="m-0 p-0 pl-4 item-list">
-      <input type="checkbox" />
+      <input
+        type="checkbox"
+        (change)="onChangeCheckedAll($event)"
+        [(checked)]="checkAllDescription"
+      />
       TODOS
     </div>
-    <div *ngFor="let item of condiciones" class="m-0 p-0 pl-4 item-list">
+    @if(filterColumn == 'Descripción'){
+    <div *ngFor="let item of nameProducto" class="m-0 p-0 pl-4 item-list">
       <input type="checkbox" [(ngModel)]="item.check" />
       {{ item.description }}
     </div>
+    } @else {
+    <div *ngFor="let item of menuOption" class="m-0 p-0 pl-4 item-list">
+      <input type="checkbox" [(ngModel)]="item.check" />
+      {{ item.desciption }}
+    </div>
+    }
   </li>
   <li>
-    <div class="buttons-filter">
-      <button>Aceptar</button>
+    <div class="container-buttons-filter">
+      <button (click)="onActionMenuHeadAC()">Aceptar</button>
       <button (click)="closeHeadTableAC()">cancelar</button>
     </div>
   </li>

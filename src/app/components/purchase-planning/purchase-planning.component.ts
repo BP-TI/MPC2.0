@@ -36,6 +36,7 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
   rowsLb: any[];
   rowsUCompras: any[];
   rowsUIngresos: any[];
+  rowsDataTotal: any[];
   conscom: any = undefined;
   conscomImpto: any = undefined;
   loading: boolean = false;
@@ -51,6 +52,7 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
   isHovering: boolean = false;
   isRowHover: Number = -1;
   isRowSelected: Number = -1;
+  idProductSelected: Number = 0;
 
 
   @ViewChild("actionTemplate") actionTemplate: TemplateRef<any>;
@@ -161,6 +163,7 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
   onChangeProveedor() {
     this.loading = true;
     this.rows = [];
+    this.rowsDataTotal = [];
     this.laboratorios = [];
     this.clearDataTablesSecond();
 
@@ -180,6 +183,7 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
 
   CalcularCompra() {
     this.loading = true;
+    this.rowsDataTotal = [];
     this.clearDataTablesSecond();
 
     let labChecks = this.laboratorios?.filter(p => p.selected === true) || [];
@@ -202,6 +206,21 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
           if (response.codStatus === 1) {
             if (response.message === "OK") {
               this.rows = response.detalleProductos;
+              this.rowsDataTotal = response.detalleProductos;
+              console.log(this.rows);
+
+              let dataMenuFilter: OptionsCLickHeadMenuAC[] = [];
+              this.rows.forEach((element: any) => {
+                dataMenuFilter.push({
+                  codProducto: element.codProducto.toString(),
+                  description: element.nombreProducto.toString(),
+                  laboratorio: element.nombreLaboratorio.toString(),
+                  tipo: element.ABC.toString(),
+                  check: true,
+                })
+              });
+              this.contextMenu.nameProducto = dataMenuFilter;
+
             } else {
               alert(response.message);
             }
@@ -230,7 +249,6 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
   }
 
   handleMenuAction(action: string) {
-    console.log(action);
     switch (action) {
       case 'view':
         this.modalService.open(this.verSustitutosModal, { size: 'xl', centered: true, backdrop: false, scrollable: true });
@@ -252,6 +270,13 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
       case 'delete':
         alert('🗑️ Eliminar');
         break;
+      case 'O-AZ':
+        this.getACOrderAZ();
+        break;
+      case 'O-ZA':
+        this.getACOrderZA()
+        break;
+
     }
   }
 
@@ -432,7 +457,6 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
     }
 
     this.ordenCompraService.getUltimasCompras(dataRequets).subscribe((response: any) => {
-      console.log(response);
 
       if (response.codStatus == 1) {
         if (response.ultimasCompras != null && response.ultimasCompras.length > 0) {
@@ -453,8 +477,9 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
 
   }
 
-  openContextMenu(event: MouseEvent, opcionMenu: number) {
+  openContextMenu(event: MouseEvent, opcionMenu: number, headerColumnAC: string = '') {
     event.preventDefault();
+    this.contextMenu.filterColumn = headerColumnAC;
     this.contextMenu.open(event.pageX, event.pageY, opcionMenu);
   }
 
@@ -469,16 +494,19 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
     this.conscomImpto = undefined;
     this.laboratorios = [];
     this.rows = [];
+    this.rowsDataTotal = [];
     this.opcionesForm.get('todos')?.disable();
     this.totalIGV = 0;
     this.totalPagar = 0;
     this.totalParcial = 0;
     this.proveedor = "0";
     this.isRowSelected = -1;
+    this.idProductSelected = 0;
   }
 
   clearDataTablesSecond() {
     this.isRowSelected = -1;
+    this.idProductSelected = 0;
     this.rowsUCompras = [];
     this.rowsUIngresos = [];
     this.conscom = undefined;
@@ -505,23 +533,10 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
 
   getCondiciones() {
     this.loading = true;
-    let menuOptionCondiciones: OptionsCLickHeadMenuAC[] = [];
 
     this.purchaseService.getCondiciones().subscribe((response: any) => {
-      this.loading = false;
       if (response.length > 0) {
         this.condiciones = response;
-        response.forEach((element: any) => {
-          menuOptionCondiciones.push({
-            codCondicion: element.codCondicion,
-            description: element.descripcion,
-            check: true,
-          });
-        });
-
-        this.contextMenu.condiciones = menuOptionCondiciones;
-        
-        
       }
     }, (error: HttpErrorResponse) => {
       this.loading = false;
@@ -534,17 +549,46 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
     );
     return filtrado ? filtrado.descripcion : '';
   }
+  // Filtro tabla Analisis de compra
+  getACOrderAZ() {
+
+    this.rows.sort((a: any, b: any) =>
+      a.nombreProducto.toString().trim().localeCompare(b.nombreProducto).toString().trim()
+    );
+    this.isRowSelected = -1;
+    this.isRowSelected = this.rows.findIndex((p: any) => p.codProducto == this.idProductSelected);
+
+  }
+
+  getACOrderZA() {
+    this.rows = this.rows.sort((a: any, b: any) =>
+      b.nombreProducto.toString().trim().localeCompare(a.nombreProducto).toString().trim()
+    );
+    this.isRowSelected = -1;
+    this.isRowSelected = this.rows.findIndex((p: any) => p.codProducto == this.idProductSelected);
+  }
+
+  filterData(filter: string) {
+    let productFilter: string[] = filter.split('-');
+
+    let dataFilter = this.rowsDataTotal.filter((element: any) =>
+      productFilter.includes(element.codProducto)
+    );
+    this.rows = dataFilter;
+    this.calculateTotal();
+  }
 
   // hover tabla Analisis Compra
   onRowHover(index: number) {
     this.isRowHover = index;
   }
 
-  siRowSelectedHover(index: number) {
+  siRowSelectedHover(index: number, codProduct: string) {
     let rowStyle = 'background-white-fixed-column';
 
     if (this.isRowSelected == index) {
       rowStyle = 'background-selected-column';
+      this.idProductSelected = Number(codProduct);
     }
 
     if (this.isRowHover == index) {
