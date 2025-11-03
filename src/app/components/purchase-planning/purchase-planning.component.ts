@@ -54,6 +54,10 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
   isRowSelected: Number = -1;
   idProductSelected: Number = 0;
 
+  showToast = false;
+  toastMessage = '';
+  toastType: 'success' | 'error2' | 'info' | 'warning' = 'info';
+
 
   @ViewChild("actionTemplate") actionTemplate: TemplateRef<any>;
   @ViewChild(OptionClickComponent) contextMenu!: OptionClickComponent;
@@ -189,7 +193,7 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
     let labChecks = this.laboratorios?.filter(p => p.selected === true) || [];
     if (labChecks.length === 0) {
       this.loading = false;
-      alert("Debes seleccionar al menos un laboratorio para continuar");
+      this.AlertToast(`Warning: Debes seleccionar al menos un laboratorio para continuar.`,'warning')
       return;
     }
 
@@ -200,7 +204,7 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
 
         this.loading = false;
         if (response == null) {
-          alert("No se encontraton registros");
+          this.AlertToast(`Información: No se encontraron registros.`,'info');
 
         } else {
           if (response.codStatus === 1) {
@@ -222,16 +226,18 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
               this.contextMenu.nameProducto = dataMenuFilter;
 
             } else {
-              alert(response.message);
+              //alert(response.message);
+              this.AlertToast(`Información: ${response.message}`,'info');
             }
             this.calculateTotal();
           } else {
-            alert(response.message);
+            this.AlertToast(`${response.message}`,'warning');
           }
         }
       },
       (error: HttpErrorResponse) => {
         this.loading = false;
+        this.AlertToast(`Error: ${error}`,'error2');
       }
     );
   }
@@ -440,7 +446,7 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
       return;
     }
 
-    this.loading = true;
+    //this.loading = true;
     this.rowsUCompras = [];
     this.rowsUIngresos = [];
     this.conscom = undefined;
@@ -459,20 +465,28 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
     this.ordenCompraService.getUltimasCompras(dataRequets).subscribe((response: any) => {
 
       if (response.codStatus == 1) {
-        if (response.ultimasCompras != null && response.ultimasCompras.length > 0) {
-          this.rowsUCompras = response.ultimasCompras;
-        }
+        if(response.message != "OK"){
+          this.AlertToast(response.message,'warning');
+        }else{
+          if (response.ultimasCompras != null && response.ultimasCompras.length > 0) {
+            this.rowsUCompras = response.ultimasCompras;          
+          }
 
-        if (response.ultimosIngresos != null && response.ultimosIngresos.length > 0) {
-          this.rowsUIngresos = response.ultimosIngresos;
-        }
+          if (response.ultimosIngresos != null && response.ultimosIngresos.length > 0) {
+            this.rowsUIngresos = response.ultimosIngresos;
+          }
 
-        this.conscom = response.costoCompra;
-        this.conscomImpto = response.costoCompraIGV;
+          this.conscom = response.costoCompra;
+          this.conscomImpto = response.costoCompraIGV;
+        }        
+      }
+      else{
+        this.AlertToast(response.message,'error2');
       }
       this.loading = false;
     }, (error: HttpErrorResponse) => {
       this.loading = false;
+      this.AlertToast(`Error: ${error}`,'error2');
     });
 
   }
@@ -603,5 +617,13 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
     this.isRowHover = -1;
   }
   // End hover tabla Analisis Compra
+
+  AlertToast(message: string, type: 'success' | 'error2' | 'info' | 'warning' = 'info') {
+    this.toastMessage = message;
+    this.toastType = type;
+    this.showToast = true;
+
+    setTimeout(() => this.showToast = false, 5000);
+  }
 
 }

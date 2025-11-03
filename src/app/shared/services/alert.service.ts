@@ -24,13 +24,11 @@ export class AlertService {
       this.toastaService.success(toastOptions);
     else if (severity == MessageSeverity.error)
       this.toastaService.error(toastOptions);
-    else if (severity == MessageSeverity.warn)
+    else if (severity == MessageSeverity.warning)
       this.toastaService.warning(toastOptions);
-    else if (severity == MessageSeverity.wait)
-      this.toastaService.wait(toastOptions);
   }
 
- 
+  
 
 
 }
@@ -40,6 +38,5 @@ export class AlertService {
     info,
     success,
     error,
-    warn,
-    wait
+    warning
   }

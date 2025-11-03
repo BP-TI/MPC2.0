@@ -519,7 +519,7 @@
   </div>
 </div>
 <!-- end modal -->
-<app-option-click (action)="handleMenuAction($event)"
-                  (filter) = "filterData($event)"
-></app-option-click>
+<app-option-click (action)="handleMenuAction($event)" (filter) = "filterData($event)"></app-option-click>
+<app-alertToast *ngIf="showToast" [message]="toastMessage" [type]="toastType" [duration]="5000"></app-alertToast>
+<loading *ngIf="loading"></loading>
 <!-- end modal -->

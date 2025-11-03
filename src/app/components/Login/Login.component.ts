@@ -61,8 +61,7 @@ export class LoginComponent implements OnInit {
       (response) => {
         this.loading = false;
         if(response.codigo === 0){
-          this.alertaService.showMessage("Error", response.message, MessageSeverity.error);
-
+          this.AlertToast("Error: Usuario y/o contraseña incorrectos.",'error2');          
         }else{
           this.cargarDatosSession(response);
           this.router.navigate(['/home']);
@@ -85,6 +84,18 @@ export class LoginComponent implements OnInit {
 
   executeCaptcha(){
 
+  }
+
+  showToast = false;
+  toastMessage = '';
+  toastType: 'success' | 'error2' | 'info' | 'warning' = 'info';
+
+  AlertToast(message: string, type: 'success' | 'error2' | 'info' | 'warning' = 'info') {
+    this.toastMessage = message;
+    this.toastType = type;
+    this.showToast = true;
+
+    setTimeout(() => this.showToast = false, 5000);
   }
 
 }
