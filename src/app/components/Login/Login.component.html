@@ -64,3 +64,4 @@
 </div>
 
 <loading *ngIf="loading"></loading>
+<app-alertToast *ngIf="showToast" [message]="toastMessage" [type]="toastType" [duration]="5000"></app-alertToast>

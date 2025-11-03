@@ -26,6 +26,7 @@ import { PdfViewerModule } from 'ng2-pdf-viewer';
 import { CurrentOrderComponent } from './components/current-order/current-order.component';
 import { InventoryPolicyComponent } from './components/inventory-policy/inventory-policy.component';
 import { PurchaseOrderComponent } from './components/purchase-order/purchase-order.component';
+import { AlertToastComponent } from './shared/components/alertToast/alertToast.component';
 
 @NgModule({
   declarations: [
@@ -42,6 +43,7 @@ import { PurchaseOrderComponent } from './components/purchase-order/purchase-ord
     CurrentOrderComponent,
     InventoryPolicyComponent,
     PurchaseOrderComponent,
+    AlertToastComponent
   ],
   imports: [
     NgbModalModule,
@@ -66,6 +68,7 @@ import { PurchaseOrderComponent } from './components/purchase-order/purchase-ord
     OptionClickComponent,
     InventoryPolicyComponent,
     PurchaseOrderComponent,
+    AlertToastComponent,
   ],
   bootstrap: [App]
 })
