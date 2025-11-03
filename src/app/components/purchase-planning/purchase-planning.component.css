@@ -326,7 +326,9 @@ th:nth-child(3) {
   background-color: white;
 }
 
+
 /* === Estilos para el sombreado del hover y select de la tabla AC === */
+
 #tablaAnalisiCompra tbody tr {
   background: white;
 }
