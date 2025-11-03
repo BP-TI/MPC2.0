@@ -3,6 +3,7 @@ export class OptionsCLickHeadMenuAC {
     codProducto:string;
     description:string;
     laboratorio:string;
+    compraFinal:Number;
     tipo:string;
     check: boolean;
 }

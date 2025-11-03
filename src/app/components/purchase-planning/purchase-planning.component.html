@@ -218,7 +218,7 @@
       >
         <!-- Listado de columnas filtro -->
         @for(data of headTableAnalisisCompra; track data; let index = $index){ @if(index > 2){
-        <div class="dropdown-item form-check" data-toggle="modal">
+        <div class="dropdown-item form-check">
           <input
             class="form-check-input"
             type="checkbox"
@@ -227,7 +227,7 @@
             (change)="deleteColumn(data, 'tablaAnalisiCompra', $event)"
             checked
           />
-          <label class="form-check-label" for="{{ data }}"> {{ data }} </label>
+          <label class="form-check-label" for="data"> {{ data }} </label>
         </div>
         } }
         <!-- End Listado de columnas filtro -->
@@ -244,10 +244,14 @@
         <thead>
           <tr id="header-row">
             <th draggable="true" *ngFor="let data of headTableAnalisisCompra">
-              {{ data }}
-              @if( data == 'Descripción' || data == 'Tipo'){
-                <i class="fa-solid fa-filter text-light" (click)="openContextMenu($event, 4, data)"></i>
+              {{ data }}              
+              @if( data == 'Descripción' || data == 'Tipo' || data == 'Compra final' || data == 'Labora.' ){
+              <i
+                class="fa-solid fa-filter text-light"
+                (click)="openContextMenu($event, 4, data)"
+              ></i>
               }
+
             </th>
           </tr>
         </thead>
@@ -261,9 +265,11 @@
             (click)="isRowSelected = i"
             [class.selected]="isRowSelected === i"
           >
-            <td [ngClass]="siRowSelectedHover(i, data.codProducto )">{{ data.codProducto }}</td>
-            <td [ngClass]="siRowSelectedHover(i, data.codProducto )">{{ data.nombreProducto }}</td>
-            <td [ngClass]="siRowSelectedHover(i, data.codProducto )">{{ data.nombreLaboratorio }}</td>
+            <td [ngClass]="siRowSelectedHover(i, data.codProducto)">{{ data.codProducto }}</td>
+            <td [ngClass]="siRowSelectedHover(i, data.codProducto)">{{ data.nombreProducto }}</td>
+            <td [ngClass]="siRowSelectedHover(i, data.codProducto)">
+              {{ data.nombreLaboratorio }}
+            </td>
             <td class="center-text">{{ data.unidadEmpaque }}</td>
             @if(isRowSelected === i){
             <td class="center-text">
@@ -519,7 +525,15 @@
   </div>
 </div>
 <!-- end modal -->
-<app-option-click (action)="handleMenuAction($event)" (filter) = "filterData($event)"></app-option-click>
-<app-alertToast *ngIf="showToast" [message]="toastMessage" [type]="toastType" [duration]="5000"></app-alertToast>
+<app-option-click
+  (action)="handleMenuAction($event)"
+  (filter)="filterData($event)"
+></app-option-click>
+<app-alertToast
+  *ngIf="showToast"
+  [message]="toastMessage"
+  [type]="toastType"
+  [duration]="5000"
+></app-alertToast>
 <loading *ngIf="loading"></loading>
 <!-- end modal -->

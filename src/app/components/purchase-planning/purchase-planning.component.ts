@@ -8,7 +8,7 @@ import { GlobalService } from '../../shared/services/global.service';
 import { OrdenCompraService } from '../../services/PurchasePlanning/ordenCompra.service';
 import { OptionClickComponent } from '../../shared/components/option-click/option-click.component';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { OptionsCLickHeadMenuAC } from '../../shared/models/option-click';
+import { OptionsCLickHeadMenuAC, OptionsClickHeadMenuAC2 } from '../../shared/models/option-click';
 
 @Component({
   selector: 'app-purchase-planning',
@@ -53,6 +53,7 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
   isRowHover: Number = -1;
   isRowSelected: Number = -1;
   idProductSelected: Number = 0;
+  columnFilterSelect: string = '';
 
   showToast = false;
   toastMessage = '';
@@ -193,7 +194,7 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
     let labChecks = this.laboratorios?.filter(p => p.selected === true) || [];
     if (labChecks.length === 0) {
       this.loading = false;
-      this.AlertToast(`Warning: Debes seleccionar al menos un laboratorio para continuar.`,'warning')
+      this.AlertToast(`Warning: Debes seleccionar al menos un laboratorio para continuar.`, 'warning')
       return;
     }
 
@@ -204,40 +205,27 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
 
         this.loading = false;
         if (response == null) {
-          this.AlertToast(`Información: No se encontraron registros.`,'info');
+          this.AlertToast(`Información: No se encontraron registros.`, 'info');
 
         } else {
           if (response.codStatus === 1) {
             if (response.message === "OK") {
               this.rows = response.detalleProductos;
               this.rowsDataTotal = response.detalleProductos;
-              console.log(this.rows);
-
-              let dataMenuFilter: OptionsCLickHeadMenuAC[] = [];
-              this.rows.forEach((element: any) => {
-                dataMenuFilter.push({
-                  codProducto: element.codProducto.toString(),
-                  description: element.nombreProducto.toString(),
-                  laboratorio: element.nombreLaboratorio.toString(),
-                  tipo: element.ABC.toString(),
-                  check: true,
-                })
-              });
-              this.contextMenu.nameProducto = dataMenuFilter;
+              this.createMenuListHeaderAC();
 
             } else {
-              //alert(response.message);
-              this.AlertToast(`Información: ${response.message}`,'info');
+              this.AlertToast(`Información: ${response.message}`, 'info');
             }
             this.calculateTotal();
           } else {
-            this.AlertToast(`${response.message}`,'warning');
+            this.AlertToast(`${response.message}`, 'warning');
           }
         }
       },
       (error: HttpErrorResponse) => {
         this.loading = false;
-        this.AlertToast(`Error: ${error}`,'error2');
+        this.AlertToast(`Error: ${error}`, 'error2');
       }
     );
   }
@@ -360,6 +348,7 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
   }
 
   deleteColumn(headColumna: string, nombreTabla: string, event: Event) {
+
     let tabla: any = document.getElementById(nombreTabla);
     let row = tabla.rows;
     let idColumna: number = 99999;
@@ -367,12 +356,11 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
 
     for (let i = 0; i < row.length; i++) {
       let celdas = row[i].cells;
-
       for (let j = 0; j < celdas.length; j++) {
-
-        if (headColumna.trim() === celdas[j].innerHTML.trim()) {
+        if (headColumna.trim() === celdas[j].innerText.trim()) {
           idColumna = j;
         }
+
         if (j === idColumna) {
           if (isChecked) {
             let styleColumn: string = "text-align: left; padding: 4px; position: sticky; top: 0;";
@@ -381,7 +369,7 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
             }
             celdas[j].setAttribute("style", styleColumn);
           } else {
-            celdas[j].setAttribute("style", "display: none;");
+            celdas[j].setAttribute("style", "display: none; !important");
 
           }
         }
@@ -465,11 +453,11 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
     this.ordenCompraService.getUltimasCompras(dataRequets).subscribe((response: any) => {
 
       if (response.codStatus == 1) {
-        if(response.message != "OK"){
-          this.AlertToast(response.message,'warning');
-        }else{
+        if (response.message != "OK") {
+          this.AlertToast(response.message, 'warning');
+        } else {
           if (response.ultimasCompras != null && response.ultimasCompras.length > 0) {
-            this.rowsUCompras = response.ultimasCompras;          
+            this.rowsUCompras = response.ultimasCompras;
           }
 
           if (response.ultimosIngresos != null && response.ultimosIngresos.length > 0) {
@@ -478,15 +466,15 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
 
           this.conscom = response.costoCompra;
           this.conscomImpto = response.costoCompraIGV;
-        }        
+        }
       }
-      else{
-        this.AlertToast(response.message,'error2');
+      else {
+        this.AlertToast(response.message, 'error2');
       }
       this.loading = false;
     }, (error: HttpErrorResponse) => {
       this.loading = false;
-      this.AlertToast(`Error: ${error}`,'error2');
+      this.AlertToast(`Error: ${error}`, 'error2');
     });
 
   }
@@ -494,6 +482,7 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
   openContextMenu(event: MouseEvent, opcionMenu: number, headerColumnAC: string = '') {
     event.preventDefault();
     this.contextMenu.filterColumn = headerColumnAC;
+    this.columnFilterSelect = headerColumnAC;
     this.contextMenu.open(event.pageX, event.pageY, opcionMenu);
   }
 
@@ -533,10 +522,10 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
     let sumaPagar: number = 0;
 
     this.rows.forEach((data: any) => {
-      if (parseFloat(data.compraFinal) > 0) {
-        sumaParcial += parseFloat(data.parcial);
-        sumaIGV += parseFloat(data.igv);
-        sumaPagar += parseFloat(data.total);
+      if (Number(data.compraFinal) > 0) {
+        sumaParcial += Number(data.parcial);
+        sumaIGV += Number(data.igv);
+        sumaPagar += Number(data.total);
       }
     });
 
@@ -564,20 +553,113 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
     return filtrado ? filtrado.descripcion : '';
   }
   // Filtro tabla Analisis de compra
+  createMenuListHeaderAC() {
+    let dataMenuFilter: OptionsCLickHeadMenuAC[] = [];
+    this.rows.forEach((element: any) => {
+      dataMenuFilter.push({
+        codProducto: element.codProducto.toString(),
+        description: element.nombreProducto.toString(),
+        laboratorio: element.nombreLaboratorio.toString(),
+        tipo: element.ABC,
+        compraFinal: Math.trunc(Number(element.compraFinal) * 100) / 100,
+        check: true,
+      })
+    });
+    this.contextMenu.nameProducto = dataMenuFilter;
+
+    let listado: string[] = [];
+    let menuOption: OptionsClickHeadMenuAC2[] = [];
+    // Laboratorio
+    listado = [...new Set(dataMenuFilter.map(u => u.laboratorio.toString()))];
+    listado.forEach((element: string) => {
+      menuOption.push({
+        desciption: element,
+        check: true,
+      });
+    });
+    this.contextMenu.menuListLabora = menuOption;
+
+    // Tipo
+    menuOption = [];
+    listado = [...new Set(dataMenuFilter.map(u => u.tipo.toString()))];
+    listado.forEach((element: string) => {
+      menuOption.push({
+        desciption: element,
+        check: true,
+      });
+    });
+    this.contextMenu.menuLisTipo = menuOption;
+
+    // Compra Final
+    menuOption = [];
+    listado = [...new Set(dataMenuFilter.map(u => u.compraFinal.toString()))];
+    listado.forEach((element: string) => {
+      menuOption.push({
+        desciption: element,
+        check: true,
+      });
+    });
+    this.contextMenu.menuLisCompraFinal = menuOption;
+
+
+  }
   getACOrderAZ() {
 
-    this.rows.sort((a: any, b: any) =>
-      a.nombreProducto.toString().trim().localeCompare(b.nombreProducto).toString().trim()
-    );
+    if (this.columnFilterSelect == 'Descripción') {
+      this.rows.sort((a: any, b: any) =>
+        a.nombreProducto.toString().trim().localeCompare(b.nombreProducto).toString().trim()
+      );
+    }
+
+    if (this.columnFilterSelect == 'Tipo') {
+      this.rows.sort((a: any, b: any) =>
+        (a.ABC ?? "").toString().trim().localeCompare((b.ABC ?? "").toString().trim())
+      );
+    }
+
+    if (this.columnFilterSelect == 'Labora.') {
+      this.rows = this.rows.sort((a: any, b: any) =>
+        (a.nombreLaboratorio ?? "").toString().trim().localeCompare(b.nombreLaboratorio ?? "").toString().trim()
+      );
+    }
+
+    if (this.columnFilterSelect == 'Compra final') {
+      this.rows = this.rows.sort((a: any, b: any) =>
+        (a.compraFinal ?? "").toString().trim().localeCompare(b.compraFinal ?? "").toString().trim()
+      );
+    }
+
     this.isRowSelected = -1;
     this.isRowSelected = this.rows.findIndex((p: any) => p.codProducto == this.idProductSelected);
 
   }
 
   getACOrderZA() {
-    this.rows = this.rows.sort((a: any, b: any) =>
-      b.nombreProducto.toString().trim().localeCompare(a.nombreProducto).toString().trim()
-    );
+
+    if (this.columnFilterSelect == 'Descripción') {
+      this.rows = this.rows.sort((a: any, b: any) =>
+        b.nombreProducto.toString().trim().localeCompare(a.nombreProducto).toString().trim()
+      );
+    }
+
+    if (this.columnFilterSelect == 'Tipo') {
+      this.rows = this.rows.sort((a: any, b: any) =>
+        (b.ABC ?? "").toString().trim().localeCompare(a.ABC ?? "").toString().trim()
+      );
+    }
+
+    if (this.columnFilterSelect == 'Labora.') {
+      this.rows = this.rows.sort((a: any, b: any) =>
+        (b.nombreLaboratorio ?? "").toString().trim().localeCompare(a.nombreLaboratorio ?? "").toString().trim()
+      );
+    }
+
+    if (this.columnFilterSelect == 'Compra final') {
+      this.rows = this.rows.sort((a: any, b: any) =>
+        (b.compraFinal ?? "").toString().trim().localeCompare(a.compraFinal ?? "").toString().trim()
+      );
+    }
+
     this.isRowSelected = -1;
     this.isRowSelected = this.rows.findIndex((p: any) => p.codProducto == this.idProductSelected);
   }

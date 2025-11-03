@@ -44,15 +44,30 @@
     </div>
     @if(filterColumn == 'Descripción'){
     <div *ngFor="let item of nameProducto" class="m-0 p-0 pl-4 item-list">
-      <input type="checkbox" [(ngModel)]="item.check" />
+      <input type="checkbox" [(ngModel)]="item.check"/>
       {{ item.description }}
     </div>
-    } @else {
-    <div *ngFor="let item of menuOption" class="m-0 p-0 pl-4 item-list">
+    } 
+    @if(filterColumn == 'Labora.') {
+    <div *ngFor="let item of menuListLabora" class="m-0 p-0 pl-4 item-list">
       <input type="checkbox" [(ngModel)]="item.check" />
       {{ item.desciption }}
     </div>
     }
+    @if(filterColumn == 'Tipo') {
+    <div *ngFor="let item of menuLisTipo" class="m-0 p-0 pl-4 item-list">
+      <input type="checkbox" [(ngModel)]="item.check" />
+      {{ item.desciption }}
+    </div>
+    }
+    @if(filterColumn == 'Compra final') {
+    <div *ngFor="let item of menuLisCompraFinal" class="m-0 p-0 pl-4 item-list">
+      <input type="checkbox" [(ngModel)]="item.check" />
+      {{ item.desciption }}
+    </div>
+    }
+
+
   </li>
   <li>
     <div class="container-buttons-filter">
