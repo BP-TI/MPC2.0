@@ -1,4 +1,4 @@
-i {
+.icon-filter-colunm-hidden {
   color: #32509d;
   font-size: 1.2rem;
   cursor: pointer;
@@ -40,7 +40,7 @@ i {
 .input-select {
   box-sizing: border-box;
   /* width: 200px; */
-  width: auto;
+  width: 300px;
   height: 35px;
 
   background: #FFFFFF;
@@ -59,7 +59,7 @@ i {
 .input-select-table-AC {
   box-sizing: border-box;
   width: auto;
-  height: 25px;
+  height: 20px;
 
   background: #FFFFFF;
   border: 0.5px solid rgba(175, 167, 167, 0.7);
@@ -70,8 +70,29 @@ i {
   align-self: stretch;
   flex-grow: 0;
   color: #7A7A7A;
-  padding: 3px;
-  font-size: 10px;
+  padding: 2px;
+  margin: 0px;;
+  font-size: 8px;
+}
+
+.input-table-AC {
+  box-sizing: border-box;
+  width: 50px;
+  height: 20px;
+
+  background: #FFFFFF;
+  border: 0.5px solid rgba(175, 167, 167, 0.7);
+  border-radius: 4px;
+
+  flex: none;
+  order: 1;
+  align-self: stretch;
+  flex-grow: 0;
+  color: #7A7A7A;
+  padding: 1px;
+  margin: 0px;
+  font-size: 8px;
+  text-align: center;
 }
 
 .container-button {
@@ -148,7 +169,14 @@ i {
   height: 100px;
   overflow-x: none;
   overflow-y: none;
-  scrollbar-color: #B0E0E6 white !important;  
+  scrollbar-color: #B0E0E6 white !important;
+}
+
+.menu-boticas {
+  height: 100px;
+  overflow-x: none;
+  overflow-y: none;
+  scrollbar-color: #B0E0E6 white !important;
 }
 
 /* Estilo de la tabla */
@@ -171,7 +199,7 @@ i {
 }
 
 .table-style {
-  width: 200%;
+  width: 450%;
   min-height: auto;
   max-height: 250px;
 }
@@ -179,11 +207,13 @@ i {
 .table-style2 {
   width: 180%;
   /* height: 100%; */
-  table-layout: fixed; /* == */
+  table-layout: fixed;
+  /* == */
 }
 
-.table-style2 tr{
-  height: 5px !important; /* == */
+.table-style2 tr {
+  height: 5px !important;
+  /* == */
 }
 
 .table-style2 thead th {
@@ -208,7 +238,7 @@ td {
 
 .table-style2 th,
 td {
-  overflow: hidden; 
+  overflow: hidden;
   font-family: 'Montserrat';
   font-style: normal;
 }
@@ -228,7 +258,6 @@ td {
 .table-style td {
   font-size: 10px;
   color: #3C3C3C;
-  /* background: white; */
 }
 
 .table-style2 td {
@@ -243,7 +272,6 @@ td {
 td {
   white-space: nowrap;
   text-align: left;
-  padding: 4px;
 }
 
 .table-style2 th,
@@ -261,7 +289,8 @@ td {
 
 .table-fixed th,
 .table-fixed td {
-  padding: 2px;
+  padding: 0px 10px;
+  margin: 0px;
 }
 
 
@@ -292,7 +321,6 @@ th:nth-child(3) {
   left: 60px;
   min-width: 200px;
   z-index: 4;
-  /* background: #B0E0E6; */
   background: white;
 }
 
@@ -306,15 +334,16 @@ th:nth-child(3) {
 }
 
 /* === Estilos para el sombreado del hover y select de la tabla AC === */
-#tablaAnalisiCompra tbody tr{
+#tablaAnalisiCompra tbody tr {
   background: white;
 }
-#tablaAnalisiCompra tbody tr:hover{
+
+#tablaAnalisiCompra tbody tr:hover {
   cursor: pointer;
   background: #B0E0E6 !important;
 }
 
-.selected{
+.selected {
   background: #D7E3F3 !important;
 }
 
@@ -322,9 +351,11 @@ th:nth-child(3) {
 .background-hover-fixed-column {
   background-color: #B0E0E6 !important;
 }
+
 .background-white-fixed-column {
   background-color: white !important;
 }
+
 .background-selected-column {
   background-color: #D7E3F3 !important;
 }
@@ -468,7 +499,7 @@ hr {
   text-align: center;
 }
 
-.options{
+.options {
   width: 100%;
   height: 130px;
   display: flex;
@@ -481,9 +512,27 @@ hr {
   border: #DCEBFF solid;
 }
 
-.options div:nth-child(2){
+.options div:nth-child(2) {
   display: flex;
   justify-content: right;
-  
+
 }
 
+/* para quitar el scroll para los input tipo Number */
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type=number] {
+  -moz-appearance: textfield;
+}
+
+/* Para mostrar la flecha del campo select */
+select {
+  appearance: auto !important;
+  -webkit-appearance: auto !important;
+  -moz-appearance: auto !important;
+  background-image: none !important;
+}

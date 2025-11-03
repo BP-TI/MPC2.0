@@ -1,4 +1,4 @@
-<div id="contenedor" class="col-12 m-0 pt-3">
+<div id="contenedor" class="col-12 m-0 pt-3" (contextmenu)="denyRightClick($event)">
   <!-- botones cabecera -->
   <div class="container-button">
     <button class="button-header" (click)="CalcularCompra()">
@@ -69,9 +69,9 @@
           </form>
         </div>
 
-        <div ngbDropdown class="fondoSelect">
-          <div ngbDropdownMenu class="dropdown-scroll p-2">
-            <div *ngFor="let item of laboratorios" class="form-check label-check-lab">
+        <div ngbDropdown class="fondoSelect col-12 p-0 m-0 menu-laboratorio">
+          <div ngbDropdownMenu class="dropdown-scroll p-0 m-0">
+            <div *ngFor="let item of laboratorios" class="form-check label-check-lab m-0 p-0 pl-4">
               <input
                 class="form-check-input"
                 type="checkbox"
@@ -88,24 +88,24 @@
       <!-- boticas -->
        <div class="m-0 p-0">
         <div class="">
-          <form [formGroup]="opcionesForm">
+          <form [formGroup]="opcionesFormBot">
             <div class="form-check">
               <input
                 class="form-check-input"
                 type="checkbox"
-                id="checkTodos"
+                id="checkTodosBot"
                 formControlName="todos"
-                (change)="onCheckChange('todosBot')"
+                (change)="onCheckChangeBot('todosBot')"
               />
-              <label class="label-text" for="checkTodos">Todos las boticas</label>
+              <label class="label-text" for="checkTodos">Todas las boticas</label>
               <br />
             </div>
           </form>
         </div>
 
-        <div ngbDropdown class="fondoSelect">
-          <div ngbDropdownMenu class="dropdown-scroll p-2">
-            <div *ngFor="let item of boticas" class="form-check label-check-lab">
+        <div ngbDropdown class="fondoSelect col-12 p-0 m-0 menu-boticas">
+          <div ngbDropdownMenu class="dropdown-scroll p-0 m-0">
+            <div *ngFor="let item of boticas" class="form-check label-check-lab m-0 p-0 pl-4">
               <input
                 class="form-check-input"
                 type="checkbox"
@@ -318,7 +318,7 @@
     <div
       id="container-table"
       class="m-0 p-0 table-scroll col-12"
-      (contextmenu)="openContextMenu($event, 1)"
+      (contextmenu)="openContextMenu($event, 3)"
     >
       <table id="tablaAnalisiCompra" class="table-style table-fixed">
         <thead>

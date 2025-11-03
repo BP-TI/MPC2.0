@@ -40,7 +40,7 @@
 .input-select {
   box-sizing: border-box;
   /* width: 200px; */
-  width: auto;
+  width: 300px;
   height: 35px;
 
   background: #FFFFFF;

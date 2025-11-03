@@ -25,8 +25,39 @@
 </ul>
 
 <ul
-  class="lista-filtro"
-  class="custom-menu menu-filter"
+  class="custom-menu"
+  *ngIf="visible3"
+  [ngStyle]="{ top: y + 'px', left: x + 'px' }"
+  style="height: 180px"
+>
+  <li (click)="onAction('filters')">🎛️ Mostrar Filtros</li>
+  <li (click)="onAction('excel')">📊 Exportar a Excel</li>
+  <li (click)="onAction('add')">➕ Adicionar Producto</li>
+  <li (click)="onAction('add')">➖ Eliminar Producto</li>
+  <li (click)="onAction('stockDetail')">🏥 Generar Consolidado O/C </li>
+  <li (click)="onAction('infraStock')">📉 Eliminar Consolidado O/C</li>
+  <li (click)="onAction('finalZero')">0️⃣ Compra Final 0</li>
+  <li (click)="onAction('discounts')">💰 Ver Sustitutos</li>
+</ul>
+
+<ul
+  class="custom-menu"
+  *ngIf="visible3"
+  [ngStyle]="{ top: y + 'px', left: x + 'px' }"
+  style="height: 180px"
+>
+  <li (click)="onAction('filters')">🎛️ Mostrar Filtros</li>
+  <li (click)="onAction('excel')">📊 Exportar a Excel</li>
+  <li (click)="onAction('add')">➕ Adicionar Producto</li>
+  <li (click)="onAction('add')">➖ Eliminar Producto</li>
+  <li (click)="onAction('stockDetail')">🏥 Generar Consolidado O/C </li>
+  <li (click)="onAction('infraStock')">📉 Eliminar Consolidado O/C</li>
+  <li (click)="onAction('finalZero')">0️⃣ Compra Final 0</li>
+  <li (click)="onAction('discounts')">💰 Ver Sustitutos</li>
+</ul>
+
+<ul
+  class="custom-menu menu-filter lista-filtro"
   *ngIf="visible4"
   [ngStyle]="{ top: y + 'px', left: x + 'px' }"
   style="height: 200px"
