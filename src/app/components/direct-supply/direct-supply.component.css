@@ -172,13 +172,6 @@
   scrollbar-color: #B0E0E6 white !important;
 }
 
-.menu-boticas {
-  height: 100px;
-  overflow-x: none;
-  overflow-y: none;
-  scrollbar-color: #B0E0E6 white !important;
-}
-
 /* Estilo de la tabla */
 .table-scroll {
   overflow-x: auto;
