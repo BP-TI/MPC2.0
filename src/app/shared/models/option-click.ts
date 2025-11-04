@@ -4,6 +4,7 @@ export class OptionsCLickHeadMenuAC {
     description:string;
     laboratorio:string;
     compraFinal:Number;
+    condicion:string;
     tipo:string;
     check: boolean;
 }
@@ -12,4 +13,5 @@ export class OptionsClickHeadMenuAC2{
     description:string;
     check:boolean;
     visible: boolean = true;
+    codCondiciones?: string = '';
 }
