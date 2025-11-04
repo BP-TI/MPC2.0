@@ -71,7 +71,7 @@ export class DirectSupplyComponent implements OnInit {
   selectedProveedores: string[] = [];
   proveedor = "0";
   opcionesForm: FormGroup;
-
+  opcionesFormBot: FormGroup;
   @ViewChild(OptionClickComponent) contextMenu!: OptionClickComponent;
 
 
@@ -95,6 +95,9 @@ export class DirectSupplyComponent implements OnInit {
     this.opcionesForm = this.fb.group({
       todos: [false],
       unico: [false]
+    });
+     this.opcionesFormBot = this.fb.group({
+      todos: [false],
     });
   }
 
@@ -216,10 +219,12 @@ export class DirectSupplyComponent implements OnInit {
         this.opcionesForm.patchValue({ unico: false });
         this.laboratorios.forEach(p => {
           p.selected = true;
+          this.onChangeLaboratorios(); 
         });
       } else {
         this.laboratorios.forEach(p => {
           p.selected = false;
+          this.boticas=[];
         });
       }
     }
@@ -230,8 +235,7 @@ export class DirectSupplyComponent implements OnInit {
 
     onCheckChangeBot(opcion: string) {
     if (opcion === 'todosBot') {
-      if (this.opcionesForm.value.todosBot) {
-        this.opcionesForm.patchValue({ unico: false });
+      if (this.opcionesFormBot.value.todos) {
         this.boticas.forEach(p => {
           p.selected = true;
         });
@@ -241,9 +245,6 @@ export class DirectSupplyComponent implements OnInit {
         });
       }
     }
-    if (opcion === 'unico' && this.opcionesForm.value.unico) {
-      this.opcionesForm.patchValue({ todos: false });
-    }
   }
 
 
@@ -251,6 +252,7 @@ export class DirectSupplyComponent implements OnInit {
     this.loading = true;
     this.rows = [];
     this.laboratorios = [];
+    this.boticas=[];
     this.supplyService.getLaboratorios(this.proveedor).subscribe(
       (response) => {
         this.loading = false;
@@ -278,6 +280,9 @@ export class DirectSupplyComponent implements OnInit {
     );
 
   }
+   denyRightClick(event: MouseEvent) {
+    event.preventDefault();
+  }
 
     clearField() {
     /*this.rowsUCompras = [];
@@ -287,7 +292,8 @@ export class DirectSupplyComponent implements OnInit {
     this.laboratorios = [];
     this.boticas=[];
     this.rows = [];
-    this.opcionesForm.get('todos')?.disable();
+    this.opcionesForm.get('todos')?.reset();
+    this.opcionesFormBot.get('todos')?.reset();
     this.totalIGV = 0;
     this.totalPagar = 0;
     this.totalParcial = 0;
