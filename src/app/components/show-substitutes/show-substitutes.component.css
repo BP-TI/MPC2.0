@@ -1,0 +1,128 @@
+.modal-body {
+    padding: 0px;
+    margin: 0px;
+}
+
+.header-modal {
+    background: #134B97;
+    color: white;
+}
+
+.button-cancel:hover {
+    /* box-sizing: border-box; */
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+
+    background: white;
+    border: 1px solid #FB2C36;
+    border-radius: 4px;
+    font-size: 12px;
+
+    font-family: 'Montserrat';
+    font-style: normal;
+
+
+    display: flex;
+    align-items: center;
+    letter-spacing: 1.25px;
+
+    color: #FB2C36;
+}
+
+.title-modal {
+    font-family: 'Montserrat';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 13px;
+    line-height: 20px;
+    padding: 0px;
+}
+
+.button-cancel {
+
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    padding: 4px 10px;
+    gap: 4px;
+
+    width: auto;
+    height: 25px;
+
+    background: #FB2C36;
+    border: 1px solid #FB2C36;
+    border-radius: 4px;
+    font-size: 12px;
+
+    font-family: 'Montserrat';
+    font-style: normal;
+
+
+    display: flex;
+    align-items: center;
+    letter-spacing: 1.25px;
+
+    color: #ffffff;
+}
+
+.table-scroll {
+    height: 200px;
+    margin: 10px;
+    padding: 0px;
+    overflow-y: auto !important;
+    overflow-x: auto !important;
+    display: block !important;
+    position: static !important;
+    border: #DCEBFF solid;
+    scrollbar-color: #B0E0E6 white !important;
+}
+
+.table-style thead th {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    padding: 0px;
+    margin: 0px;
+}
+
+.table-style {
+    width: 100%;
+    min-height: auto;
+}
+
+.table-style thead th {
+    background: #134B97;
+    color: white;
+}
+
+.table-style th,
+td {
+    font-family: 'Montserrat';
+    font-style: normal;
+    line-height: 22px;
+}
+
+.table-style th {
+    font-weight: bold;
+    font-size: 10px;
+    color: black;
+    background: white;
+}
+
+.table-style td {
+    font-size: 10px;
+    color: #3C3C3C;
+    background: white;
+}
+
+.table-style th,
+td {
+    text-align: center;
+    white-space: nowrap;
+    padding: 8px;
+    text-align: center;
+}

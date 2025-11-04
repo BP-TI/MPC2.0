@@ -1,6 +1,6 @@
 import { Component, EventEmitter, HostListener, OnInit, Output } from '@angular/core';
 import { OptionsCLickHeadMenuAC, OptionsClickHeadMenuAC2 } from '../../models/option-click';
-import { Laboratorios } from '../../../models/parametros';
+import { AppConstants } from '../../constants/app.constants';
 
 @Component({
   selector: 'app-option-click',
@@ -97,35 +97,35 @@ export class OptionClickComponent implements OnInit {
     const checked = (event.target as HTMLInputElement).checked;
 
     switch (this.filterColumn) {
-      case 'Descripción':
+      case AppConstants.TitleTableHeadAC.DESCRIPCION:
         if (checked) {
           this.menuListProducto.forEach(p => p.check = true);
         } else {
           this.menuListProducto.forEach(p => p.check = false);
         }
         break;
-      case 'Labora.':
+      case AppConstants.TitleTableHeadAC.LABORATORIO:
         if (checked) {
           this.menuListLabora.forEach(p => p.check = true);
         } else {
           this.menuListLabora.forEach(p => p.check = false);
         }
         break;
-      case 'Tipo':
+      case AppConstants.TitleTableHeadAC.TIPO:
         if (checked) {
           this.menuLisTipo.forEach(p => p.check = true);
         } else {
           this.menuLisTipo.forEach(p => p.check = false);
         }
         break;
-      case 'Compra final':
+      case AppConstants.TitleTableHeadAC.COMPRA_FINAL:
         if (checked) {
           this.menuListCompraFinal.forEach(p => p.check = true);
         } else {
           this.menuListCompraFinal.forEach(p => p.check = false);
         }
         break;
-      case 'Condición':
+      case AppConstants.TitleTableHeadAC.CONDICION:
         if (checked) {
           this.menuListCondiciones.forEach(p => p.check = true);
         } else {
@@ -138,19 +138,19 @@ export class OptionClickComponent implements OnInit {
   onChangecheckAll() {
     let isChecked: boolean = true;
 
-    if (this.filterColumn == 'Descripción') {
+    if (this.filterColumn == AppConstants.TitleTableHeadAC.DESCRIPCION) {
       isChecked = this.menuListProducto.every(element => element.check == true);
     }
-    if (this.filterColumn == 'Labora.') {
+    if (this.filterColumn == AppConstants.TitleTableHeadAC.LABORATORIO) {
       isChecked = this.menuListLabora.every(element => element.check == true);
     }
-    if (this.filterColumn == 'Tipo') {
+    if (this.filterColumn == AppConstants.TitleTableHeadAC.TIPO) {
       isChecked = this.menuLisTipo.every(element => element.check == true);
     }
-    if (this.filterColumn == 'Compra final') {
+    if (this.filterColumn == AppConstants.TitleTableHeadAC.COMPRA_FINAL) {
       isChecked = this.menuListCompraFinal.every(element => element.check == true);
     }
-    if (this.filterColumn == 'Condición') {
+    if (this.filterColumn == AppConstants.TitleTableHeadAC.CONDICION) {
       isChecked = this.menuListCondiciones.every(element => element.check == true);
     }
     this.checkAllDescription = isChecked;
@@ -162,7 +162,7 @@ export class OptionClickComponent implements OnInit {
     }
 
     let elementCheck: OptionsCLickHeadMenuAC[] = [];
-    if (this.filterColumn == 'Descripción') {
+    if (this.filterColumn == AppConstants.TitleTableHeadAC.DESCRIPCION) {
       let selectedElement = this.menuListProducto.filter(p => p.check == true);
       if (this.primerFiltro == this.filterColumn) {
         elementCheck = this.dataProductos.filter(element => selectedElement.some(c => c.description.trim() == element.description.trim()));
@@ -171,7 +171,7 @@ export class OptionClickComponent implements OnInit {
       }
     }
 
-    if (this.filterColumn == 'Tipo') {
+    if (this.filterColumn == AppConstants.TitleTableHeadAC.TIPO) {
       let selectedElement = this.menuLisTipo.filter(p => p.check == true);
       if (this.primerFiltro == this.filterColumn) {
         elementCheck = this.dataProductos.filter(element => selectedElement.some(c => c.description.trim() == element.tipo.trim()))
@@ -180,7 +180,7 @@ export class OptionClickComponent implements OnInit {
       }
     }
 
-    if (this.filterColumn == 'Compra final') {
+    if (this.filterColumn == AppConstants.TitleTableHeadAC.COMPRA_FINAL) {
       let selectedElement = this.menuListCompraFinal.filter(p => p.check == true);
       if (this.primerFiltro == this.filterColumn) {
         elementCheck = this.dataProductos.filter(element => selectedElement.some(c => c.description.trim() == element.compraFinal.toString().trim()))
@@ -190,7 +190,7 @@ export class OptionClickComponent implements OnInit {
       }
     }
 
-    if (this.filterColumn == 'Labora.') {
+    if (this.filterColumn == AppConstants.TitleTableHeadAC.LABORATORIO) {
       let selectedElement = this.menuListLabora.filter(p => p.check == true);
       if (this.primerFiltro == this.filterColumn) {
         elementCheck = this.dataProductos.filter(element => selectedElement.some(c => c.description.trim() == element.laboratorio.toString().trim()))
@@ -199,7 +199,7 @@ export class OptionClickComponent implements OnInit {
       }
     }
 
-    if (this.filterColumn == 'Condición') {
+    if (this.filterColumn == AppConstants.TitleTableHeadAC.CONDICION) {
       let selectedElement = this.menuListCondiciones.filter(p => p.check == true);
       if (this.primerFiltro == this.filterColumn) {
         elementCheck = this.dataProductos.filter(element => selectedElement.some(c => c.codCondiciones?.trim() == element.condicion.toString().trim()))
@@ -215,14 +215,13 @@ export class OptionClickComponent implements OnInit {
       this.primerFiltro = this.filterColumn;
     }
     this.filter.emit(stringChecked);
-
   }
 
   calculateListHead() {
     if (this.primerFiltro != this.filterColumn) {
       let headListData: string[]
       switch (this.filterColumn) {
-        case 'Descripción':
+        case AppConstants.TitleTableHeadAC.DESCRIPCION:
           headListData = this.dataFilter.map(p => p.description);
           this.menuListProducto.forEach(dataList => {
             if (headListData.find(f => f == dataList.description)) {
@@ -232,7 +231,7 @@ export class OptionClickComponent implements OnInit {
             }
           });
           break;
-        case 'Labora.':
+        case AppConstants.TitleTableHeadAC.LABORATORIO:
           headListData = Array.from(new Set(this.dataFilter.map(p => p.laboratorio)));
           this.menuListLabora.forEach(dataList => {
             if (headListData.find(f => f == dataList.description)) {
@@ -242,7 +241,7 @@ export class OptionClickComponent implements OnInit {
             }
           });
           break;
-        case 'Tipo':
+        case AppConstants.TitleTableHeadAC.TIPO:
           headListData = Array.from(new Set(this.dataFilter.map(p => p.tipo)));
           this.menuLisTipo.forEach(dataList => {
             if (headListData.find(f => f.trim() == dataList.description.trim())) {
@@ -253,8 +252,8 @@ export class OptionClickComponent implements OnInit {
           });
           break;
 
-        case 'Compra final':
-          headListData = Array.from(new Set(this.dataFilter.map(p => p.compraFinal.toString())));          
+        case AppConstants.TitleTableHeadAC.COMPRA_FINAL:
+          headListData = Array.from(new Set(this.dataFilter.map(p => p.compraFinal.toString())));
           this.menuListCompraFinal.forEach(dataList => {
             if (headListData.find(f => f.trim() == dataList.description.trim())) {
               dataList.visible = true;
@@ -264,7 +263,7 @@ export class OptionClickComponent implements OnInit {
           });
           break;
 
-        case 'Condición':
+        case AppConstants.TitleTableHeadAC.CONDICION:
           headListData = Array.from(new Set(this.dataFilter.map(p => p.condicion.toString())));
           this.menuListCondiciones.forEach(dataList => {
             if (headListData.find(f => f == dataList.codCondiciones)) {
@@ -282,7 +281,7 @@ export class OptionClickComponent implements OnInit {
       this.dataFilter = [];
 
       switch (this.primerFiltro) {
-        case 'Descripción':
+        case AppConstants.TitleTableHeadAC.CONDICION:
           this.menuListProducto.map(p => p.check = true);
           headSelectElement = this.menuListProducto.filter(p => p.check == true);
           headListData = Array.from(new Set(headSelectElement.map(p => p.description)));
@@ -292,7 +291,7 @@ export class OptionClickComponent implements OnInit {
             }
           });
           break;
-        case 'Labora.':
+        case AppConstants.TitleTableHeadAC.LABORATORIO:
           this.menuListLabora.map(p => p.check = true);
           headSelectElement = this.menuListLabora.filter(p => p.check == true);
           headListData = Array.from(new Set(headSelectElement.map(p => p.description)));
@@ -303,7 +302,7 @@ export class OptionClickComponent implements OnInit {
           });
 
           break;
-        case 'Tipo':
+        case AppConstants.TitleTableHeadAC.TIPO:
           this.menuLisTipo.map(p => p.check = true);
           headSelectElement = this.menuLisTipo.filter(p => p.check == true);
           headListData = Array.from(new Set(headSelectElement.map(p => p.description)));
@@ -313,8 +312,8 @@ export class OptionClickComponent implements OnInit {
             }
           });
           break;
-        case 'Compra final':
-          this.menuListCompraFinal.map(p => p.check);          
+        case AppConstants.TitleTableHeadAC.COMPRA_FINAL:
+          this.menuListCompraFinal.map(p => p.check);
           headSelectElement = this.menuListCompraFinal.filter(p => p.check == true);
           headListData = Array.from(new Set(headSelectElement.map(p => p.description)));
           this.dataProductos.forEach(element => {
@@ -323,7 +322,7 @@ export class OptionClickComponent implements OnInit {
             }
           });
           break;
-        case 'Condición':
+        case AppConstants.TitleTableHeadAC.CONDICION:
           this.menuListCondiciones.map(p => p.check);
           headSelectElement = this.menuListCondiciones.filter(p => p.check == true);
           headListData = Array.from(new Set(headSelectElement.map(p => p.description)));
@@ -334,10 +333,7 @@ export class OptionClickComponent implements OnInit {
           });
           break;
       }
-
     }
-
-
 
   }
 
