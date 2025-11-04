@@ -172,6 +172,13 @@
   scrollbar-color: #B0E0E6 white !important;
 }
 
+.menu-boticas {
+  height: 100px;
+  overflow-x: none;
+  overflow-y: none;
+  scrollbar-color: #B0E0E6 white !important;
+}
+
 /* Estilo de la tabla */
 .table-scroll {
   overflow-x: auto;
@@ -326,7 +333,9 @@ th:nth-child(3) {
   background-color: white;
 }
 
+
 /* === Estilos para el sombreado del hover y select de la tabla AC === */
+
 #tablaAnalisiCompra tbody tr {
   background: white;
 }

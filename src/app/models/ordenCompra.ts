@@ -12,3 +12,11 @@ export interface IUltimasComprasReq {
     usuarioLogin:string;    
     codUsuario:Number;    
 }
+export interface IUltimasComprasAbadiReq {
+    codProveedor:string;    
+    codLab:string;    
+    codProducto:string;    
+    usuarioLogin:string;   
+    codigoAlmacen:string; 
+    codUsuario:Number;    
+}
