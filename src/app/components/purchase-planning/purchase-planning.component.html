@@ -2,6 +2,7 @@
   <!-- botones cabecera -->
   <div class="container-button">
     <button class="button-header" (click)="CalcularCompra()">
+      <!-- <button class="button-header" (click)="cargardataMockap()"> -->
       <i class="fa-solid fa-calculator"></i>
       Calcular Compra
     </button>
@@ -73,7 +74,10 @@
 
         <div ngbDropdown class="fondoSelect col-12 p-0 m-0 menu-laboratorio">
           <div ngbDropdownMenu class="dropdown-scroll p-0 m-0">
-            <div *ngFor="let item of laboratorios" class="form-check label-check-lab m-0 p-0 pl-4">
+            <div
+              *ngFor="let item of laboratorios; let i = index"
+              class="form-check label-check-lab m-0 p-0 pl-4"              
+            >
               <input
                 class="form-check-input"
                 type="checkbox"
@@ -203,13 +207,7 @@
       <div class="subtitle mb-3">Análisis Compras</div>
 
       <!-- Filtro de la tabla de A.Compra -->
-      <a
-        class="dropdown-toggle"
-        id="userDropdown"
-        role="button"
-        data-toggle="dropdown"
-        data-bs-auto-close="false"
-      >
+      <a class="dropdown-toggle" id="userDropdown" role="button" data-toggle="dropdown">
         <i class="fa-solid fa-filter .icon-filter-colunm-hidden"></i>
       </a>
       <div
@@ -244,14 +242,14 @@
         <thead>
           <tr id="header-row">
             <th draggable="true" *ngFor="let data of headTableAnalisisCompra">
-              {{ data }}              
-              @if( data == 'Descripción' || data == 'Tipo' || data == 'Compra final' || data == 'Labora.' ){
+              {{ data }}
+              @if( data == 'Descripción' || data == 'Tipo' || data == 'Compra final' || data ==
+              'Labora.' ){
               <i
                 class="fa-solid fa-filter text-light"
                 (click)="openContextMenu($event, 4, data)"
               ></i>
               }
-
             </th>
           </tr>
         </thead>

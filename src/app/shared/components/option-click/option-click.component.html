@@ -74,27 +74,35 @@
       TODOS
     </div>
     @if(filterColumn == 'Descripción'){
-    <div *ngFor="let item of nameProducto" class="m-0 p-0 pl-4 item-list">
-      <input type="checkbox" [(ngModel)]="item.check"/>
-      {{ item.description }}
+    <div  *ngFor="let item of menuListProducto" class="m-0 p-0 pl-4 item-list">
+      <div *ngIf="item.visible" class="d-flex gap-2">
+        <input type="checkbox" [(ngModel)]="item.check" (change)="onChangecheckAll()"/>
+        {{ item.description }}
+      </div>
     </div>
     } 
     @if(filterColumn == 'Labora.') {
     <div *ngFor="let item of menuListLabora" class="m-0 p-0 pl-4 item-list">
-      <input type="checkbox" [(ngModel)]="item.check" />
-      {{ item.desciption }}
+     <div *ngIf="item.visible" class="d-flex gap-2">
+        <input type="checkbox" [(ngModel)]="item.check" (change)="onChangecheckAll()"/>
+        {{ item.description }}
+      </div>
     </div>
     }
     @if(filterColumn == 'Tipo') {
     <div *ngFor="let item of menuLisTipo" class="m-0 p-0 pl-4 item-list">
-      <input type="checkbox" [(ngModel)]="item.check" />
-      {{ item.desciption }}
+      <div *ngIf="item.visible" class="d-flex gap-2">
+        <input type="checkbox" [(ngModel)]="item.check" (change)="onChangecheckAll()"/>
+        {{ item.description }}
+      </div>
     </div>
     }
     @if(filterColumn == 'Compra final') {
     <div *ngFor="let item of menuLisCompraFinal" class="m-0 p-0 pl-4 item-list">
-      <input type="checkbox" [(ngModel)]="item.check" />
-      {{ item.desciption }}
+     <div *ngIf="item.visible" class="d-flex gap-2">
+        <input type="checkbox" [(ngModel)]="item.check" (change)="onChangecheckAll()"/>
+        {{ item.description }}
+      </div>
     </div>
     }
 

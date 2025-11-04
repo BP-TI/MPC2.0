@@ -53,7 +53,6 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
   isRowHover: Number = -1;
   isRowSelected: Number = -1;
   idProductSelected: Number = 0;
-  columnFilterSelect: string = '';
 
   showToast = false;
   toastMessage = '';
@@ -74,14 +73,13 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
   ngOnInit() {
     this.addHeadeTable();
     this.cargarProveedores();
-    this.crearGrupoChecks();
     this.getCondiciones();
     this.global.setGlobalVar('Módulo planificación de compra');
 
   }
 
-  // Para poder mover las columnas de la tabla Analisis de compra
   ngAfterViewInit() {
+    // Para poder mover las columnas de la tabla Analisis de compra
     const tabla = this.el.nativeElement.querySelector('#tablaAnalisiCompra');
     let columnaOrigen: HTMLElement | null = null;
 
@@ -124,6 +122,11 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
       });
     });
 
+    // Para que el menu de filtro columnas de la tabla AC no se cierre
+    const menus = this.el.nativeElement.querySelectorAll('.dropdown-menu');
+    menus.forEach((menu: any) => {
+      menu.addEventListener('click', (event: MouseEvent) => event.stopPropagation());
+    });
 
   }
 
@@ -177,7 +180,7 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
         this.loading = false;
         this.laboratorios = response;
         if (this.laboratorios.length > 0) {
-          this.opcionesForm.get('todos')?.enable();
+          this.opcionesForm?.get('todos')?.enable();
         }
       },
       (error: HttpErrorResponse) => {
@@ -243,6 +246,7 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
   }
 
   handleMenuAction(action: string) {
+    console.log(action);
     switch (action) {
       case 'view':
         this.modalService.open(this.verSustitutosModal, { size: 'xl', centered: true, backdrop: false, scrollable: true });
@@ -482,7 +486,6 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
   openContextMenu(event: MouseEvent, opcionMenu: number, headerColumnAC: string = '') {
     event.preventDefault();
     this.contextMenu.filterColumn = headerColumnAC;
-    this.columnFilterSelect = headerColumnAC;
     this.contextMenu.open(event.pageX, event.pageY, opcionMenu);
   }
 
@@ -554,9 +557,11 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
   }
   // Filtro tabla Analisis de compra
   createMenuListHeaderAC() {
-    let dataMenuFilter: OptionsCLickHeadMenuAC[] = [];
-    this.rows.forEach((element: any) => {
-      dataMenuFilter.push({
+
+    let dataMenUfilterComplete: OptionsCLickHeadMenuAC[] = [];
+
+    this.rowsDataTotal.forEach((element: any) => {
+      dataMenUfilterComplete.push({
         codProducto: element.codProducto.toString(),
         description: element.nombreProducto.toString(),
         laboratorio: element.nombreLaboratorio.toString(),
@@ -565,65 +570,82 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
         check: true,
       })
     });
-    this.contextMenu.nameProducto = dataMenuFilter;
+
+    this.contextMenu.dataProductos = dataMenUfilterComplete;
+    this.contextMenu.dataFilter = dataMenUfilterComplete;
 
     let listado: string[] = [];
     let menuOption: OptionsClickHeadMenuAC2[] = [];
-    // Laboratorio
-    listado = [...new Set(dataMenuFilter.map(u => u.laboratorio.toString()))];
+
+    // Produccto
+    menuOption = [];
+    listado = [...new Set(dataMenUfilterComplete.map(u => u.description.toString()))];
     listado.forEach((element: string) => {
       menuOption.push({
-        desciption: element,
+        description: element,
         check: true,
+        visible: true,
+      });
+    });
+    this.contextMenu.menuListProducto = menuOption;
+
+    // Laboratorio
+    menuOption = [];
+    listado = [...new Set(dataMenUfilterComplete.map(u => u.laboratorio.toString()))];
+    listado.forEach((element: string) => {
+      menuOption.push({
+        description: element,
+        check: true,
+        visible: true,
       });
     });
     this.contextMenu.menuListLabora = menuOption;
 
     // Tipo
     menuOption = [];
-    listado = [...new Set(dataMenuFilter.map(u => u.tipo.toString()))];
+    listado = [...new Set(dataMenUfilterComplete.map(u => u.tipo.toString()))];
     listado.forEach((element: string) => {
       menuOption.push({
-        desciption: element,
+        description: element,
         check: true,
+        visible: true
       });
     });
     this.contextMenu.menuLisTipo = menuOption;
 
     // Compra Final
     menuOption = [];
-    listado = [...new Set(dataMenuFilter.map(u => u.compraFinal.toString()))];
+    listado = [...new Set(dataMenUfilterComplete.map(u => u.compraFinal.toString()))];
     listado.forEach((element: string) => {
       menuOption.push({
-        desciption: element,
+        description: element,
         check: true,
+        visible: true,
       });
     });
     this.contextMenu.menuLisCompraFinal = menuOption;
-
-
   }
-  getACOrderAZ() {
 
-    if (this.columnFilterSelect == 'Descripción') {
+  getACOrderAZ() {
+    if ( this.contextMenu.filterColumn == 'Descripción') {
       this.rows.sort((a: any, b: any) =>
         a.nombreProducto.toString().trim().localeCompare(b.nombreProducto).toString().trim()
       );
     }
 
-    if (this.columnFilterSelect == 'Tipo') {
+    if ( this.contextMenu.filterColumn == 'Tipo') {
       this.rows.sort((a: any, b: any) =>
         (a.ABC ?? "").toString().trim().localeCompare((b.ABC ?? "").toString().trim())
       );
     }
+    if (this.contextMenu.filterColumn == 'Labora.') {
 
-    if (this.columnFilterSelect == 'Labora.') {
       this.rows = this.rows.sort((a: any, b: any) =>
         (a.nombreLaboratorio ?? "").toString().trim().localeCompare(b.nombreLaboratorio ?? "").toString().trim()
       );
     }
 
-    if (this.columnFilterSelect == 'Compra final') {
+    if (this.contextMenu.filterColumn == 'Compra final') {
       this.rows = this.rows.sort((a: any, b: any) =>
         (a.compraFinal ?? "").toString().trim().localeCompare(b.compraFinal ?? "").toString().trim()
       );
@@ -635,26 +657,25 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
   }
 
   getACOrderZA() {
-
-    if (this.columnFilterSelect == 'Descripción') {
+    if (this.contextMenu.filterColumn == 'Descripción') {
       this.rows = this.rows.sort((a: any, b: any) =>
         b.nombreProducto.toString().trim().localeCompare(a.nombreProducto).toString().trim()
       );
     }
 
-    if (this.columnFilterSelect == 'Tipo') {
+    if (this.contextMenu.filterColumn == 'Tipo') {
       this.rows = this.rows.sort((a: any, b: any) =>
         (b.ABC ?? "").toString().trim().localeCompare(a.ABC ?? "").toString().trim()
       );
     }
 
-    if (this.columnFilterSelect == 'Labora.') {
+    if (this.contextMenu.filterColumn == 'Labora.') {
       this.rows = this.rows.sort((a: any, b: any) =>
         (b.nombreLaboratorio ?? "").toString().trim().localeCompare(a.nombreLaboratorio ?? "").toString().trim()
       );
     }
 
-    if (this.columnFilterSelect == 'Compra final') {
+    if (this.contextMenu.filterColumn == 'Compra final') {
       this.rows = this.rows.sort((a: any, b: any) =>
         (b.compraFinal ?? "").toString().trim().localeCompare(a.compraFinal ?? "").toString().trim()
       );
@@ -665,12 +686,27 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
   }
 
   filterData(filter: string) {
+    if (this.contextMenu.primerFiltro.length == 0) {
+      this.contextMenu.primerFiltro = this.contextMenu.filterColumn;
+    }
     let productFilter: string[] = filter.split('-');
 
     let dataFilter = this.rowsDataTotal.filter((element: any) =>
       productFilter.includes(element.codProducto)
     );
     this.rows = dataFilter;
+    this.contextMenu.dataFilter = [];
+    dataFilter.forEach(element => {
+      this.contextMenu.dataFilter.push({
+        codProducto: element.codProducto,
+        description: element.nombreProducto,
+        laboratorio: element.nombreLaboratorio,
+        compraFinal: Number(element.compraFinal),
+        tipo: element.ABC,
+        check: true,
+      });
+    });
+
     this.calculateTotal();
   }
 

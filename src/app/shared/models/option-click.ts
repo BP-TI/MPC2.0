@@ -9,6 +9,7 @@ export class OptionsCLickHeadMenuAC {
 }
 
 export class OptionsClickHeadMenuAC2{
-    desciption:string;
+    description:string;
     check:boolean;
+    visible: boolean = true;
 }
