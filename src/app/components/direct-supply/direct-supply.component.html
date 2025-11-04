@@ -118,78 +118,57 @@
         </div>
       </div>
       <!-- end boticas -->
+      <div class="m-0 p-0 options">
+        <div class="m-0 p-0 d-flex d-flex align-items-center gap-2"></div>
+        <!-- tabla de CosCom -->
+          <div *ngIf="conscom">
+            <table class="table-style">
+                <thead>
+                  <tr>
+                    <th>CosCom</th>
+                    <th>CosCom+Impto</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="center-text">{{ conscom }}</td>
+                    <td class="center-text">{{ conscomImpto }}</td>
+                  </tr>
+                </tbody>
+            </table>
+          </div>
+      </div>
     </div>
   </div>
-  
 
-  
 
   <!-- tablas -->
   <div class="col-12 m-0 p-0 mt-2 d-flex align-items-baseline gap-4">
     <!-- tabla ultimas compras -->
     <div class="col-md-6 m-0 p-0">
       <div class="subtitle mb-3">Últimas Compras</div>
-      <!-- Tabla -->
-      <div class="m-0 p-0 table-scroll" >
-        <table class="table-style2 m-0 p-0" (contextmenu)="openContextMenu($event,2)">
+      <div class="m-0 p-0 table-scroll" (contextmenu)="openContextMenu($event, 2)">
+        <table id="tablaUltimasCompras" class="table-style2 m-0 p-0">
           <thead>
             <tr>
-              <th>Proveedor</th>
-              <th>First Name</th>
-              <th>S-Orden</th>
-              <th>Fecha</th>
-              <th>Cant.-E</th>
-              <th>Cant.-F</th>
-              <th>V.V.F</th>
-              <th>Dscto1(%)</th>
-              <th>Dscto2(%)</th>
-              <th>Dscto3(%)</th>
-              <th>Dscto4(%)</th>
-              <th>Boni</th>
+              <th *ngFor="let data of headTableUltimasCompras">
+                {{ data }}
+              </th>
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td>ABBOTT LABORA TORIOS S.A.</td>
-              <td>Raj</td>
-              <td>Shukla</td>
-              <td>09/07/2025</td>
-              <td>Advanced Java</td>
-              <td>Advanced Java</td>
-              <td>Advanced Java</td>
-              <td>Advanced Java</td>
-              <td>Advanced Java</td>
-              <td>Advanced Java</td>
-              <td>Advanced Java</td>
-              <td>Advanced Java</td>
-            </tr>
-            <tr>
-              <td>ABBOTT LABORA TORIOS S.A.</td>
-              <td>Rahul</td>
-              <td>Mishra</td>
-              <td>09/07/2025</td>
-              <td>DSA In JAVA</td>
-              <td>DSA In JAVA</td>
-              <td>DSA In JAVA</td>
-              <td>DSA In JAVA</td>
-              <td>DSA In JAVA</td>
-              <td>DSA In JAVA</td>
-              <td>DSA In JAVA</td>
-              <td>DSA In JAVA</td>
-            </tr>
-            <tr>
-              <td>ABBOTT LABORA TORIOS S.A.</td>
-              <td>Prahant</td>
-              <td>Shuka</td>
-              <td>09/07/2025</td>
-              <td>Web Development</td>
-              <td>Web Development</td>
-              <td>Web Development</td>
-              <td>Web Development</td>
-              <td>Web Development</td>
-              <td>Web Development</td>
-              <td>Web Development</td>
-              <td>Web Development</td>
+            <tr *ngFor="let item of rowsUCompras">
+              <td>{{ item.nombreProveedor }}</td>
+              <td>{{ item.orden }}</td>
+              <td>{{ item.fecha | date : 'dd/MM/yyyy' }}</td>
+              <td>{{ item.cantE }}</td>
+              <td>{{ item.cantF }}</td>
+              <td>{{ item.VVF | number : '1.2-2' }}</td>
+              <td>{{ item.dscto1 | number : '1.2-2' }}</td>
+              <td>{{ item.dscto2 | number : '1.2-2' }}</td>
+              <td>{{ item.dscto3 | number : '1.2-2' }}</td>
+              <td>{{ item.dscto4 | number : '1.2-2' }}</td>
+              <td>{{ item.bonificacion }}</td>
             </tr>
           </tbody>
         </table>
@@ -200,71 +179,30 @@
     <!-- Tabla Últimos ingresos -->
     <div class="col-md-6 m-0 p-0 pr-4">
       <div class="subtitle mb-3">Últimas ingresos</div>
-      <!-- Tabla -->
-      <div class="m-0 p-0 table-scroll">
-        <table class="table-style2" (contextmenu)="openContextMenu($event,2)">
+      <div class="m-0 p-0 table-scroll" (contextmenu)="openContextMenu($event, 2)">
+        <table id="tablaUltimosIngresos" class="table-style2">
           <thead>
             <tr>
-              <th>Invnum</th>
-              <th>Proveedor</th>
-              <th>Documento</th>
-              <th>Fecha de ingreso</th>
-              <th>Orden de Compra</th>
-              <th>Cant.-E</th>
-              <th>Cant.-F</th>
-              <th>V.V.F</th>
-              <th>Dsct1(%)</th>
-              <th>Dsct2(%)</th>
-              <th>Dsct3(%)</th>
-              <th>Dsct4(%)</th>
-              <th>Boni</th>
+              <th *ngFor="let data of headTableUltimosIngresos">
+                {{ data }}
+              </th>
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td>12345678</td>
-              <td>ABBOTT LABORA TORIOS S.A.</td>
-              <td>Shukla</td>
-              <td>09/07/2025</td>
-              <td>12345678</td>
-              <td>ABBOTT LABORA TORIOS S.A.</td>
-              <td>Shukla</td>
-              <td>09/07/2025</td>
-              <td>09/07/2025</td>
-              <td>09/07/2025</td>
-              <td>09/07/2025</td>
-              <td>09/07/2025</td>
-              <td>09/07/2025</td>
-            </tr>
-            <tr>
-              <td>12345678</td>
-              <td>ABBOTT LABORA TORIOS S.A.</td>
-              <td>Mishra</td>
-              <td>09/07/2025</td>
-              <td>12345678</td>
-              <td>ABBOTT LABORA TORIOS S.A.</td>
-              <td>Shukla</td>
-              <td>09/07/2025</td>
-              <td>09/07/2025</td>
-              <td>09/07/2025</td>
-              <td>09/07/2025</td>
-              <td>09/07/2025</td>
-              <td>09/07/2025</td>
-            </tr>
-            <tr>
-              <td>12345678</td>
-              <td>ABBOTT LABORA TORIOS S.A.</td>
-              <td>Shuka</td>
-              <td>09/07/2025</td>
-              <td>12345678</td>
-              <td>ABBOTT LABORA TORIOS S.A.</td>
-              <td>Shukla</td>
-              <td>09/07/2025</td>
-              <td>09/07/2025</td>
-              <td>09/07/2025</td>
-              <td>09/07/2025</td>
-              <td>09/07/2025</td>
-              <td>09/07/2025</td>
+            <tr *ngFor="let item of rowsUIngresos">
+              <td>{{ item.invNum }}</td>
+              <td>{{ item.nombreProveedor }}</td>
+              <td>{{ item.documento }}</td>
+              <td>{{ item.fechaIngreso | date : 'dd/MM/yyyy' }}</td>
+              <td>{{ item.ordenCompra | date : 'dd/MM/yyyy' }}</td>
+              <td>{{ item.cantE }}</td>
+              <td>{{ item.cantF }}</td>
+              <td>{{ item.VVF | number : '1.2-2' }}</td>
+              <td>{{ item.dscto1 | number : '1.2-2' }}</td>
+              <td>{{ item.dscto2 | number : '1.2-2' }}</td>
+              <td>{{ item.dscto3 | number : '1.2-2' }}</td>
+              <td>{{ item.dscto4 | number : '1.2-2' }}</td>
+              <td>{{ item.bonificacion }}</td>
             </tr>
           </tbody>
         </table>
@@ -273,9 +211,6 @@
     <!-- End tabla -->
   </div>
   <!-- end tablas -->
-
-  <hr size="10px" width="100%" color="134B97" />
-
   <!-- tabla Analisis compras -->
   <div class="col-12 m-0 p-0 mt-2">
     <!-- head y filter -->
@@ -329,7 +264,9 @@
           </tr>
         </thead>
         <tbody id="body">
-          <tr *ngFor="let data of rows; let i = index"
+          <tr 
+          (click)="getTableUltimasCompras(data)"
+          *ngFor="let data of rows; let i = index"
             (mouseenter)="isHovering = true"
             (mouseleave)="isNotRowHover()"
             (mouseover)="onRowHover(i)"
@@ -466,4 +403,11 @@
 </div>
 
 <!-- end modal -->
-<app-option-click (action)="handleMenuAction($event)"></app-option-click>
+<app-option-click (action)="handleMenuAction($event)"  ></app-option-click>
+<app-alertToast
+  *ngIf="showToast"
+  [message]="toastMessage"
+  [type]="toastType"
+  [duration]="5000"
+></app-alertToast>
+<loading *ngIf="loading"></loading>

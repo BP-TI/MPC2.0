@@ -1,5 +1,6 @@
-import { Component, EventEmitter, OnInit, Output, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
+import { Component, EventEmitter,ElementRef, OnInit, Output, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
 import { AppConstants } from '../../shared/constants/app.constants';
+import { IUltimasComprasAbadiReq } from '../../models/ordenCompra';
 import { ReporteProductosCompra } from '../../models/ordenCompra';
 import { Laboratorios, Proveedores, Boticas } from '../../models/parametros';
 import { FormBuilder, FormGroup } from '@angular/forms';
@@ -43,7 +44,14 @@ export class DirectSupplyComponent implements OnInit {
   tableClass2: string = "table-company-4";//table-company-default
   rows: any = [];
   headTableAnalisisCompra: string[] = []
+  headTableUltimasCompras: string[] = []
+  headTableUltimosIngresos: string[] = []
+  
   rowsLb: any[];
+  rowsUCompras: any[];
+  rowsUIngresos: any[];
+  conscom: any = undefined;
+  conscomImpto: any = undefined;
   loading: boolean = false;
   columns: any = [];
   columnasLb: any = [];
@@ -66,6 +74,10 @@ export class DirectSupplyComponent implements OnInit {
   isRowHover: Number = -1;
   isRowSelected: Number = -1;
   validaCorreo: boolean = false;
+ showToast = false;
+  toastMessage = '';
+  toastType: 'success' | 'error2' | 'info' | 'warning' = 'info';
+
   @ViewChild("actionTemplate") actionTemplate: TemplateRef<any>;
 
   selectedProveedores: string[] = [];
@@ -79,16 +91,62 @@ export class DirectSupplyComponent implements OnInit {
     private supplyService: DirectSupplyService,
     private ordenCompraService: OrdenCompraAbadiService,
     private modalService: NgbModal,
-    public global: GlobalService) { }
+    public global: GlobalService,
+  private el: ElementRef) { }
 
 
   ngOnInit() {
     this.cargarProveedores();
-    this.createColumsTableTC();
-    this.createColumsTableLB();
     this.crearGrupoChecks();
     this.addHeadeTable();
     this.global.setGlobalVar('Módulo Abastecimiento Directo');
+  }
+
+  
+    ngAfterViewInit() {
+    const tabla = this.el.nativeElement.querySelector('#tablaAnalisiCompra');
+    let columnaOrigen: HTMLElement | null = null;
+
+    tabla.querySelectorAll('th').forEach((th: HTMLElement) => {
+      th.addEventListener('dragstart', e => {
+        columnaOrigen = th;
+        (e as DragEvent).dataTransfer!.effectAllowed = 'move';
+      });
+
+      th.addEventListener('dragover', e => e.preventDefault());
+
+      th.addEventListener('drop', e => {
+        e.preventDefault();
+        if (columnaOrigen === th) return;
+
+        const ths = Array.from(th.parentNode!.children);
+        const origenIndex = ths.indexOf(columnaOrigen!);
+        const destinoIndex = ths.indexOf(th);
+        if (origenIndex < 3) return;
+        if (destinoIndex < 3) return;
+        // Mover encabezado
+        if (origenIndex > destinoIndex) {
+          th.parentNode!.insertBefore(columnaOrigen!, th);
+        } else {
+          th.parentNode!.insertBefore(columnaOrigen!, th.nextSibling);
+        }
+
+        // Mover celdas
+        tabla.querySelectorAll('tbody tr').forEach((tr: HTMLElement) => {
+          const celdas = Array.from(tr.children);
+          const celdaOrigen = celdas[origenIndex];
+          const celdaDestino = celdas[destinoIndex];
+
+          if (origenIndex > destinoIndex) {
+            tr.insertBefore(celdaOrigen, celdaDestino);
+          } else {
+            tr.insertBefore(celdaOrigen, celdaDestino.nextSibling);
+          }
+        });
+      });
+    });
+
+
   }
 
   crearGrupoChecks() {
@@ -117,59 +175,6 @@ export class DirectSupplyComponent implements OnInit {
   }
 
 
-  private createColumsTableTC(): void {
-    const columnDefinitions = [
-      { name: 'Cód.', prop: 'codProducto', width: 70, frozenLeft: true },
-      { name: 'Descripción', prop: 'nombreProducto', width: 250, frozenLeft: true },
-      { name: 'Laboratorio', prop: 'nombreLaboratorio', width: 250, frozenLeft: true },
-      { name: 'Cant. Unid. Empaque', prop: 'unidadEmpaque', width: 70 },
-      { name: 'Condición', prop: 'condicion', width: 150 },
-      { name: 'Tipo', prop: 'ABC', width: 150 },
-      { name: 'Mayo 31', prop: 'mesQuinto', width: 70 },
-      { name: 'Jun 30', prop: 'mesCuarto', width: 70 },
-      { name: 'Jul 30', prop: 'mesTercero', width: 70 },
-      { name: 'Ago 31', prop: 'mesSegundo', width: 70 },
-      { name: 'Set 30', prop: 'mesPrimero', width: 70 },
-      { name: 'Oct 5', prop: 'mesActual', width: 70 },
-      { name: 'Oct Proy. 31', prop: 'mesActualProyeccion', width: 70 },
-      { name: 'Prom. Mes', prop: 'promMes', width: 70 },
-      { name: 'Pre Compra', prop: 'preCompra', width: 70 },
-      { name: 'Compra Final', prop: 'compraFinal', width: 70 },
-      { name: 'Boni', prop: 'bonificacion', width: 70 },
-      { name: 'Almacén', prop: 'almacen', width: 70 },
-      { name: 'Organización', prop: 'org', width: 90 },
-      { name: 'Canje', prop: 'canje', width: 70 },
-      { name: 'Logis_Inver', prop: 'logisticaInversa', width: 70 },
-      { name: 'O/C', prop: 'oc', width: 70 },
-      { name: 'Cobertura Organización', prop: 'cobOrgAct', width: 90 },
-      { name: 'Máximo Infrastock', prop: 'maxInfraStock', width: 70 },
-      { name: 'V.V.F', prop: 'VVF1', width: 70 },
-      { name: 'V.V.F Nuevo', prop: 'VVF2', width: 70 },
-      { name: 'Dscto 1', prop: 'descuento1', width: 70 },
-      { name: 'Dscto 2', prop: 'descuento2', width: 70 },
-      { name: 'Dscto 3', prop: 'descuento3', width: 70 },
-      { name: 'Dscto 4', prop: 'descuento4', width: 70 },
-      { name: 'CosCom', prop: 'cosCom', width: 70 },
-      { name: 'Parcial', prop: 'parcial', width: 70 },
-      { name: 'Igv', prop: 'igv', width: 70 },
-      { name: 'Total', prop: 'totalParcial', width: 70 },
-      { name: 'Observación', prop: 'observaciones', width: 150 },
-    ];
-
-    this.columns = [
-      ...columnDefinitions.map((col) => ({
-        ...col,
-        draggable: true,
-        resizeable: true,
-        cellClass: "text-center",
-        minWidth: col.width || 100,
-      }))
-    ];
-
-    this.totalWidth = this.columns.reduce((sum: any, col: any) => sum + (col.width || 100), 0);
-
-
-  }
 
   getStickyOffset(index: number): number {
     let offset = 0;
@@ -180,29 +185,6 @@ export class DirectSupplyComponent implements OnInit {
       }
     }
     return offset;
-  }
-
-  private createColumsTableLB(): void {
-    const columnDefinitions = [
-      { prop: "ABC", name: "Tipo", width: 120 },
-      { prop: "puntoVenta", name: "Punto Venta", width: 40 },
-      { prop: "MaxAlmacen", name: "Maximo Almacén", width: 40 },
-      { prop: "Total", name: "Total", width: 40 }
-    ];
-
-    this.columnasLb = columnDefinitions.map((col) => ({
-      ...col,
-      draggable: false,
-      resizeable: true,
-      cellClass: (row: any) => {
-        switch (col.prop) {
-          case 'ABC':
-            return 'text-left bold-text';
-          default:
-            return 'text-center';
-        }
-      }
-    }));
   }
 
   onSearch() {
@@ -285,10 +267,10 @@ export class DirectSupplyComponent implements OnInit {
   }
 
     clearField() {
-    /*this.rowsUCompras = [];
+    this.rowsUCompras = [];
     this.rowsUIngresos = [];
     this.conscom = undefined;
-    this.conscomImpto = undefined;*/
+    this.conscomImpto = undefined;
     this.laboratorios = [];
     this.boticas=[];
     this.rows = [];
@@ -324,13 +306,13 @@ export class DirectSupplyComponent implements OnInit {
     let labChecks = this.laboratorios?.filter(p => p.selected === true) || [];
     if (labChecks.length === 0) {
       this.loading = false;
-      alert("Debes seleccionar al menos un laboratorio para continuar");
+      this.AlertToast(`Advertencia: Debes seleccionar al menos un laboratorio para continuar.`, 'warning')
       return;
     }
      let BotChecks = this.boticas?.filter(p => p.selected === true) || [];
     if (BotChecks.length === 0) {
       this.loading = false;
-      alert("Debes seleccionar al menos un akmacen para continuar");
+      this.AlertToast(`Advertencia: Debes seleccionar al menos una botica para continuar.`, 'warning')
       return;
     }
 
@@ -342,22 +324,23 @@ export class DirectSupplyComponent implements OnInit {
       (response) => {
         this.loading = false;
         if (response == null) {
-          alert("No se encontraton registros");
+          this.AlertToast(`Información: No se encontraron registros.`, 'info');
 
         } else {
           if (response.codStatus === 1) {
             if (response.message === "OK") {
               this.rows = response.detalleProductos;
             } else {
-              alert(response.message);
+              this.AlertToast(`Información: ${response.message}`, 'info');
             }
           } else {
-            alert(response.message);
+            this.AlertToast(`Atención: ${response.message}`, 'warning');
           }
         }
       },
       (error: HttpErrorResponse) => {
         this.loading = false;
+        this.AlertToast(`Error: ${error}`, 'error2');
       }
     );
   }
@@ -434,6 +417,35 @@ export class DirectSupplyComponent implements OnInit {
       'Botica + O/C',
       'Cobertura Botica (Dia)',
       'Observación',
+    ];
+     this.headTableUltimasCompras = [
+      'Proveedor',
+      ' S - Orden',
+      ' Fecha',
+      ' Cant.-E',
+      ' Cant.- F',
+      ' V.V.F',
+      ' Dscto1(%)',
+      ' Dscto2(%)',
+      ' Dscto3(%)',
+      ' Dscto4(%)',
+      ' Boni',
+    ];
+
+    this.headTableUltimosIngresos = [
+      'Invnum',
+      'Proveedor',
+      'Documento',
+      'Fecha de ingreso',
+      'Orden de Compra',
+      'Cant.-E',
+      'Cant.-F',
+      'V.V.F',
+      'Dsct1(%)',
+      'Dsct2(%)',
+      'Dsct3(%)',
+      'Dsct4(%)',
+      'Boni',
     ];
   }
 
@@ -519,32 +531,56 @@ export class DirectSupplyComponent implements OnInit {
 
   }
 
-
-  eliminarColumna(headColumna: string, nombreTabla: string) {
-    let tabla: any = document.getElementById(nombreTabla);
-    let row = tabla.rows;
-    let idColumna: number = 99999;
-
-    for (let i = 0; i < row.length; i++) {
-      let celdas = row[i].cells;
-      for (let j = 0; j < celdas.length; j++) {
-
-        if (headColumna.includes(celdas[j].innerHTML)) {
-          idColumna = j;
-        }
-
-        if (j === idColumna) {
-          console.log(j);
-          console.log('Entro');
-          celdas[j].remove();
-        }
+    getTableUltimasCompras(data: any) {
+      if (this.isRowHover == this.isRowSelected) {
+        return;
       }
+  
+      //this.loading = true;
+      this.rowsUCompras = [];
+      this.rowsUIngresos = [];
+      this.conscom = undefined;
+      this.conscomImpto = undefined;
+  
+      let dataUsuario = this.global.getDataUserLogin();
+  
+      let dataRequets: IUltimasComprasAbadiReq = {
+        codProveedor: this.proveedor,
+        codLab: data.codLaboratorio,
+        codProducto: data.codProducto,
+        usuarioLogin: dataUsuario.usuario,
+        codigoAlmacen: data.codigoAlmacen,
+        codUsuario: Number(dataUsuario.codigoUsuario)
+      }
+  
+      this.ordenCompraService.getUltimasCompras(dataRequets).subscribe((response: any) => {
+  
+        if (response.codStatus == 1) {
+          if (response.message != "OK") {
+            this.AlertToast(response.message, 'warning');
+          } else {
+            if (response.ultimasCompras != null && response.ultimasCompras.length > 0) {
+              this.rowsUCompras = response.ultimasCompras;
+            }
+  
+            if (response.ultimosIngresos != null && response.ultimosIngresos.length > 0) {
+              this.rowsUIngresos = response.ultimosIngresos;
+            }
+  
+            this.conscom = response.costoCompra;
+            this.conscomImpto = response.costoCompraIGV;
+          }
+        }
+        else {
+          this.AlertToast(response.message, 'error2');
+        }
+        this.loading = false;
+      }, (error: HttpErrorResponse) => {
+        this.loading = false;
+        this.AlertToast(`Error: ${error}`, 'error2');
+      });
+  
     }
-  }
-
-  seleccionarLaboratorio(idLaboratorio: number){
-
-  }
 
    // hover tabla Analisis Compra
   onRowHover(index: number) {
@@ -570,5 +606,12 @@ export class DirectSupplyComponent implements OnInit {
     this.isRowHover = -1;
   }
   // End hover tabla Analisis Compra
+    AlertToast(message: string, type: 'success' | 'error2' | 'info' | 'warning' = 'info') {
+    this.toastMessage = message;
+    this.toastType = type;
+    this.showToast = true;
+
+    setTimeout(() => this.showToast = false, 5000);
+  }
 
 }
