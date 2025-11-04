@@ -27,6 +27,7 @@ import { CurrentOrderComponent } from './components/current-order/current-order.
 import { InventoryPolicyComponent } from './components/inventory-policy/inventory-policy.component';
 import { PurchaseOrderComponent } from './components/purchase-order/purchase-order.component';
 import { AlertToastComponent } from './shared/components/alertToast/alertToast.component';
+import { ShowSubstitutesComponent } from './components/show-substitutes/show-substitutes.component';
 
 @NgModule({
   declarations: [
@@ -43,7 +44,8 @@ import { AlertToastComponent } from './shared/components/alertToast/alertToast.c
     CurrentOrderComponent,
     InventoryPolicyComponent,
     PurchaseOrderComponent,
-    AlertToastComponent
+    AlertToastComponent,
+    ShowSubstitutesComponent
   ],
   imports: [
     NgbModalModule,
@@ -69,6 +71,7 @@ import { AlertToastComponent } from './shared/components/alertToast/alertToast.c
     InventoryPolicyComponent,
     PurchaseOrderComponent,
     AlertToastComponent,
+    ShowSubstitutesComponent,
   ],
   bootstrap: [App]
 })

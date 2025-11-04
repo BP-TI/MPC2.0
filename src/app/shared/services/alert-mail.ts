@@ -23,8 +23,6 @@ export class AlertMail {
       'Content-Type': 'application/json',
       'X-LOCAL-SECRET': 'mi_super_secreto_local_123'
     });
-
-
     return this.httpClient.post<any[]>(`${this.REQUEST_URL}`, request, { headers });
 
   }

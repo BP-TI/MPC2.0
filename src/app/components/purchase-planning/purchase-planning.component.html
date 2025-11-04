@@ -240,12 +240,13 @@
       <table id="tablaAnalisiCompra" class="table-style table-fixed">
         <thead>
           <tr id="header-row">
-            @for(data of headTableAnalisisCompra; track data){ 
-              @if(showColumn(data)){
+            @for(data of headTableAnalisisCompra; track data){ @if(showColumn(data)){
             <th draggable="true">
               {{ data }}
-              @if( data == 'Descripción' || data == 'Tipo' || data == 'Compra final' || data == 'Labora.' || data == 'Condición' ){
+              @if( data == 'Descripción' || data == 'Tipo' || data == 'Compra final' || data ==
+              'Labora.' || data == 'Condición' ){
               <i
+                *ngIf="showFilterTable"
                 class="fa-solid fa-filter text-light"
                 (click)="openContextMenu($event, 4, data)"
               ></i>
@@ -264,13 +265,35 @@
             (click)="isRowSelected = i"
             [class.selected]="isRowSelected === i"
           >
-            <td *ngIf="showColumn(headTableAnalisisCompra[0])" [ngClass]="siRowSelectedHover(i, data.codProducto)">{{ data.codProducto }}</td>
-            <td *ngIf="showColumn(headTableAnalisisCompra[1])" [ngClass]="siRowSelectedHover(i, data.codProducto)">{{ data.nombreProducto }}</td>
-            <td *ngIf="showColumn(headTableAnalisisCompra[2])" [ngClass]="siRowSelectedHover(i, data.codProducto)">{{ data.nombreLaboratorio }}</td>
-            <td *ngIf="showColumn(headTableAnalisisCompra[3])" class="center-text">{{ data.unidadEmpaque }}</td>
+            <td
+              *ngIf="showColumn(headTableAnalisisCompra[0])"
+              [ngClass]="siRowSelectedHover(i, data.codProducto)"
+            >
+              {{ data.codProducto }}
+            </td>
+            <td
+              *ngIf="showColumn(headTableAnalisisCompra[1])"
+              [ngClass]="siRowSelectedHover(i, data.codProducto)"
+            >
+              {{ data.nombreProducto }}
+            </td>
+            <td
+              *ngIf="showColumn(headTableAnalisisCompra[2])"
+              [ngClass]="siRowSelectedHover(i, data.codProducto)"
+            >
+              {{ data.nombreLaboratorio }}
+            </td>
+            <td *ngIf="showColumn(headTableAnalisisCompra[3])" class="center-text">
+              {{ data.unidadEmpaque }}
+            </td>
             @if(isRowSelected === i){
             <td *ngIf="showColumn(headTableAnalisisCompra[4])" class="center-text">
-              <select class="input-select-table-AC" id="proveedor" [(ngModel)]="data.condicion" (change)="updateFilterHeader()">
+              <select
+                class="input-select-table-AC"
+                id="proveedor"
+                [(ngModel)]="data.condicion"
+                (change)="updateFilterHeader()"
+              >
                 <option value="0" disabled>--Seleccione--</option>
                 <option *ngFor="let data of condiciones" [ngValue]="data.codigoCondicion">
                   {{ data.descripcion }}
@@ -279,19 +302,41 @@
             </td>
             } @else {
 
-            <td *ngIf="showColumn(headTableAnalisisCompra[4])" class="center-text">{{ getNameCondicion(data.condicion) }}</td>
+            <td *ngIf="showColumn(headTableAnalisisCompra[4])" class="center-text">
+              {{ getNameCondicion(data.condicion) }}
+            </td>
             }
 
-            <td *ngIf="showColumn(headTableAnalisisCompra[5])" class="center-text">{{ data.ABC }}</td>
-            <td *ngIf="showColumn(headTableAnalisisCompra[6])" class="center-text">{{ data.mesQuinto | number : '1.2-2' }}</td>
-            <td *ngIf="showColumn(headTableAnalisisCompra[7])" class="center-text">{{ data.mesCuarto | number : '1.2-2' }}</td>
-            <td *ngIf="showColumn(headTableAnalisisCompra[8])" class="center-text">{{ data.mesTercero | number : '1.2-2' }}</td>
-            <td *ngIf="showColumn(headTableAnalisisCompra[9])" class="center-text">{{ data.mesSegundo | number : '1.2-2' }}</td>
-            <td *ngIf="showColumn(headTableAnalisisCompra[10])" class="center-text">{{ data.mesPrimero | number : '1.2-2' }}</td>
-            <td *ngIf="showColumn(headTableAnalisisCompra[11])" class="center-text">{{ data.mesActual | number : '1.2-2' }}</td>
-            <td *ngIf="showColumn(headTableAnalisisCompra[12])" class="center-text">{{ data.mesActualProyeccion | number : '1.2-2' }}</td>
-            <td *ngIf="showColumn(headTableAnalisisCompra[13])" class="center-text">{{ data.promMes | number : '1.2-2' }}</td>
-            <td *ngIf="showColumn(headTableAnalisisCompra[14])" class="center-text">{{ data.preCompra | number : '1.2-2' }}</td>
+            <td *ngIf="showColumn(headTableAnalisisCompra[5])" class="center-text">
+              {{ data.ABC }}
+            </td>
+            <td *ngIf="showColumn(headTableAnalisisCompra[6])" class="center-text">
+              {{ data.mesQuinto | number : '1.2-2' }}
+            </td>
+            <td *ngIf="showColumn(headTableAnalisisCompra[7])" class="center-text">
+              {{ data.mesCuarto | number : '1.2-2' }}
+            </td>
+            <td *ngIf="showColumn(headTableAnalisisCompra[8])" class="center-text">
+              {{ data.mesTercero | number : '1.2-2' }}
+            </td>
+            <td *ngIf="showColumn(headTableAnalisisCompra[9])" class="center-text">
+              {{ data.mesSegundo | number : '1.2-2' }}
+            </td>
+            <td *ngIf="showColumn(headTableAnalisisCompra[10])" class="center-text">
+              {{ data.mesPrimero | number : '1.2-2' }}
+            </td>
+            <td *ngIf="showColumn(headTableAnalisisCompra[11])" class="center-text">
+              {{ data.mesActual | number : '1.2-2' }}
+            </td>
+            <td *ngIf="showColumn(headTableAnalisisCompra[12])" class="center-text">
+              {{ data.mesActualProyeccion | number : '1.2-2' }}
+            </td>
+            <td *ngIf="showColumn(headTableAnalisisCompra[13])" class="center-text">
+              {{ data.promMes | number : '1.2-2' }}
+            </td>
+            <td *ngIf="showColumn(headTableAnalisisCompra[14])" class="center-text">
+              {{ data.preCompra | number : '1.2-2' }}
+            </td>
             <!-- Compra Final -->
             @if(isRowSelected === i){
             <td *ngIf="showColumn(headTableAnalisisCompra[15])" class="center-text">
@@ -304,7 +349,9 @@
               />
             </td>
             } @else {
-            <td *ngIf="showColumn(headTableAnalisisCompra[15])" class="center-text">{{ data.compraFinal | number : '1.2-2' }}</td>
+            <td *ngIf="showColumn(headTableAnalisisCompra[15])" class="center-text">
+              {{ data.compraFinal | number : '1.2-2' }}
+            </td>
             }
             <!-- End Compra Final -->
 
@@ -319,25 +366,45 @@
               />
             </td>
             } @else{
-            <td *ngIf="showColumn(headTableAnalisisCompra[16])" class="center-text">{{ data.bonificacion | number : '1.2-2' }}</td>
+            <td *ngIf="showColumn(headTableAnalisisCompra[16])" class="center-text">
+              {{ data.bonificacion | number : '1.2-2' }}
+            </td>
             }
             <!-- End Bonificación -->
 
-            <td *ngIf="showColumn(headTableAnalisisCompra[17])" class="center-text">{{ data.almacen | number : '1.2-2' }}</td>
-            <td *ngIf="showColumn(headTableAnalisisCompra[18])" class="center-text">{{ data.org | number : '1.2-2' }}</td>
-            <td *ngIf="showColumn(headTableAnalisisCompra[19])" class="center-text">{{ data.canje | number : '1.2-2' }}</td>
-            <td *ngIf="showColumn(headTableAnalisisCompra[20])" class="center-text">{{ data.logisticaInversa | number : '1.2-2' }}</td>
-            <td *ngIf="showColumn(headTableAnalisisCompra[21])" class="center-text">{{ data.oc | number : '1.2-2' }}</td>
-            <td *ngIf="showColumn(headTableAnalisisCompra[22])" class="center-text">{{ data.cobOrgAct | number : '1.2-2' }}</td>
-            <td *ngIf="showColumn(headTableAnalisisCompra[23])" class="center-text">{{ data.maxInfraStock | number : '1.2-2' }}</td>
-            <td *ngIf="showColumn(headTableAnalisisCompra[24])" class="center-text">{{ data.VVF1 | number : '1.2-2' }}</td>
+            <td *ngIf="showColumn(headTableAnalisisCompra[17])" class="center-text">
+              {{ data.almacen | number : '1.2-2' }}
+            </td>
+            <td *ngIf="showColumn(headTableAnalisisCompra[18])" class="center-text">
+              {{ data.org | number : '1.2-2' }}
+            </td>
+            <td *ngIf="showColumn(headTableAnalisisCompra[19])" class="center-text">
+              {{ data.canje | number : '1.2-2' }}
+            </td>
+            <td *ngIf="showColumn(headTableAnalisisCompra[20])" class="center-text">
+              {{ data.logisticaInversa | number : '1.2-2' }}
+            </td>
+            <td *ngIf="showColumn(headTableAnalisisCompra[21])" class="center-text">
+              {{ data.oc | number : '1.2-2' }}
+            </td>
+            <td *ngIf="showColumn(headTableAnalisisCompra[22])" class="center-text">
+              {{ data.cobOrgAct | number : '1.2-2' }}
+            </td>
+            <td *ngIf="showColumn(headTableAnalisisCompra[23])" class="center-text">
+              {{ data.maxInfraStock | number : '1.2-2' }}
+            </td>
+            <td *ngIf="showColumn(headTableAnalisisCompra[24])" class="center-text">
+              {{ data.VVF1 | number : '1.2-2' }}
+            </td>
             <!-- VVF2 -->
             @if(isRowSelected === i){
             <td *ngIf="showColumn(headTableAnalisisCompra[25])" class="center-text">
               <input type="number" placeholder="" class="input-table-AC" [(ngModel)]="data.VVF2" />
             </td>
             } @else {
-            <td *ngIf="showColumn(headTableAnalisisCompra[25])" class="center-text">{{ data.VVF2 | number : '1.2-2' }}</td>
+            <td *ngIf="showColumn(headTableAnalisisCompra[25])" class="center-text">
+              {{ data.VVF2 | number : '1.2-2' }}
+            </td>
             }
             <!-- End VVF2 -->
 
@@ -352,7 +419,9 @@
               />
             </td>
             }@else{
-            <td *ngIf="showColumn(headTableAnalisisCompra[26])" class="center-text">{{ data.descuento1 | number : '1.2-2' }}</td>
+            <td *ngIf="showColumn(headTableAnalisisCompra[26])" class="center-text">
+              {{ data.descuento1 | number : '1.2-2' }}
+            </td>
             }
             <!-- End Descuento1 -->
 
@@ -367,7 +436,9 @@
               />
             </td>
             } @else{
-            <td *ngIf="showColumn(headTableAnalisisCompra[27])" class="center-text">{{ data.descuento2 | number : '1.2-2' }}</td>
+            <td *ngIf="showColumn(headTableAnalisisCompra[27])" class="center-text">
+              {{ data.descuento2 | number : '1.2-2' }}
+            </td>
             }
             <!-- ENd Descuento2 -->
 
@@ -382,7 +453,9 @@
               />
             </td>
             }@else{
-            <td *ngIf="showColumn(headTableAnalisisCompra[28])" class="center-text">{{ data.descuento3 | number : '1.2-2' }}</td>
+            <td *ngIf="showColumn(headTableAnalisisCompra[28])" class="center-text">
+              {{ data.descuento3 | number : '1.2-2' }}
+            </td>
             }
             <!-- End Descuento 3 -->
 
@@ -397,7 +470,9 @@
               />
             </td>
             }@else{
-            <td *ngIf="showColumn(headTableAnalisisCompra[29])" class="center-text">{{ data.descuento4 | number : '1.2-2' }}</td>
+            <td *ngIf="showColumn(headTableAnalisisCompra[29])" class="center-text">
+              {{ data.descuento4 | number : '1.2-2' }}
+            </td>
             }
             <!-- End Descuento4 -->
 
@@ -412,13 +487,21 @@
               />
             </td>
             }@else{
-            <td *ngIf="showColumn(headTableAnalisisCompra[30])" class="center-text">{{ data.cosCom | number : '1.2-2' }}</td>
+            <td *ngIf="showColumn(headTableAnalisisCompra[30])" class="center-text">
+              {{ data.cosCom | number : '1.2-2' }}
+            </td>
             }
             <!-- End Coscom -->
 
-            <td *ngIf="showColumn(headTableAnalisisCompra[31])" class="center-text">{{ data.parcial | number : '1.2-2' }}</td>
-            <td *ngIf="showColumn(headTableAnalisisCompra[32])" class="center-text">{{ data.igv | number : '1.2-2' }}</td>
-            <td *ngIf="showColumn(headTableAnalisisCompra[33])" class="center-text">{{ data.total | number : '1.2-2' }}</td>
+            <td *ngIf="showColumn(headTableAnalisisCompra[31])" class="center-text">
+              {{ data.parcial | number : '1.2-2' }}
+            </td>
+            <td *ngIf="showColumn(headTableAnalisisCompra[32])" class="center-text">
+              {{ data.igv | number : '1.2-2' }}
+            </td>
+            <td *ngIf="showColumn(headTableAnalisisCompra[33])" class="center-text">
+              {{ data.total | number : '1.2-2' }}
+            </td>
             <td *ngIf="showColumn(headTableAnalisisCompra[34])">{{ data.observaciones }}</td>
           </tr>
         </tbody>
@@ -491,7 +574,8 @@
     </div>
   </div>
 </div>
-<!-- End modal Generar Orden de compra basa en otra OC -->
+<!-- ENd Modal -->
+<!-- modal Generar Orden de compra basa en otra OC -->
 <div
   class="modal fade"
   id="generarbasadaoc"
@@ -522,7 +606,8 @@
     </div>
   </div>
 </div>
-<!-- end modal -->
+
+<!-- opciones de menu -->
 <app-option-click
   (action)="handleMenuAction($event)"
   (filter)="filterData($event)"

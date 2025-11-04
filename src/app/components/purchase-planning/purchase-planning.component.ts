@@ -1,14 +1,18 @@
-import { AfterViewInit, Component, ElementRef, OnInit, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { Laboratorios, Proveedores, Condiciones } from '../../models/parametros';
 import { IUltimasComprasReq } from '../../models/ordenCompra';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { PurchasePlanningService } from '../../services/PurchasePlanning/purchasePlanning.service';
-import { HttpErrorResponse, JsonpClientBackend } from '@angular/common/http';
+import { HttpErrorResponse } from '@angular/common/http';
 import { GlobalService } from '../../shared/services/global.service';
 import { OrdenCompraService } from '../../services/PurchasePlanning/ordenCompra.service';
 import { OptionClickComponent } from '../../shared/components/option-click/option-click.component';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { OptionsCLickHeadMenuAC, OptionsClickHeadMenuAC2 } from '../../shared/models/option-click';
+import { AppConstants } from '../../shared/constants/app.constants';
+import { AgentOutlook } from '../../shared/models/agentOutlook';
+import { AlertMail } from '../../shared/services/alert-mail';
+import { ShowSubstitutesComponent } from '../show-substitutes/show-substitutes.component';
 
 @Component({
   selector: 'app-purchase-planning',
@@ -54,6 +58,7 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
   isRowSelected: Number = -1;
   idProductSelected: Number = 0;
   deleteColumnAC: string[] = [];
+  showFilterTable: boolean = false;
 
   showToast = false;
   toastMessage = '';
@@ -68,7 +73,8 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
     private ordenCompraService: OrdenCompraService,
     private modalService: NgbModal,
     public global: GlobalService,
-    private el: ElementRef) { }
+    private el: ElementRef,
+    private alertMail: AlertMail) { }
 
 
   ngOnInit() {
@@ -249,18 +255,21 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
   handleMenuAction(action: string) {
     switch (action) {
       case 'view':
-        this.modalService.open(this.verSustitutosModal, { size: 'xl', centered: true, backdrop: false, scrollable: true });
-
+        if(this.isRowSelected != -1){
+          const modalSUbs = this.modalService.open( ShowSubstitutesComponent, { size: 'xl', centered: true, backdrop: false, scrollable: true });
+          let data = this.rows.filter((p:any)=> p.codProducto == this.idProductSelected);
+         console.log(data);
+          modalSUbs.componentInstance.codProv = this.proveedor;
+          modalSUbs.componentInstance.codProduct = data[0].codProducto;
+          modalSUbs.componentInstance.codLabora = data[0].codLaboratorio;
+        }else {
+           this.AlertToast("Warning: Debe de seleccionar el producto primero.",'warning');
+        }
         break;
 
       case 'filters':
-        this.showFilters = !this.showFilters;
-        if (this.showFilters) {
-          this.filteredRows = [...this.rows];
-        } else {
-          this.filters = {};
-          this.filteredRows = [...this.rows];
-        }
+        console.log('Entro');
+        this.showFilterTable = !this.showFilterTable;
         break;
       case 'edit':
         alert('✏️ Editar');
@@ -282,12 +291,12 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
 
   addHeadeTable() {
     this.headTableAnalisisCompra = [
-      'cod.',
-      'Descripción',
-      'Labora.',
-      'Cant. Unid. Empaque',
-      'Condición',
-      'Tipo',
+      AppConstants.TitleTableHeadAC.COD_PROD,
+      AppConstants.TitleTableHeadAC.DESCRIPCION,
+      AppConstants.TitleTableHeadAC.LABORATORIO,
+      AppConstants.TitleTableHeadAC.CANT_UNID_EMPAQUE,
+      AppConstants.TitleTableHeadAC.CONDICION,
+      AppConstants.TitleTableHeadAC.TIPO,
       this.showMonth('mesquinto'),
       this.showMonth('mescuarto'),
       this.showMonth('mestercero'),
@@ -295,28 +304,28 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
       this.showMonth('mesprimero'),
       this.showMonth('mesActual'),
       this.showMonth('mesProyectado'),
-      'Prom. Mes',
-      'Pre compra',
-      'Compra final',
-      'Boni',
-      'Almacén',
-      'Organización',
-      'Canje',
-      'logis_inver',
-      'O/C',
-      'Cobertura Organizacional',
-      'Maximo Infrastock',
-      'V.V.F',
-      'V.V.F Nuevo',
-      'Dsct.1',
-      'Dsct.2',
-      'Dsct.3',
-      'Dsct.4',
-      'CosCom',
-      'Parcial',
-      'Igv',
-      'Total',
-      'Observación',
+      AppConstants.TitleTableHeadAC.PROM_MES,
+      AppConstants.TitleTableHeadAC.PRE_COMPRA,
+      AppConstants.TitleTableHeadAC.COMPRA_FINAL,
+      AppConstants.TitleTableHeadAC.BONIFICADO,
+      AppConstants.TitleTableHeadAC.ALMACEN,
+      AppConstants.TitleTableHeadAC.ORGANIZACION,
+      AppConstants.TitleTableHeadAC.CANJE,
+      AppConstants.TitleTableHeadAC.LOGIS_INVER,
+      AppConstants.TitleTableHeadAC.OC,
+      AppConstants.TitleTableHeadAC.COBERTURA_ORGANIZACIONAL,
+      AppConstants.TitleTableHeadAC.MAXI_INFRASTOCK,
+      AppConstants.TitleTableHeadAC.VVF,
+      AppConstants.TitleTableHeadAC.VVFNUEVO,
+      AppConstants.TitleTableHeadAC.DESC1,
+      AppConstants.TitleTableHeadAC.DESC2,
+      AppConstants.TitleTableHeadAC.DESC3,
+      AppConstants.TitleTableHeadAC.DESC4,
+      AppConstants.TitleTableHeadAC.COSCON,
+      AppConstants.TitleTableHeadAC.PARCIAL,
+      AppConstants.TitleTableHeadAC.IGV,
+      AppConstants.TitleTableHeadAC.TOTAL,
+      AppConstants.TitleTableHeadAC.OBSERVACION,
     ];
     this.deleteColumnAC = this.headTableAnalisisCompra;
 
@@ -484,8 +493,8 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
         check: true,
       })
     });
-    
-    
+
+
 
     this.contextMenu.open(event.pageX, event.pageY, opcionMenu);
   }
@@ -743,6 +752,30 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
   }
   // End hover tabla Analisis Compra
 
+  openOutlook() {
+    let body: AgentOutlook = {
+      subject: 'Prueba',
+      body: 'Este es un mensaje de prueba \n\nsaludos \njheisson Villafuerte',
+      isBodyHtml: 'true',
+      recipients: [
+        "tu@correo.com",
+        "tu2@correo.com"
+      ],
+      attachments: [{
+        filename: "hola.zip",
+        dataBase64: ""
+      }]
+    }
+
+    this.alertMail.openMail(body).subscribe(response => {
+      console.log('entro');
+      console.log(response);
+    }, error => {
+      console.log('error');
+    });
+
+  }
+
   AlertToast(message: string, type: 'success' | 'error2' | 'info' | 'warning' = 'info') {
     this.toastMessage = message;
     this.toastType = type;
@@ -750,5 +783,6 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
 
     setTimeout(() => this.showToast = false, 5000);
   }
+
 
 }

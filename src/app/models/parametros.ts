@@ -26,3 +26,9 @@ export class Condiciones {
     descripcion: string;
 }
 
+export class Substitutes {
+    codigoProveedor:string;
+    codigoLaboratorio:string;
+    codigoProducto:string;
+}
+
