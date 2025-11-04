@@ -98,7 +98,15 @@
     </div>
     }
     @if(filterColumn == 'Compra final') {
-    <div *ngFor="let item of menuLisCompraFinal" class="m-0 p-0 pl-4 item-list">
+    <div *ngFor="let item of menuListCompraFinal" class="m-0 p-0 pl-4 item-list">
+     <div *ngIf="item.visible" class="d-flex gap-2">
+        <input type="checkbox" [(ngModel)]="item.check" (change)="onChangecheckAll()"/>
+        {{ item.description }}
+      </div>
+    </div>
+    }
+     @if(filterColumn == 'Condición') {
+    <div *ngFor="let item of menuListCondiciones" class="m-0 p-0 pl-4 item-list">
      <div *ngIf="item.visible" class="d-flex gap-2">
         <input type="checkbox" [(ngModel)]="item.check" (change)="onChangecheckAll()"/>
         {{ item.description }}

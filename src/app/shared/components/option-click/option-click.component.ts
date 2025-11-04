@@ -19,7 +19,8 @@ export class OptionClickComponent implements OnInit {
   menuListProducto: OptionsClickHeadMenuAC2[] = [];
   menuListLabora: OptionsClickHeadMenuAC2[] = [];
   menuLisTipo: OptionsClickHeadMenuAC2[] = [];
-  menuLisCompraFinal: OptionsClickHeadMenuAC2[] = [];
+  menuListCompraFinal: OptionsClickHeadMenuAC2[] = [];
+  menuListCondiciones: OptionsClickHeadMenuAC2[] = [];
 
   checkAllDescription: boolean = true;
 
@@ -30,7 +31,7 @@ export class OptionClickComponent implements OnInit {
 
   visible = false;
   visible2 = false;
-  visible3=false;
+  visible3 = false;
   visible4 = false;
 
   x = 0;
@@ -46,17 +47,17 @@ export class OptionClickComponent implements OnInit {
       case 1:
         this.visible2 = false;
         this.visible = true;
-        this.visible3=false;
+        this.visible3 = false;
         this.visible4 = false
         break;
       case 2:
         this.visible2 = true;
         this.visible = false;
-        this.visible3=false;
+        this.visible3 = false;
         this.visible4 = false;
         break;
       case 3:
-        this.visible3=true;
+        this.visible3 = true;
         this.visible = false;
         this.visible2 = false;
         this.visible4 = false;
@@ -66,8 +67,8 @@ export class OptionClickComponent implements OnInit {
         this.calculateListHead();
         this.visible = false;
         this.visible2 = false;
-        this.visible3=false;
-        if(this.visible4 == false){
+        this.visible3 = false;
+        if (this.visible4 == false) {
           this.visible4 = true
         } else {
           this.visible4 = false
@@ -80,7 +81,7 @@ export class OptionClickComponent implements OnInit {
   close() {
     this.visible = false;
     this.visible2 = false;
-    this.visible3=false;
+    this.visible3 = false;
   }
 
   closeHeadTableAC() {
@@ -98,9 +99,9 @@ export class OptionClickComponent implements OnInit {
     switch (this.filterColumn) {
       case 'Descripción':
         if (checked) {
-          this.dataProductos.forEach(p => p.check = true);
+          this.menuListProducto.forEach(p => p.check = true);
         } else {
-          this.dataProductos.forEach(p => p.check = false);
+          this.menuListProducto.forEach(p => p.check = false);
         }
         break;
       case 'Labora.':
@@ -115,6 +116,20 @@ export class OptionClickComponent implements OnInit {
           this.menuLisTipo.forEach(p => p.check = true);
         } else {
           this.menuLisTipo.forEach(p => p.check = false);
+        }
+        break;
+      case 'Compra final':
+        if (checked) {
+          this.menuListCompraFinal.forEach(p => p.check = true);
+        } else {
+          this.menuListCompraFinal.forEach(p => p.check = false);
+        }
+        break;
+      case 'Condición':
+        if (checked) {
+          this.menuListCondiciones.forEach(p => p.check = true);
+        } else {
+          this.menuListCondiciones.forEach(p => p.check = false);
         }
         break;
     }
@@ -133,7 +148,10 @@ export class OptionClickComponent implements OnInit {
       isChecked = this.menuLisTipo.every(element => element.check == true);
     }
     if (this.filterColumn == 'Compra final') {
-      isChecked = this.menuLisCompraFinal.every(element => element.check == true);
+      isChecked = this.menuListCompraFinal.every(element => element.check == true);
+    }
+    if (this.filterColumn == 'Condición') {
+      isChecked = this.menuListCondiciones.every(element => element.check == true);
     }
     this.checkAllDescription = isChecked;
   }
@@ -146,37 +164,62 @@ export class OptionClickComponent implements OnInit {
     let elementCheck: OptionsCLickHeadMenuAC[] = [];
     if (this.filterColumn == 'Descripción') {
       let selectedElement = this.menuListProducto.filter(p => p.check == true);
-      elementCheck = this.dataFilter.filter(element => selectedElement.some(c => c.description.trim() == element.description.trim()));
+      if (this.primerFiltro == this.filterColumn) {
+        elementCheck = this.dataProductos.filter(element => selectedElement.some(c => c.description.trim() == element.description.trim()));
+      } else {
+        elementCheck = this.dataFilter.filter(element => selectedElement.some(c => c.description.trim() == element.description.trim()));
+      }
     }
 
     if (this.filterColumn == 'Tipo') {
       let selectedElement = this.menuLisTipo.filter(p => p.check == true);
-      elementCheck = this.dataFilter.filter(element => selectedElement.some(c => c.description.trim() == element.tipo.trim()))
+      if (this.primerFiltro == this.filterColumn) {
+        elementCheck = this.dataProductos.filter(element => selectedElement.some(c => c.description.trim() == element.tipo.trim()))
+      } else {
+        elementCheck = this.dataFilter.filter(element => selectedElement.some(c => c.description.trim() == element.tipo.trim()))
+      }
     }
 
     if (this.filterColumn == 'Compra final') {
-      let selectedElement = this.menuLisCompraFinal.filter(p => p.check == true);
-      elementCheck = this.dataFilter.filter(element => selectedElement.some(c => c.description.trim() == element.compraFinal.toString().trim()))
+      let selectedElement = this.menuListCompraFinal.filter(p => p.check == true);
+      if (this.primerFiltro == this.filterColumn) {
+        elementCheck = this.dataProductos.filter(element => selectedElement.some(c => c.description.trim() == element.compraFinal.toString().trim()))
+      } else {
+        elementCheck = this.dataFilter.filter(element => selectedElement.some(c => c.description.trim() == element.compraFinal.toString().trim()))
+
+      }
     }
 
     if (this.filterColumn == 'Labora.') {
       let selectedElement = this.menuListLabora.filter(p => p.check == true);
-      elementCheck = this.dataFilter.filter(element => selectedElement.some(c => c.description.trim() == element.laboratorio.toString().trim()))
+      if (this.primerFiltro == this.filterColumn) {
+        elementCheck = this.dataProductos.filter(element => selectedElement.some(c => c.description.trim() == element.laboratorio.toString().trim()))
+      } else {
+        elementCheck = this.dataFilter.filter(element => selectedElement.some(c => c.description.trim() == element.laboratorio.toString().trim()))
+      }
+    }
+
+    if (this.filterColumn == 'Condición') {
+      let selectedElement = this.menuListCondiciones.filter(p => p.check == true);
+      if (this.primerFiltro == this.filterColumn) {
+        elementCheck = this.dataProductos.filter(element => selectedElement.some(c => c.codCondiciones?.trim() == element.condicion.toString().trim()))
+
+      } else {
+        elementCheck = this.dataFilter.filter(element => selectedElement.some(c => c.codCondiciones?.trim() == element.condicion.toString().trim()))
+
+      }
     }
     let stringChecked = elementCheck.map(p => p.codProducto).join('-');
 
     if (this.primerFiltro.trim().length == 0) {
       this.primerFiltro = this.filterColumn;
     }
-
     this.filter.emit(stringChecked);
 
   }
 
   calculateListHead() {
-
     if (this.primerFiltro != this.filterColumn) {
-
       let headListData: string[]
       switch (this.filterColumn) {
         case 'Descripción':
@@ -202,7 +245,7 @@ export class OptionClickComponent implements OnInit {
         case 'Tipo':
           headListData = Array.from(new Set(this.dataFilter.map(p => p.tipo)));
           this.menuLisTipo.forEach(dataList => {
-            if (headListData.find(f => f == dataList.description)) {
+            if (headListData.find(f => f.trim() == dataList.description.trim())) {
               dataList.visible = true;
             } else {
               dataList.visible = false;
@@ -211,9 +254,20 @@ export class OptionClickComponent implements OnInit {
           break;
 
         case 'Compra final':
-          headListData = Array.from(new Set(this.dataFilter.map(p => p.compraFinal.toString())));
-          this.menuLisCompraFinal.forEach(dataList => {
-            if (headListData.find(f => f == dataList.description)) {
+          headListData = Array.from(new Set(this.dataFilter.map(p => p.compraFinal.toString())));          
+          this.menuListCompraFinal.forEach(dataList => {
+            if (headListData.find(f => f.trim() == dataList.description.trim())) {
+              dataList.visible = true;
+            } else {
+              dataList.visible = false;
+            }
+          });
+          break;
+
+        case 'Condición':
+          headListData = Array.from(new Set(this.dataFilter.map(p => p.condicion.toString())));
+          this.menuListCondiciones.forEach(dataList => {
+            if (headListData.find(f => f == dataList.codCondiciones)) {
               dataList.visible = true;
             } else {
               dataList.visible = false;
@@ -226,6 +280,7 @@ export class OptionClickComponent implements OnInit {
       let headSelectElement: OptionsClickHeadMenuAC2[] = []
       let headListData: string[]
       this.dataFilter = [];
+
       switch (this.primerFiltro) {
         case 'Descripción':
           this.menuListProducto.map(p => p.check = true);
@@ -259,11 +314,21 @@ export class OptionClickComponent implements OnInit {
           });
           break;
         case 'Compra final':
-          this.menuLisCompraFinal.map(p => p.check);
-          headSelectElement = this.menuLisCompraFinal.filter(p => p.check == true);
+          this.menuListCompraFinal.map(p => p.check);          
+          headSelectElement = this.menuListCompraFinal.filter(p => p.check == true);
           headListData = Array.from(new Set(headSelectElement.map(p => p.description)));
           this.dataProductos.forEach(element => {
             if (headListData.find(p => p == element.compraFinal.toString())) {
+              this.dataFilter.push(element);
+            }
+          });
+          break;
+        case 'Condición':
+          this.menuListCondiciones.map(p => p.check);
+          headSelectElement = this.menuListCondiciones.filter(p => p.check == true);
+          headListData = Array.from(new Set(headSelectElement.map(p => p.description)));
+          this.dataProductos.forEach(element => {
+            if (headListData.find(p => p == element.condicion.toString())) {
               this.dataFilter.push(element);
             }
           });

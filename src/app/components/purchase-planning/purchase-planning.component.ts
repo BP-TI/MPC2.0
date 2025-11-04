@@ -53,6 +53,7 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
   isRowHover: Number = -1;
   isRowSelected: Number = -1;
   idProductSelected: Number = 0;
+  deleteColumnAC: string[] = [];
 
   showToast = false;
   toastMessage = '';
@@ -246,7 +247,6 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
   }
 
   handleMenuAction(action: string) {
-    console.log(action);
     switch (action) {
       case 'view':
         this.modalService.open(this.verSustitutosModal, { size: 'xl', centered: true, backdrop: false, scrollable: true });
@@ -279,7 +279,6 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
   }
 
   // ------ * -----
-
 
   addHeadeTable() {
     this.headTableAnalisisCompra = [
@@ -319,6 +318,7 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
       'Total',
       'Observación',
     ];
+    this.deleteColumnAC = this.headTableAnalisisCompra;
 
     this.headTableUltimasCompras = [
       'Proveedor',
@@ -351,33 +351,19 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
     ];
   }
 
-  deleteColumn(headColumna: string, nombreTabla: string, event: Event) {
-
-    let tabla: any = document.getElementById(nombreTabla);
-    let row = tabla.rows;
-    let idColumna: number = 99999;
+  showColumn(headColumn: string) {
+    if (this.deleteColumnAC.find(p => p == headColumn)) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+  deleteColumn(headColumna: string, event: Event) {
     let isChecked = (event.target as HTMLInputElement).checked;
-
-    for (let i = 0; i < row.length; i++) {
-      let celdas = row[i].cells;
-      for (let j = 0; j < celdas.length; j++) {
-        if (headColumna.trim() === celdas[j].innerText.trim()) {
-          idColumna = j;
-        }
-
-        if (j === idColumna) {
-          if (isChecked) {
-            let styleColumn: string = "text-align: left; padding: 4px; position: sticky; top: 0;";
-            if (j == 0) {
-              styleColumn += "z-index: 5 !important;";
-            }
-            celdas[j].setAttribute("style", styleColumn);
-          } else {
-            celdas[j].setAttribute("style", "display: none; !important");
-
-          }
-        }
-      }
+    if (isChecked) {
+      this.deleteColumnAC.push(headColumna);
+    } else {
+      this.deleteColumnAC = this.deleteColumnAC.filter(p => p != headColumna);
     }
   }
 
@@ -486,6 +472,21 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
   openContextMenu(event: MouseEvent, opcionMenu: number, headerColumnAC: string = '') {
     event.preventDefault();
     this.contextMenu.filterColumn = headerColumnAC;
+    this.contextMenu.dataFilter = [];
+    this.rows.forEach((element: any) => {
+      this.contextMenu.dataFilter.push({
+        codProducto: element.codProducto.toString(),
+        description: element.nombreProducto.toString(),
+        laboratorio: element.nombreLaboratorio.toString(),
+        tipo: element.ABC,
+        compraFinal: Math.trunc(Number(element.compraFinal) * 100) / 100,
+        condicion: element.condicion.toString(),
+        check: true,
+      })
+    });
+    
+    
+
     this.contextMenu.open(event.pageX, event.pageY, opcionMenu);
   }
 
@@ -557,7 +558,6 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
   }
   // Filtro tabla Analisis de compra
   createMenuListHeaderAC() {
-
     let dataMenUfilterComplete: OptionsCLickHeadMenuAC[] = [];
 
     this.rowsDataTotal.forEach((element: any) => {
@@ -567,6 +567,7 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
         laboratorio: element.nombreLaboratorio.toString(),
         tipo: element.ABC,
         compraFinal: Math.trunc(Number(element.compraFinal) * 100) / 100,
+        condicion: element.condicion.toString(),
         check: true,
       })
     });
@@ -623,17 +624,31 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
         visible: true,
       });
     });
-    this.contextMenu.menuLisCompraFinal = menuOption;
+    this.contextMenu.menuListCompraFinal = menuOption;
+
+    // Condiciones
+    menuOption = [];
+    listado = [...new Set(dataMenUfilterComplete.map(u => u.condicion.toString()))];
+    listado.forEach((element: string) => {
+      menuOption.push({
+        description: this.condiciones.find(p => p.codigoCondicion.includes(element))?.descripcion ?? '',
+        codCondiciones: element,
+        check: true,
+        visible: true,
+      });
+    });
+
+    this.contextMenu.menuListCondiciones = menuOption;
   }
 
   getACOrderAZ() {
-    if ( this.contextMenu.filterColumn == 'Descripción') {
+    if (this.contextMenu.filterColumn == 'Descripción') {
       this.rows.sort((a: any, b: any) =>
         a.nombreProducto.toString().trim().localeCompare(b.nombreProducto).toString().trim()
       );
     }
 
-    if ( this.contextMenu.filterColumn == 'Tipo') {
+    if (this.contextMenu.filterColumn == 'Tipo') {
       this.rows.sort((a: any, b: any) =>
         (a.ABC ?? "").toString().trim().localeCompare((b.ABC ?? "").toString().trim())
       );
@@ -695,19 +710,11 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
       productFilter.includes(element.codProducto)
     );
     this.rows = dataFilter;
-    this.contextMenu.dataFilter = [];
-    dataFilter.forEach(element => {
-      this.contextMenu.dataFilter.push({
-        codProducto: element.codProducto,
-        description: element.nombreProducto,
-        laboratorio: element.nombreLaboratorio,
-        compraFinal: Number(element.compraFinal),
-        tipo: element.ABC,
-        check: true,
-      });
-    });
-
     this.calculateTotal();
+  }
+
+  updateFilterHeader() {
+    this.createMenuListHeaderAC();
   }
 
   // hover tabla Analisis Compra
