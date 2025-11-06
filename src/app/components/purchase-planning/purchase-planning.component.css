@@ -1,3 +1,5 @@
+
+
 .icon-filter-colunm-hidden {
   color: #32509d;
   font-size: 1.2rem;
@@ -39,7 +41,6 @@
 
 .input-select {
   box-sizing: border-box;
-  /* width: 200px; */
   width: 300px;
   height: 35px;
 
@@ -487,6 +488,7 @@ hr {
 
 .filter-table {
   height: 200px;
+  font-size: 10px;
   overflow-y: auto;
 }
 
