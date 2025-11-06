@@ -2,14 +2,14 @@ import { Component, EventEmitter,ElementRef, OnInit, Output, TemplateRef, ViewCh
 import { AppConstants } from '../../shared/constants/app.constants';
 import { IUltimasComprasAbadiReq } from '../../models/ordenCompra';
 import { ReporteProductosCompra } from '../../models/ordenCompra';
-import { Laboratorios, Proveedores, Boticas } from '../../models/parametros';
+import { Laboratorios, Proveedores, Boticas, Condiciones } from '../../models/parametros';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { DirectSupplyService } from '../../services/DirectSupply/directSupply.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { OrdenCompraAbadiService } from '../../services/DirectSupply/ordenCompraAbadi.service';
 import { OptionClickComponent } from '../../shared/components/option-click/option-click.component';
 import { GlobalService } from '../../shared/services/global.service';
-
+import { OptionsCLickHeadMenuAC, OptionsClickHeadMenuAC2 } from '../../shared/models/option-click';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
@@ -46,10 +46,11 @@ export class DirectSupplyComponent implements OnInit {
   headTableAnalisisCompra: string[] = []
   headTableUltimasCompras: string[] = []
   headTableUltimosIngresos: string[] = []
-  
+   deleteColumnAC: string[] = [];  
   rowsLb: any[];
   rowsUCompras: any[];
   rowsUIngresos: any[];
+  rowsDataTotal: any[];
   conscom: any = undefined;
   conscomImpto: any = undefined;
   loading: boolean = false;
@@ -66,6 +67,8 @@ export class DirectSupplyComponent implements OnInit {
   //bsModalRef: BsModalRef;
   loadingIndicator: boolean = false;
   currentFilter: string = "active";
+  idProductSelected: Number = 0;
+  condiciones: Condiciones[] = [];
   totalWidth = 0;
   totalParcial: number = 0;
   totalIGV: number = 0;
@@ -74,6 +77,7 @@ export class DirectSupplyComponent implements OnInit {
   isRowHover: Number = -1;
   isRowSelected: Number = -1;
   validaCorreo: boolean = false;
+    showFilterTable: boolean = false;
  showToast = false;
   toastMessage = '';
   toastType: 'success' | 'error2' | 'info' | 'warning' = 'info';
@@ -185,14 +189,6 @@ export class DirectSupplyComponent implements OnInit {
       }
     }
     return offset;
-  }
-
-  onSearch() {
-
-  }
-
-  onSelectAccount(row: any) {
-
   }
 
   onCheckChange(opcion: string) {
@@ -345,21 +341,25 @@ export class DirectSupplyComponent implements OnInit {
     );
   }
 
-  openContextMenu(event: MouseEvent,opcionMenu:number) {
-    event.preventDefault(); // evita el menú del navegador
-    this.contextMenu.open(event.pageX, event.pageY,opcionMenu);
-  }
-
-  applyFilter(columnProp: string, value: string) {
-    this.filters[columnProp] = value.toLowerCase();
-
-    this.filteredRows = this.rows.filter((row: any) => {
-      return Object.keys(this.filters).every((key) => {
-        if (!this.filters[key]) return true;
-        const cellValue = row[key]?.toString().toLowerCase() || '';
-        return cellValue.includes(this.filters[key]);
-      });
+  openContextMenu(event: MouseEvent, opcionMenu: number, headerColumnAC: string = '') {
+    event.preventDefault();
+    this.contextMenu.filterColumn = headerColumnAC;
+    this.contextMenu.dataFilter = [];
+    this.rows.forEach((element: any) => {
+      this.contextMenu.dataFilter.push({
+        codProducto: element.codProducto.toString(),
+        description: element.nombreProducto.toString(),
+        laboratorio: element.nombreLaboratorio.toString(),
+        tipo: element.ABC,
+        compraFinal: Math.trunc(Number(element.compraFinal) * 100) / 100,
+        condicion: element.condicion.toString(),
+        check: true,
+      })
     });
+
+
+
+    this.contextMenu.open(event.pageX, event.pageY, opcionMenu);
   }
 
 
@@ -371,13 +371,8 @@ export class DirectSupplyComponent implements OnInit {
         break;
 
       case 'filters':
-        this.showFilters = !this.showFilters;
-        if (this.showFilters) {
-          this.filteredRows = [...this.rows];
-        } else {
-          this.filters = {};
-          this.filteredRows = [...this.rows];
-        }
+         console.log('Entro');
+        this.showFilterTable = !this.showFilterTable;
         break;
       case 'edit':
         alert('✏️ Editar');
@@ -392,13 +387,13 @@ export class DirectSupplyComponent implements OnInit {
 
   addHeadeTable() {
     this.headTableAnalisisCompra = [
-      '#R',
-      'cod.',
-      'Descripción',
-      'Labora.',
-      'Establecimiento',
-      'Cant. Unid. Empaque',
-      'Condición',
+      AppConstants.TitleTableHeadACAbadi.R,
+      AppConstants.TitleTableHeadACAbadi.COD_PROD,
+      AppConstants.TitleTableHeadACAbadi.DESCRIPCION,
+      AppConstants.TitleTableHeadACAbadi.LABORATORIO,
+      AppConstants.TitleTableHeadACAbadi.ESTABLECIMIENTO,
+      AppConstants.TitleTableHeadACAbadi.CANT_UNID_EMPAQUE,
+      AppConstants.TitleTableHeadACAbadi.CONDICION,
       this.showMonth('mesquinto'),
       this.showMonth('mescuarto'),
       this.showMonth('mestercero'),
@@ -406,19 +401,20 @@ export class DirectSupplyComponent implements OnInit {
       this.showMonth('mesprimero'),
       this.showMonth('mesActual'),
       this.showMonth('mesProyectado'),
-      'Prom. Mes',
-      'Pre compra',
-      'Compra final',
-      'Boni',
-      'Botica',
-      'O/C Vigente',
-      'O/C Vencida',
-      'O/C',
-      'Botica + O/C',
-      'Cobertura Botica (Dia)',
-      'Observación',
+      AppConstants.TitleTableHeadACAbadi.PROM_MES,
+      AppConstants.TitleTableHeadACAbadi.PRE_COMPRA,
+      AppConstants.TitleTableHeadACAbadi.COMPRA_FINAL,
+      AppConstants.TitleTableHeadACAbadi.BONIFICADO,
+      AppConstants.TitleTableHeadACAbadi.OCVIGENTE,
+      AppConstants.TitleTableHeadACAbadi.OCVENCIDA,
+      AppConstants.TitleTableHeadACAbadi.OC,
+      AppConstants.TitleTableHeadACAbadi.BOTICAOC,
+      AppConstants.TitleTableHeadACAbadi.COBERTURA_BOTICA,
+      AppConstants.TitleTableHeadACAbadi.OBSERVACION,
     ];
-     this.headTableUltimasCompras = [
+    this.deleteColumnAC = this.headTableAnalisisCompra;
+
+    this.headTableUltimasCompras = [
       'Proveedor',
       ' S - Orden',
       ' Fecha',
@@ -449,33 +445,19 @@ export class DirectSupplyComponent implements OnInit {
     ];
   }
 
-  deleteColumn(headColumna: string, nombreTabla: string, event: Event) {
-    let tabla: any = document.getElementById(nombreTabla);
-    let row = tabla.rows;
-    let idColumna: number = 99999;
+    showColumn(headColumn: string) {
+    if (this.deleteColumnAC.find(p => p == headColumn)) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+  deleteColumn(headColumna: string, event: Event) {
     let isChecked = (event.target as HTMLInputElement).checked;
-
-    for (let i = 0; i < row.length; i++) {
-      let celdas = row[i].cells;
-
-      for (let j = 0; j < celdas.length; j++) {
-
-        if (headColumna.trim() === celdas[j].innerHTML.trim()) {
-          idColumna = j;
-        }
-        if (j === idColumna) {
-          if (isChecked) {
-            let styleColumn: string = "text-align: left; padding: 4px; position: sticky; top: 0;";
-            if (j == 0) {
-              styleColumn += "z-index: 5 !important;";
-            }
-            celdas[j].setAttribute("style", styleColumn);
-          } else {
-            celdas[j].setAttribute("style", "display: none;");
-
-          }
-        }
-      }
+    if (isChecked) {
+      this.deleteColumnAC.push(headColumna);
+    } else {
+      this.deleteColumnAC = this.deleteColumnAC.filter(p => p != headColumna);
     }
   }
 
@@ -581,6 +563,167 @@ export class DirectSupplyComponent implements OnInit {
       });
   
     }
+
+      // Filtro tabla Analisis de compra
+      createMenuListHeaderAC() {
+        let dataMenUfilterComplete: OptionsCLickHeadMenuAC[] = [];
+    
+        this.rowsDataTotal.forEach((element: any) => {
+          dataMenUfilterComplete.push({
+            codProducto: element.codProducto.toString(),
+            description: element.nombreProducto.toString(),
+            laboratorio: element.nombreLaboratorio.toString(),
+            tipo: element.ABC,
+            compraFinal: Math.trunc(Number(element.compraFinal) * 100) / 100,
+            condicion: element.condicion.toString(),
+            check: true,
+          })
+        });
+    
+        this.contextMenu.dataProductos = dataMenUfilterComplete;
+        this.contextMenu.dataFilter = dataMenUfilterComplete;
+    
+        let listado: string[] = [];
+        let menuOption: OptionsClickHeadMenuAC2[] = [];
+    
+        // Produccto
+        menuOption = [];
+        listado = [...new Set(dataMenUfilterComplete.map(u => u.description.toString()))];
+        listado.forEach((element: string) => {
+          menuOption.push({
+            description: element,
+            check: true,
+            visible: true,
+          });
+        });
+        this.contextMenu.menuListProducto = menuOption;
+    
+        // Laboratorio
+        menuOption = [];
+        listado = [...new Set(dataMenUfilterComplete.map(u => u.laboratorio.toString()))];
+        listado.forEach((element: string) => {
+          menuOption.push({
+            description: element,
+            check: true,
+            visible: true,
+          });
+        });
+        this.contextMenu.menuListLabora = menuOption;
+    
+        // Tipo
+        menuOption = [];
+        listado = [...new Set(dataMenUfilterComplete.map(u => u.tipo.toString()))];
+        listado.forEach((element: string) => {
+          menuOption.push({
+            description: element,
+            check: true,
+            visible: true
+          });
+        });
+        this.contextMenu.menuLisTipo = menuOption;
+    
+        // Compra Final
+        menuOption = [];
+        listado = [...new Set(dataMenUfilterComplete.map(u => u.compraFinal.toString()))];
+        listado.forEach((element: string) => {
+          menuOption.push({
+            description: element,
+            check: true,
+            visible: true,
+          });
+        });
+        this.contextMenu.menuListCompraFinal = menuOption;
+    
+        // Condiciones
+        menuOption = [];
+        listado = [...new Set(dataMenUfilterComplete.map(u => u.condicion.toString()))];
+        listado.forEach((element: string) => {
+          menuOption.push({
+            description: this.condiciones.find(p => p.codigoCondicion.includes(element))?.descripcion ?? '',
+            codCondiciones: element,
+            check: true,
+            visible: true,
+          });
+        });
+    
+        this.contextMenu.menuListCondiciones = menuOption;
+      }
+    
+      getACOrderAZ() {
+        if (this.contextMenu.filterColumn == 'Descripción') {
+          this.rows.sort((a: any, b: any) =>
+            a.nombreProducto.toString().trim().localeCompare(b.nombreProducto).toString().trim()
+          );
+        }
+    
+        if (this.contextMenu.filterColumn == 'Tipo') {
+          this.rows.sort((a: any, b: any) =>
+            (a.ABC ?? "").toString().trim().localeCompare((b.ABC ?? "").toString().trim())
+          );
+        }
+        if (this.contextMenu.filterColumn == 'Labora.') {
+    
+          this.rows = this.rows.sort((a: any, b: any) =>
+            (a.nombreLaboratorio ?? "").toString().trim().localeCompare(b.nombreLaboratorio ?? "").toString().trim()
+          );
+        }
+    
+        if (this.contextMenu.filterColumn == 'Compra final') {
+          this.rows = this.rows.sort((a: any, b: any) =>
+            (a.compraFinal ?? "").toString().trim().localeCompare(b.compraFinal ?? "").toString().trim()
+          );
+        }
+    
+        this.isRowSelected = -1;
+        this.isRowSelected = this.rows.findIndex((p: any) => p.codProducto == this.idProductSelected);
+    
+      }
+    
+      getACOrderZA() {
+        if (this.contextMenu.filterColumn == 'Descripción') {
+          this.rows = this.rows.sort((a: any, b: any) =>
+            b.nombreProducto.toString().trim().localeCompare(a.nombreProducto).toString().trim()
+          );
+        }
+    
+        if (this.contextMenu.filterColumn == 'Tipo') {
+          this.rows = this.rows.sort((a: any, b: any) =>
+            (b.ABC ?? "").toString().trim().localeCompare(a.ABC ?? "").toString().trim()
+          );
+        }
+    
+        if (this.contextMenu.filterColumn == 'Labora.') {
+          this.rows = this.rows.sort((a: any, b: any) =>
+            (b.nombreLaboratorio ?? "").toString().trim().localeCompare(a.nombreLaboratorio ?? "").toString().trim()
+          );
+        }
+    
+        if (this.contextMenu.filterColumn == 'Compra final') {
+          this.rows = this.rows.sort((a: any, b: any) =>
+            (b.compraFinal ?? "").toString().trim().localeCompare(a.compraFinal ?? "").toString().trim()
+          );
+        }
+    
+        this.isRowSelected = -1;
+        this.isRowSelected = this.rows.findIndex((p: any) => p.codProducto == this.idProductSelected);
+      }
+    
+      filterData(filter: string) {
+        if (this.contextMenu.primerFiltro.length == 0) {
+          this.contextMenu.primerFiltro = this.contextMenu.filterColumn;
+        }
+        let productFilter: string[] = filter.split('-');
+    
+        let dataFilter = this.rowsDataTotal.filter((element: any) =>
+          productFilter.includes(element.codProducto)
+        );
+        this.rows = dataFilter;
+        this.calculateTotal();
+      }
+    
+      updateFilterHeader() {
+        this.createMenuListHeaderAC();
+      }
 
    // hover tabla Analisis Compra
   onRowHover(index: number) {
