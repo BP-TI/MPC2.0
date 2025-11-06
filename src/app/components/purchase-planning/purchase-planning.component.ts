@@ -13,6 +13,8 @@ import { AppConstants } from '../../shared/constants/app.constants';
 import { AgentOutlook } from '../../shared/models/agentOutlook';
 import { AlertMail } from '../../shared/services/alert-mail';
 import { ShowSubstitutesComponent } from '../show-substitutes/show-substitutes.component';
+import { AddProductComponent } from '../add-product/add-product.component';
+import { InventoryPolicyComponent } from '../inventory-policy/inventory-policy.component';
 
 @Component({
   selector: 'app-purchase-planning',
@@ -255,27 +257,20 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
   handleMenuAction(action: string) {
     switch (action) {
       case 'view':
-        if(this.isRowSelected != -1){
-          const modalSUbs = this.modalService.open( ShowSubstitutesComponent, { size: 'xl', centered: true, backdrop: false, scrollable: true });
-          let data = this.rows.filter((p:any)=> p.codProducto == this.idProductSelected);
-         console.log(data);
-          modalSUbs.componentInstance.codProv = this.proveedor;
-          modalSUbs.componentInstance.codProduct = data[0].codProducto;
-          modalSUbs.componentInstance.codLabora = data[0].codLaboratorio;
-        }else {
-           this.AlertToast("Warning: Debe de seleccionar el producto primero.",'warning');
-        }
+        this.openModalSubstitutes();
         break;
 
       case 'filters':
-        console.log('Entro');
         this.showFilterTable = !this.showFilterTable;
         break;
       case 'edit':
         alert('✏️ Editar');
         break;
+      case 'addProduct':
+        this.openModalAddProduct();
+        break;
       case 'delete':
-        alert('🗑️ Eliminar');
+        this.deleteProductList();
         break;
       case 'O-AZ':
         this.getACOrderAZ();
@@ -367,6 +362,7 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
       return false;
     }
   }
+
   deleteColumn(headColumna: string, event: Event) {
     let isChecked = (event.target as HTMLInputElement).checked;
     if (isChecked) {
@@ -493,9 +489,6 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
         check: true,
       })
     });
-
-
-
     this.contextMenu.open(event.pageX, event.pageY, opcionMenu);
   }
 
@@ -565,6 +558,84 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
     );
     return filtrado ? filtrado.descripcion : '';
   }
+
+  addNewProductoList(dataProduct: any) {
+    let newData: any = {
+      ABC: "",
+      ObservacionAutoriza: "",
+      VVF1: "0.00",
+      VVF2: "0.00",
+      almacen: "0.00",
+      asociado: "",
+      bonificacion: "0.00",
+      botica: "0.00",
+      canje: "0.00",
+      clasificacion: "",
+      cobOrgAct: "0.00",
+      cobOrgActCalcNoBotica: "0.00",
+      cobOrgActNoBotica: "0.00",
+      codLaboratorio: dataProduct.codigoLaboratorio,
+      codProducto: dataProduct.codigoProducto,
+      compraFinal: "0.00",
+      condicion: "",
+      cosCom: "00.00",
+      descuento1: "00.00",
+      descuento2: "0.00",
+      descuento3: "0.00",
+      descuento4: "0.00",
+      fracUnidad: "0",
+      igv: "0.00",
+      igvProducto: "18.00",
+      incentivo: "0.00",
+      logisticaInversa: "0.00",
+      maxBot: "0.00",
+      maxInfraStock: "0.00",
+      mesActual: "0.00",
+      mesActualProyeccion: "0.00",
+      mesCuarto: "0.00",
+      mesPrimero: "0.00",
+      mesQuinto: "0.00",
+      mesSegundo: "0.00",
+      mesTercero: "0.00",
+      nombreLaboratorio: dataProduct.descripcionLaboratorio,
+      nombreProducto: dataProduct.descripcionProducto,
+      nroOC: "",
+      observaciones: "",
+      oc: "0.00",
+      ocVencido: "0.00",
+      ocVigente: "0.00",
+      org: "0.00",
+      orgNoBotica: "0.00",
+      parcial: "0.00",
+      plazoPago: "00.00",
+      preCompra: "0.00",
+      promMes: "0.00",
+      relacionado: "",
+      secRelacion: "0",
+      total: "0.00",
+      totalNoBotica: "0.00",
+      totalParcial: "0.00",
+      unidadEmpaque: "6",
+      usuarioAutoriza: "",
+      ventaSubDist: "0",
+    }
+
+    this.rows.push(newData);
+  }
+
+  deleteProductList() {
+    if (!confirm('¿Estás seguro de continuar?')) {
+      return;
+    }
+
+    if (this.isRowSelected != -1) {
+      let data = this.rows.filter((p: any) => p.codProducto == this.idProductSelected);
+      this.rows = this.rows.filter((p: any) => p != data);
+    } else {
+      this.AlertToast("Warning: Debe de seleccionar el producto primero.", 'warning');
+    }
+  }
+
   // Filtro tabla Analisis de compra
   createMenuListHeaderAC() {
     let dataMenUfilterComplete: OptionsCLickHeadMenuAC[] = [];
@@ -710,6 +781,7 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
   }
 
   filterData(filter: string) {
+    this.contextMenu.closeHeadTableAC();
     if (this.contextMenu.primerFiltro.length == 0) {
       this.contextMenu.primerFiltro = this.contextMenu.filterColumn;
     }
@@ -752,6 +824,63 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
   }
   // End hover tabla Analisis Compra
 
+  // Modals
+  openModalInveventoryPolicy() {
+    const modalInvPoli = this.modalService.open(InventoryPolicyComponent, {
+      windowClass: "modal-inventori-policy",
+      centered: true,
+      backdrop: false,
+      scrollable: true
+    });
+  }
+
+  openModalSubstitutes() {
+    if (this.isRowSelected != -1) {
+      const modalSUbs = this.modalService.open(ShowSubstitutesComponent, {
+        windowClass: "modal-Substitutes",
+        centered: true,
+        backdrop: false,
+        scrollable: true
+      });
+      let data = this.rows.filter((p: any) => p.codProducto == this.idProductSelected);
+      modalSUbs.componentInstance.codProv = this.proveedor;
+      modalSUbs.componentInstance.codProduct = data[0].codProducto;
+      modalSUbs.componentInstance.codLabora = data[0].codLaboratorio;
+    } else {
+      this.AlertToast("Warning: Debe de seleccionar el producto primero.", 'warning');
+    }
+  }
+
+  openModalAddProduct() {
+    if (this.proveedor.trim().length == 0 || this.proveedor == '0' || this.proveedor == null || this.proveedor == undefined) {
+      this.AlertToast("Warning: Debe de seleccionar un proveedor.", 'warning');
+      return;
+    }
+
+    if (this.laboratorios.length == 0) {
+      this.AlertToast("Warning: El proveedor debe de tener al menos un laboratorio relacionado.", 'warning');
+      return;
+    }
+
+    const modalAddProd = this.modalService.open(AddProductComponent, {
+      windowClass: "modal-product",
+      keyboard: true,
+      backdrop: false,
+      backdropClass: 'modal-backdrop',
+    });
+    let codLab = 'x';
+    modalAddProd.componentInstance.codProv = this.proveedor;
+    modalAddProd.componentInstance.codLab = codLab;
+
+    modalAddProd.closed.subscribe((response: any) => {
+      this.addNewProductoList(response);
+    });
+
+  }
+
+
+
+  // End Modals
   openOutlook() {
     let body: AgentOutlook = {
       subject: 'Prueba',

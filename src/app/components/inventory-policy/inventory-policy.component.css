@@ -1,3 +1,81 @@
+.modal-inventori-policy .modal-dialog {
+    max-width: 1000px !important;
+    /* width: 600px !important; */
+    position: absolute !important;
+    z-index: 1060;
+    top: 8%;
+    left: 30%;
+}
+
+.modal {
+    background: none !important;
+    pointer-events: none;
+}
+
+.modal-body {
+  padding: 0px;
+  margin: 0px;
+  height: 100%;
+  width: 100%;
+}
+
+.header-modal {
+  background: #134B97;
+  color: white;
+  cursor: move;
+}
+
+.button-cancel {
+
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding: 4px 10px;
+  gap: 4px;
+
+  width: auto;
+  height: 25px;
+
+  background: #FB2C36;
+  border: 1px solid #FB2C36;
+  border-radius: 4px;
+  font-size: 12px;
+
+  font-family: 'Montserrat';
+  font-style: normal;
+
+
+  display: flex;
+  align-items: center;
+  letter-spacing: 1.25px;
+
+  color: #ffffff;
+}
+
+.button-cancel:hover {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+
+  background: white;
+  border: 1px solid #FB2C36;
+  border-radius: 4px;
+  font-size: 12px;
+
+  font-family: 'Montserrat';
+  font-style: normal;
+
+
+  display: flex;
+  align-items: center;
+  letter-spacing: 1.25px;
+
+  color: #FB2C36;
+}
+
 .table-scroll {
   overflow-x: auto;
   height: 150px;

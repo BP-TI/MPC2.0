@@ -20,3 +20,7 @@ export interface IUltimasComprasAbadiReq {
     codigoAlmacen:string; 
     codUsuario:Number;    
 }
+export interface IAdicionarProductosReq{
+    codProveedor:string;
+    codLab:string;
+}

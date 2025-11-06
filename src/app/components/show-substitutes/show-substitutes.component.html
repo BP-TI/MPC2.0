@@ -1,5 +1,5 @@
 <div class="modal-body">
-  <div class="header-modal p-2 m-0 d-flex align-items-baseline justify-content-between">
+  <div class="header-modal p-2 m-0 d-flex align-items-baseline justify-content-between" (mousedown)="startDrag($event)">
     <p class="title-modal m-0 p-0">Ver Sustitutos</p>
     <button type="button" class="button-cancel" (click)="closeModal()">
       <span aria-hidden="true">&times;</span>
@@ -7,7 +7,7 @@
   </div>
 
   <div class="table-scroll">
-    <table class="table-style" id="politicasinventario">
+    <table class="table-style">
       <thead>
         <tr>
           <th>COD_PRO</th>

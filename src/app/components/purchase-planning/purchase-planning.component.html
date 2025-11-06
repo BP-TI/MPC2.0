@@ -72,10 +72,10 @@
         </div>
 
         <div ngbDropdown class="fondoSelect col-12 p-0 m-0 menu-laboratorio">
-          <div ngbDropdownMenu class="dropdown-scroll p-0 m-0">
+          <div ngbDropdownMenu class="dropdown-scroll pl-4 m-0">
             <div
               *ngFor="let item of laboratorios; let i = index"
-              class="form-check label-check-lab m-0 p-0 pl-4"
+              class="form-check label-check-lab m-0 p-0 pl-5"
             >
               <input
                 class="form-check-input"
@@ -99,7 +99,7 @@
               type="button"
               class="dropdown-item m-0 p-0"
               data-toggle="modal"
-              data-target="#politicaInventario"
+              (click)="openModalInveventoryPolicy()"              
             >
               <i class="fa-solid fa-circle-info" title="Política de Inventario (Día)"> </i>
             </a>
@@ -502,7 +502,16 @@
             <td *ngIf="showColumn(headTableAnalisisCompra[33])" class="center-text">
               {{ data.total | number : '1.2-2' }}
             </td>
-            <td *ngIf="showColumn(headTableAnalisisCompra[34])">{{ data.observaciones }}</td>
+
+            @if(isRowSelected === i){
+            <td class="center-text" *ngIf="showColumn(headTableAnalisisCompra[34])">
+              <input placeholder="" class="input-table-AC" [(ngModel)]="data.observaciones" />
+            </td>
+            }@else {
+            <td *ngIf="showColumn(headTableAnalisisCompra[34])">
+              {{ data.observaciones }}
+            </td>
+            }
           </tr>
         </tbody>
       </table>
@@ -518,35 +527,6 @@
 </div>
 
 <!-- MODAL -->
-<!-- modal politicas de inventario -->
-<div
-  class="modal fade"
-  id="politicaInventario"
-  data-backdrop="static"
-  data-keyboard="false"
-  tabindex="10"
-  role="dialog"
-  aria-labelledby="staticBackdropLabel"
-  aria-hidden="true"
->
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-      <div
-        class="modal-header p-2 m-0 d-flex align-items-center justify-content-between style-header-popup"
-      >
-        <p class="title-modal p-0 m-0">Política de Inventario (Día)</p>
-        <button type="button" class="button-cancel" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <app-inventory-policy></app-inventory-policy>
-      </div>
-    </div>
-  </div>
-</div>
-<!-- End modal politicas de inventario -->
-
 <!-- modal Generar Orden de compra -->
 <div
   class="modal fade"

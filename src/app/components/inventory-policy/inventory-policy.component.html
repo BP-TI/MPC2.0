@@ -1,21 +1,35 @@
-<div class="m-0 p-0 d-flex justify-content-center table-scroll">
-  <table class="table-style" id="politicasinventario">
-    <thead>
-      <tr>
-        <th>Tipo</th>
-        <th>Punto de venta</th>
-        <th>Naximo almacén</th>
-        <th>Total</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let data of rowsLb">
-        <td>{{ data.ABC | titlecase  }}</td>
-        <td>{{ data.puntoVenta }}</td>
-        <td>{{ data.MaxAlmacen }}</td>
-        <td>{{ data.Total }}</td>
-      </tr>
-    </tbody>
-  </table>
+<div class="modal-body">
+  <!-- Cabecera -->
+  <div
+    class="header-modal p-2 m-0 d-flex align-items-baseline justify-content-between"
+    (mousedown)="startDrag($event)"
+  >
+    <p class="title-modal m-0 p-0">Agregar Producto</p>
+    <button type="button" class="button-cancel" (click)="closeModal()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <!-- Tabla -->
+  <div class="m-0 p-0 d-flex justify-content-center table-scroll">
+    <table class="table-style" id="politicasinventario">
+      <thead>
+        <tr>
+          <th>Tipo</th>
+          <th>Punto de venta</th>
+          <th>Naximo almacén</th>
+          <th>Total</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let data of rowsLb">
+          <td>{{ data.ABC | titlecase }}</td>
+          <td>{{ data.puntoVenta }}</td>
+          <td>{{ data.MaxAlmacen }}</td>
+          <td>{{ data.Total }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 </div>
+
 <loading *ngIf="loading"></loading>
