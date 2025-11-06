@@ -28,6 +28,7 @@ import { InventoryPolicyComponent } from './components/inventory-policy/inventor
 import { PurchaseOrderComponent } from './components/purchase-order/purchase-order.component';
 import { AlertToastComponent } from './shared/components/alertToast/alertToast.component';
 import { ShowSubstitutesComponent } from './components/show-substitutes/show-substitutes.component';
+import { AddProductComponent } from './components/add-product/add-product.component';
 
 @NgModule({
   declarations: [
@@ -45,7 +46,8 @@ import { ShowSubstitutesComponent } from './components/show-substitutes/show-sub
     InventoryPolicyComponent,
     PurchaseOrderComponent,
     AlertToastComponent,
-    ShowSubstitutesComponent
+    ShowSubstitutesComponent,
+    AddProductComponent
   ],
   imports: [
     NgbModalModule,
@@ -72,6 +74,7 @@ import { ShowSubstitutesComponent } from './components/show-substitutes/show-sub
     PurchaseOrderComponent,
     AlertToastComponent,
     ShowSubstitutesComponent,
+    AddProductComponent,
   ],
   bootstrap: [App]
 })

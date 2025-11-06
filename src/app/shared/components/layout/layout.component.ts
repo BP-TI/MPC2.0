@@ -25,7 +25,7 @@ export class LayoutComponent implements OnInit {
   user: Usuario;
   selectedIndex: number = -1;
   titleComponent?: string = "";
-  navState:Boolean = true;
+  navState: Boolean = true;
 
   @ViewChild('prototipoModal') prototipoModal: ModalDirective;
   @ViewChild('invalidateModal') invalidateModal: ModalDirective;
@@ -132,7 +132,7 @@ export class LayoutComponent implements OnInit {
     ];
   }
 
-  stateNav(){
+  stateNav() {
     this.navState = !this.navState;
   }
 

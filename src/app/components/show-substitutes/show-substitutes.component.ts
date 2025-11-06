@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, ElementRef, HostListener, Input, OnInit, ViewEncapsulation } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { PurchasePlanningService } from '../../services/PurchasePlanning/purchasePlanning.service';
 import { Substitutes } from '../../models/parametros';
@@ -7,7 +7,8 @@ import { Substitutes } from '../../models/parametros';
   selector: 'app-show-substitutes',
   standalone: false,
   templateUrl: './show-substitutes.component.html',
-  styleUrl: './show-substitutes.component.css'
+  styleUrl: './show-substitutes.component.css',
+   encapsulation: ViewEncapsulation.None,
 })
 export class ShowSubstitutesComponent implements OnInit {
 
@@ -16,11 +17,41 @@ export class ShowSubstitutesComponent implements OnInit {
   @Input() codLabora!: string;
   dataTable: any[] = [];
 
+  loading: boolean = false;
+
+  private isDragging = false;
+  private offsetX = 0;
+  private offsetY = 0;
+
   constructor(
     private activeModal: NgbActiveModal,
     private purchaseService: PurchasePlanningService,
+    private el: ElementRef,
+    
   ) { }
 
+  startDrag(event: MouseEvent) {
+    this.isDragging = true;
+    const dialog = this.el.nativeElement.closest('.modal-dialog');
+    const rect = dialog.getBoundingClientRect();
+    this.offsetX = event.clientX - rect.left;
+    this.offsetY = event.clientY - rect.top;
+  }
+
+  @HostListener('document:mousemove', ['$event'])
+  onMouseMove(event: MouseEvent) {
+    if (!this.isDragging) return;
+    const dialog = this.el.nativeElement.closest('.modal-dialog');
+    dialog.style.left = `${event.clientX - this.offsetX}px`;
+    dialog.style.top = `${event.clientY - this.offsetY}px`;
+  }
+
+  @HostListener('document:mouseup')
+  onMouseUp() {
+    this.isDragging = false;
+  }
+
+  // -----
   ngOnInit() {
     this.showsubstitutes();
   }
@@ -35,16 +66,15 @@ export class ShowSubstitutesComponent implements OnInit {
       codigoLaboratorio: this.codLabora,
       codigoProducto: this.codProduct
     }
-    console.log(dataRequest);
+
     this.purchaseService.getSubstitutes(dataRequest).subscribe((response: any) => {
       if (response == null) {
         //  this.AlertToast(`Información: No se encontraron registros.`, 'info');
       } else {
         if (response.codStatus == 1) {
-          if (response.message === "OK"){
-            console.log('Entro');
+          if (response.message === "OK") {
             this.dataTable = response.productoSustitutorios;
-          }else{
+          } else {
             // this.AlertToast(`Información: ${response.message}`, 'info');
           }
         }
@@ -53,7 +83,6 @@ export class ShowSubstitutesComponent implements OnInit {
         }
       }
 
-      console.log(response);
     });
   }
 

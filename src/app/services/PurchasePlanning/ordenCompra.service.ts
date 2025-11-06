@@ -3,7 +3,7 @@ import { HelperService } from '../../shared/services/helper.service';
 import { environment } from '../../../environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { IUltimasComprasReq } from '../../models/ordenCompra';
+import { IAdicionarProductosReq, IUltimasComprasReq } from '../../models/ordenCompra';
 
 @Injectable({
   providedIn: 'root'
@@ -28,6 +28,10 @@ export class OrdenCompraService {
 
   getUltimasCompras(request: IUltimasComprasReq): Observable<any> {
     return this.httpClient.post<any>(`${this.REQUEST_URL}/GetUltimasCompras`, request);
+  }
+
+  getAdicionarProducto(request: IAdicionarProductosReq): Observable<any> {
+    return this.httpClient.post<any>(`${this.REQUEST_URL}/AdicionarProductos`, request);
   }
 
 
