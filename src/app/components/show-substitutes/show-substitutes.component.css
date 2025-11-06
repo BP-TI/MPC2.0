@@ -1,8 +1,11 @@
 .modal-Substitutes .modal-dialog {
-    /* max-width: 1000px !important;
-    width: 600px !important; */
+    max-width: 1000px !important;
+    width: 680px !important;
+    height: 370px !important;
     position: absolute !important;
     z-index: 1060;
+    padding: 0px !important;
+    margin: 0px;;
     top: 8%;
     left: 30%;
 }
@@ -85,7 +88,7 @@
     color: #ffffff;
 }
 
-.table-scroll {
+.table-scroll-show-Sub {
     width: 100%;
     height: 300px;
     padding: 0px;
@@ -97,44 +100,44 @@
     scrollbar-color: #B0E0E6 white !important;
 }
 
-.table-style thead th {
+.table-style-show-Sub thead th {
     position: sticky;
     top: 0;
     z-index: 2;
     margin: 0px;
 }
 
-.table-style {
+.table-style-show-Sub {
     width: 100%;
     min-height: auto;
 }
 
-.table-style thead th {
+.table-style-show-Sub thead th {
     background: #134B97;
     color: white;
 }
 
-.table-style th,
+.table-style-show-Sub th,
 td {
     font-family: 'Montserrat';
     font-style: normal;
     line-height: 22px;
 }
 
-.table-style th {
+.table-style-show-Sub th {
     font-weight: bold;
     font-size: 10px;
     color: black;
     background: white;
 }
 
-.table-style td {
+.table-style-show-Sub td {
     font-size: 10px;
     color: #3C3C3C;
     background: white;
 }
 
-.table-style th,
+.table-style-show-Sub th,
 td {
     text-align: center;
     white-space: nowrap;

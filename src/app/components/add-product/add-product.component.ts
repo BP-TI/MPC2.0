@@ -49,8 +49,19 @@ export class AddProductComponent implements OnInit {
   onMouseMove(event: MouseEvent) {
     if (!this.isDragging) return;
     const dialog = this.el.nativeElement.closest('.modal-dialog');
-    dialog.style.left = `${event.clientX - this.offsetX}px`;
-    dialog.style.top = `${event.clientY - this.offsetY}px`;
+
+    const newLeft = event.clientX - this.offsetX;
+    const newTop = event.clientY - this.offsetY;
+
+    const maxLeft = window.innerWidth - dialog.offsetWidth;
+    const maxTop = window.innerHeight - dialog.offsetHeight;
+
+    const limitedLeft = Math.max(0, Math.min(newLeft, maxLeft));
+    const limitedTop = Math.max(0, Math.min(newTop, maxTop));
+
+    dialog.style.left = `${limitedLeft}px`;
+    dialog.style.top = `${limitedTop}px`;
+
   }
 
   @HostListener('document:mouseup')
@@ -64,6 +75,7 @@ export class AddProductComponent implements OnInit {
   }
 
   filterDataTable() {
+    this.loading = true;
     if (this.textFilter.trim().length == 0) {
       this.datafilter = this.dataTable;
     }
@@ -75,6 +87,7 @@ export class AddProductComponent implements OnInit {
     if (this.chkcodProd) {
       this.datafilter = this.dataTable.filter(p => p.codigoProducto.toLowerCase().trim().includes(this.textFilter.toLowerCase().trim()));
     }
+    this.loading = false;
   }
 
   showDataProduct() {
@@ -130,6 +143,7 @@ export class AddProductComponent implements OnInit {
         this.chkDescripcion = true;
       }
     }
+    this.filterDataTable();
   }
 
   AlertToast(message: string, type: 'success' | 'error2' | 'info' | 'warning' = 'info') {

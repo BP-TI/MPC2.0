@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, ElementRef, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { Laboratorios, Proveedores, Condiciones } from '../../models/parametros';
-import { IUltimasComprasReq } from '../../models/ordenCompra';
+import { IUltimasComprasReq, PurchaseOrder } from '../../models/ordenCompra';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { PurchasePlanningService } from '../../services/PurchasePlanning/purchasePlanning.service';
 import { HttpErrorResponse } from '@angular/common/http';
@@ -15,6 +15,7 @@ import { AlertMail } from '../../shared/services/alert-mail';
 import { ShowSubstitutesComponent } from '../show-substitutes/show-substitutes.component';
 import { AddProductComponent } from '../add-product/add-product.component';
 import { InventoryPolicyComponent } from '../inventory-policy/inventory-policy.component';
+import { HeadTableAC } from '../../models/ordenCompra';
 
 @Component({
   selector: 'app-purchase-planning',
@@ -35,10 +36,11 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
   filteredRows: any[] = [];
   filters: { [key: string]: any } = {};
 
-  headTableAnalisisCompra: string[] = []
+  // headTableAnalisisCompra: string[] = []
+  headTableAnalisisCompra: HeadTableAC[] = []
   headTableUltimasCompras: string[] = []
   headTableUltimosIngresos: string[] = []
-  rows: any = [];
+  rows: PurchaseOrder[] = [];
   rowsLb: any[];
   rowsUCompras: any[];
   rowsUIngresos: any[];
@@ -59,7 +61,7 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
   isRowHover: Number = -1;
   isRowSelected: Number = -1;
   idProductSelected: Number = 0;
-  deleteColumnAC: string[] = [];
+  deleteColumnAC: HeadTableAC[] = [];
   showFilterTable: boolean = false;
 
   showToast = false;
@@ -214,7 +216,7 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
 
     this.ordenCompraService.getCalularCompra(this.proveedor, cadenaLab, "").subscribe(
       (response) => {
-
+        
         this.loading = false;
         if (response == null) {
           this.AlertToast(`Información: No se encontraron registros.`, 'info');
@@ -222,6 +224,68 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
         } else {
           if (response.codStatus === 1) {
             if (response.message === "OK") {
+              response.detalleProductos.forEach((data: any) => {
+                this.rows.push({
+                  ABC: data.ABC,
+                  ObservacionAutoriza: data.ObservacionAutoriza,
+                  VVF1: data.VVF1,
+                  VVF2: data.VVF2,
+                  almacen: data.almacen,
+                  asociado: data.asociado,
+                  bonificacion: data.bonificacion,
+                  botica: data.botica,
+                  canje: data.canje,
+                  clasificacion: data.clasificacion,
+                  cobOrgAct: data.cobOrgAct,
+                  cobOrgActCalcNoBotica: data.cobOrgActCalcNoBotica,
+                  cobOrgActNoBotica: data.cobOrgActNoBotica,
+                  codLaboratorio: data.codLaboratorio,
+                  codProducto: data.codProducto,
+                  compraFinal: data.compraFinal,
+                  condicion: data.condicion,
+                  cosCom: data.cosCom,
+                  descuento1: data.descuento1,
+                  descuento2: data.descuento2,
+                  descuento3: data.descuento3,
+                  descuento4: data.descuento4,
+                  fracUnidad: data.fracUnidad,
+                  igv: data.igv,
+                  igvProducto: data.igvProducto,
+                  incentivo: data.incentivo,
+                  logisticaInversa: data.logisticaInversa,
+                  maxBot: data.maxBot,
+                  maxInfraStock: data.maxInfraStock,
+                  mesActual: data.mesActual,
+                  mesActualProyeccion: data.mesActualProyeccion,
+                  mesCuarto: data.mesCuarto,
+                  mesPrimero: data.mesPrimero,
+                  mesQuinto: data.mesQuinto,
+                  mesSegundo: data.mesSegundo,
+                  mesTercero: data.mesTercero,
+                  nombreLaboratorio: data.nombreLaboratorio,
+                  nombreProducto: data.nombreProducto,
+                  nroOC: data.nroOC,
+                  observaciones: data.observaciones,
+                  oc: data.oc,
+                  ocVencido: data.ocVencido,
+                  ocVigente: data.ocVigente,
+                  org: data.org,
+                  orgNoBotica: data.orgNoBotica,
+                  parcial: data.parcial,
+                  plazoPago: data.plazoPago,
+                  preCompra: data.preCompra,
+                  promMes: data.promMes,
+                  relacionado: data.relacionado,
+                  secRelacion: data.secRelacion,
+                  total: data.total,
+                  totalNoBotica: data.totalNoBotica,
+                  totalParcial: data.totalParcial,
+                  unidadEmpaque: data.unidadEmpaque,
+                  usuarioAutoriza: data.usuarioAutoriza,
+                  ventaSubDist: data.ventaSubDist,
+                  isNewRow: false
+                });
+              });
               this.rows = response.detalleProductos;
               this.rowsDataTotal = response.detalleProductos;
               this.createMenuListHeaderAC();
@@ -286,42 +350,44 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
 
   addHeadeTable() {
     this.headTableAnalisisCompra = [
-      AppConstants.TitleTableHeadAC.COD_PROD,
-      AppConstants.TitleTableHeadAC.DESCRIPCION,
-      AppConstants.TitleTableHeadAC.LABORATORIO,
-      AppConstants.TitleTableHeadAC.CANT_UNID_EMPAQUE,
-      AppConstants.TitleTableHeadAC.CONDICION,
-      AppConstants.TitleTableHeadAC.TIPO,
-      this.showMonth('mesquinto'),
-      this.showMonth('mescuarto'),
-      this.showMonth('mestercero'),
-      this.showMonth('messegundo'),
-      this.showMonth('mesprimero'),
-      this.showMonth('mesActual'),
-      this.showMonth('mesProyectado'),
-      AppConstants.TitleTableHeadAC.PROM_MES,
-      AppConstants.TitleTableHeadAC.PRE_COMPRA,
-      AppConstants.TitleTableHeadAC.COMPRA_FINAL,
-      AppConstants.TitleTableHeadAC.BONIFICADO,
-      AppConstants.TitleTableHeadAC.ALMACEN,
-      AppConstants.TitleTableHeadAC.ORGANIZACION,
-      AppConstants.TitleTableHeadAC.CANJE,
-      AppConstants.TitleTableHeadAC.LOGIS_INVER,
-      AppConstants.TitleTableHeadAC.OC,
-      AppConstants.TitleTableHeadAC.COBERTURA_ORGANIZACIONAL,
-      AppConstants.TitleTableHeadAC.MAXI_INFRASTOCK,
-      AppConstants.TitleTableHeadAC.VVF,
-      AppConstants.TitleTableHeadAC.VVFNUEVO,
-      AppConstants.TitleTableHeadAC.DESC1,
-      AppConstants.TitleTableHeadAC.DESC2,
-      AppConstants.TitleTableHeadAC.DESC3,
-      AppConstants.TitleTableHeadAC.DESC4,
-      AppConstants.TitleTableHeadAC.COSCON,
-      AppConstants.TitleTableHeadAC.PARCIAL,
-      AppConstants.TitleTableHeadAC.IGV,
-      AppConstants.TitleTableHeadAC.TOTAL,
-      AppConstants.TitleTableHeadAC.OBSERVACION,
+      { description: AppConstants.TitleTableHeadAC.COD_PROD, check: true },
+      { description: AppConstants.TitleTableHeadAC.DESCRIPCION, check: true },
+      { description: AppConstants.TitleTableHeadAC.LABORATORIO, check: true },
+      { description: AppConstants.TitleTableHeadAC.CANT_UNID_EMPAQUE, check: true },
+      { description: AppConstants.TitleTableHeadAC.CONDICION, check: true },
+      { description: AppConstants.TitleTableHeadAC.TIPO, check: true },
+      { description: this.showMonth('mesquinto'), check: true },
+      { description: this.showMonth('mescuarto'), check: true },
+      { description: this.showMonth('mestercero'), check: true },
+      { description: this.showMonth('messegundo'), check: true },
+      { description: this.showMonth('mesprimero'), check: true },
+      { description: this.showMonth('mesActual'), check: true },
+      { description: this.showMonth('mesProyectado'), check: true },
+      { description: AppConstants.TitleTableHeadAC.PROM_MES, check: true },
+      { description: AppConstants.TitleTableHeadAC.PRE_COMPRA, check: true },
+      { description: AppConstants.TitleTableHeadAC.COMPRA_FINAL, check: true },
+      { description: AppConstants.TitleTableHeadAC.BONIFICADO, check: true },
+      { description: AppConstants.TitleTableHeadAC.ALMACEN, check: true },
+      { description: AppConstants.TitleTableHeadAC.ORGANIZACION, check: true },
+      { description: AppConstants.TitleTableHeadAC.CANJE, check: true },
+      { description: AppConstants.TitleTableHeadAC.LOGIS_INVER, check: true },
+      { description: AppConstants.TitleTableHeadAC.OC, check: true },
+      { description: AppConstants.TitleTableHeadAC.COBERTURA_ORGANIZACIONAL, check: true },
+      { description: AppConstants.TitleTableHeadAC.MAXI_INFRASTOCK, check: true },
+      { description: AppConstants.TitleTableHeadAC.VVF, check: true },
+      { description: AppConstants.TitleTableHeadAC.VVFNUEVO, check: true },
+      { description: AppConstants.TitleTableHeadAC.DESC1, check: true },
+      { description: AppConstants.TitleTableHeadAC.DESC2, check: true },
+      { description: AppConstants.TitleTableHeadAC.DESC3, check: true },
+      { description: AppConstants.TitleTableHeadAC.DESC4, check: true },
+      { description: AppConstants.TitleTableHeadAC.COSCON, check: true },
+      { description: AppConstants.TitleTableHeadAC.PARCIAL, check: true },
+      { description: AppConstants.TitleTableHeadAC.IGV, check: true },
+      { description: AppConstants.TitleTableHeadAC.TOTAL, check: true },
+      { description: AppConstants.TitleTableHeadAC.OBSERVACION, check: true },
+
     ];
+
     this.deleteColumnAC = this.headTableAnalisisCompra;
 
     this.headTableUltimasCompras = [
@@ -355,20 +421,12 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
     ];
   }
 
-  showColumn(headColumn: string) {
-    if (this.deleteColumnAC.find(p => p == headColumn)) {
-      return true;
-    } else {
-      return false;
-    }
-  }
-
-  deleteColumn(headColumna: string, event: Event) {
-    let isChecked = (event.target as HTMLInputElement).checked;
-    if (isChecked) {
+  deleteColumn(headColumna: HeadTableAC) {
+    headColumna.check = !headColumna.check;
+    if (headColumna.check) {
       this.deleteColumnAC.push(headColumna);
     } else {
-      this.deleteColumnAC = this.deleteColumnAC.filter(p => p != headColumna);
+      this.deleteColumnAC = this.deleteColumnAC.filter(p => p.check);
     }
   }
 
@@ -560,7 +618,7 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
   }
 
   addNewProductoList(dataProduct: any) {
-    let newData: any = {
+    let newData: PurchaseOrder = {
       ABC: "",
       ObservacionAutoriza: "",
       VVF1: "0.00",
@@ -615,25 +673,41 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
       total: "0.00",
       totalNoBotica: "0.00",
       totalParcial: "0.00",
-      unidadEmpaque: "6",
+      unidadEmpaque: "0",
       usuarioAutoriza: "",
       ventaSubDist: "0",
+      isNewRow: true,
     }
 
-    this.rows.push(newData);
+    let dataProductoExists = this.rows.filter(p => p.codProducto == newData.codProducto);
+
+    if(dataProductoExists.length>0){
+      this.AlertToast("Warning: Este Producto ya se encuentra agregado.", 'warning');
+    }else{
+      this.rows.push(newData);
+    }
+
   }
 
   deleteProductList() {
+    if (this.isRowSelected == -1) {
+      this.AlertToast("Warning: Debe de seleccionar el producto primero.", 'warning');
+    }
+
     if (!confirm('¿Estás seguro de continuar?')) {
       return;
     }
 
-    if (this.isRowSelected != -1) {
-      let data = this.rows.filter((p: any) => p.codProducto == this.idProductSelected);
-      this.rows = this.rows.filter((p: any) => p != data);
-    } else {
-      this.AlertToast("Warning: Debe de seleccionar el producto primero.", 'warning');
+    let dataRowDelete = this.rows.filter((p: any) => p.codProducto == this.idProductSelected);
+
+    if (dataRowDelete.length > 0) {
+      if (dataRowDelete[0].isNewRow) {
+        this.rows = this.rows.filter((p: any) => p.codProducto != this.idProductSelected);
+      } else {
+        this.AlertToast("Warning: Solo se puede eliminar los registros nuevos.", 'warning');
+      }
     }
+    this.clearDataTablesSecond();
   }
 
   // Filtro tabla Analisis de compra
@@ -828,7 +902,6 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
   openModalInveventoryPolicy() {
     const modalInvPoli = this.modalService.open(InventoryPolicyComponent, {
       windowClass: "modal-inventori-policy",
-      centered: true,
       backdrop: false,
       scrollable: true
     });
@@ -838,7 +911,6 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
     if (this.isRowSelected != -1) {
       const modalSUbs = this.modalService.open(ShowSubstitutesComponent, {
         windowClass: "modal-Substitutes",
-        centered: true,
         backdrop: false,
         scrollable: true
       });
@@ -864,9 +936,8 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
 
     const modalAddProd = this.modalService.open(AddProductComponent, {
       windowClass: "modal-product",
-      keyboard: true,
       backdrop: false,
-      backdropClass: 'modal-backdrop',
+      scrollable: true
     });
     let codLab = 'x';
     modalAddProd.componentInstance.codProv = this.proveedor;
