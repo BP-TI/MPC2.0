@@ -15,6 +15,7 @@ import { AlertMail } from '../../shared/services/alert-mail';
 import { ShowSubstitutesComponent } from '../show-substitutes/show-substitutes.component';
 import { AddProductComponent } from '../add-product/add-product.component';
 import { InventoryPolicyComponent } from '../inventory-policy/inventory-policy.component';
+import { ConfirmacionModalComponent } from '../../modales/confirmacionModal/confirmacionModal.component';
 
 @Component({
   selector: 'app-purchase-planning',
@@ -64,6 +65,8 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
 
   showToast = false;
   toastMessage = '';
+  idCondicion="";
+  idProducto="";
   toastType: 'success' | 'error2' | 'info' | 'warning' = 'info';
 
 
@@ -425,6 +428,8 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
   }
 
   getTableUltimasCompras(data: any) {
+    this.idCondicion = data.condicion;
+    this.idProducto = data.codProducto;
     if (this.isRowHover == this.isRowSelected) {
       return;
     }
@@ -794,8 +799,32 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
     this.calculateTotal();
   }
 
-  updateFilterHeader() {
+  updateFilterHeader(event: any,codigo:any) {    
+    console.log("event:",event.target.id);
+    console.log("event:",event.target.value);
+    console.log("condicion",this.idCondicion);
+    if(event.target.id.includes("cboCondicion")){
+      /*const modalInvPoli = this.modalService.open(ConfirmacionModalComponent, {
+      windowClass: "modal-inventori-policy",
+      centered: true,
+      backdrop: false,
+      scrollable: true
+    });*/
+      if (confirm("¿Quieres guardar los cambios?")) {
+        console.log("Guardado");
+      } else {
+        return;
+        console.log("Cancelado");
+        const select = document.getElementById(event.target.id) as HTMLSelectElement;
+        select.value = this.idCondicion;
+      }
+    }
+
     this.createMenuListHeaderAC();
+  }
+
+  onSelectFocus(id:any){
+    this.idCondicion = id;
   }
 
   // hover tabla Analisis Compra
