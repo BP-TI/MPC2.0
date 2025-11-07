@@ -16,6 +16,7 @@ import { ShowSubstitutesComponent } from '../show-substitutes/show-substitutes.c
 import { AddProductComponent } from '../add-product/add-product.component';
 import { InventoryPolicyComponent } from '../inventory-policy/inventory-policy.component';
 import { HeadTableAC } from '../../models/ordenCompra';
+import { PurchaseOrderComponent } from '../purchase-order/purchase-order.component';
 
 @Component({
   selector: 'app-purchase-planning',
@@ -921,6 +922,14 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
     } else {
       this.AlertToast("Warning: Debe de seleccionar el producto primero.", 'warning');
     }
+  }
+
+  openModalPurchaseOrder(){
+    const modalPurchaseOrder = this.modalService.open( PurchaseOrderComponent,{
+       windowClass: "modal-PurchaseOrder",
+        backdrop: true,
+        scrollable: true
+    });
   }
 
   openModalAddProduct() {
