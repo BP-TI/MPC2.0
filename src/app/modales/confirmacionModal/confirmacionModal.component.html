@@ -1,0 +1,29 @@
+<div class="modal-body">
+  <!-- Cabecera -->
+  <div
+    class="header-modal p-2 m-0 d-flex align-items-baseline justify-content-between"
+    (mousedown)="startDrag($event)"
+  >
+    <p class="title-modal m-0 p-0">Confirmación</p>
+    <button type="button" class="button-cancel" (click)="closeModal()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="p-4">
+    <div class="text-center">
+      ¿Está seguro que desea actualizar la condición del producto?
+    </div>
+  </div>
+  <div class="text-center p-1 col-12" style="border-top: var(--bs-border-width) solid;">
+    <div class="row g-0 p-2">
+      <div class="col-6">
+        <button type="button" class="button-style">SI</button>  
+      </div>
+      <div class="col-6">
+        <button type="button" class="button-style2" (click)="closeModal()">NO</button>
+      </div> 
+    </div>       
+  </div>
+</div>
+
+<loading *ngIf="loading"></loading>

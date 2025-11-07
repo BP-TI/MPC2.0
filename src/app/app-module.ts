@@ -29,6 +29,7 @@ import { PurchaseOrderComponent } from './components/purchase-order/purchase-ord
 import { AlertToastComponent } from './shared/components/alertToast/alertToast.component';
 import { ShowSubstitutesComponent } from './components/show-substitutes/show-substitutes.component';
 import { AddProductComponent } from './components/add-product/add-product.component';
+import { ConfirmacionModalComponent } from './modales/confirmacionModal/confirmacionModal.component';
 
 @NgModule({
   declarations: [
@@ -47,7 +48,8 @@ import { AddProductComponent } from './components/add-product/add-product.compon
     PurchaseOrderComponent,
     AlertToastComponent,
     ShowSubstitutesComponent,
-    AddProductComponent
+    AddProductComponent,
+    ConfirmacionModalComponent,
   ],
   imports: [
     NgbModalModule,
@@ -75,6 +77,7 @@ import { AddProductComponent } from './components/add-product/add-product.compon
     AlertToastComponent,
     ShowSubstitutesComponent,
     AddProductComponent,
+    ConfirmacionModalComponent,
   ],
   bootstrap: [App]
 })
