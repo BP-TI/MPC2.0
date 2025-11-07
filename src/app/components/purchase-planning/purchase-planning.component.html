@@ -294,7 +294,7 @@
                 placeholder=""
                 class="input-table-AC"
                 [(ngModel)]="data.unidadEmpaque"
-                (keydown.enter)="updateFilterHeader()"
+                (keydown.enter)="updateFilterHeader($event,'')"
               />
             </td>
 
@@ -316,8 +316,8 @@
                 class="input-select-table-AC"
                 id="cboCondicion{{data.codProducto}}"
                 [(ngModel)]="data.condicion"
-                (focus)="onSelectFocus(data.codigoCondicion)"
-                (change)="updateFilterHeader($event, data.codigoCondicion)"
+                (focus)="onSelectFocus(data.condicion)"
+                (change)="updateFilterHeader($event, data.condicion)"
               >
                 <option value="0" disabled>--Seleccione--</option>
                 <option *ngFor="let data of condiciones" [ngValue]="data.codigoCondicion">
