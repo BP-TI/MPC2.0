@@ -20,6 +20,10 @@ export interface IAdicionarProductosReq {
     codLab: string;
 }
 
+export interface IAdicionarProductoCalculoReq{
+    codProducto: string;
+}
+
 export class ReporteProductosCompra {
     id: string;
     producto: string;
