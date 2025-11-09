@@ -73,6 +73,8 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
   idCondicion = "";
   idProducto = "";
   toastType: 'success' | 'error2' | 'info' | 'warning' = 'info';
+  idCondicionCbo = "";
+  valorAnterior = "";
 
 
   @ViewChild("actionTemplate") actionTemplate: TemplateRef<any>;
@@ -1149,31 +1151,35 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
     this.calculateTotal();
   }
 
-  updateFilterHeader(event: any, codigo: any) {
-    console.log("event:", event.target.id);
-    console.log("event:", event.target.value);
-    console.log("condicion", this.idCondicion);
-    if (event.target.id.includes("cboCondicion")) {
+  updateFilterHeader(event: any,codigo:any) {    
+    console.log("event:",event.target.id);
+    console.log("event:",event.target.value);
+    console.log("condicion",this.idCondicion);
+    if(event.target.id.includes("cboCondicion")){
       /*const modalInvPoli = this.modalService.open(ConfirmacionModalComponent, {
       windowClass: "modal-inventori-policy",
       centered: true,
       backdrop: false,
       scrollable: true
     });*/
-      if (confirm("¿Quieres guardar los cambios?")) {
-        console.log("Guardado");
-      } else {
-        return;
-        console.log("Cancelado");
-        const select = document.getElementById(event.target.id) as HTMLSelectElement;
-        select.value = this.idCondicion;
+      const nuevoValor = event.target.value;
+
+      const confirmar = confirm(`¿Deseas cambiar de opción ${this.valorAnterior} a ${nuevoValor}?`);
+
+      if (confirmar) {        
+        this.idCondicionCbo = nuevoValor;
+        this.rows = this.rows.map((p:any )=> p.codProducto == codigo ? { ...p, condicion: this.idCondicionCbo } : p);
+      } else { 
+        this.idCondicionCbo = "";       
+        this.idCondicionCbo = this.idCondicion;
+        this.rows = this.rows.map((p:any )=> p.codProducto == codigo ? { ...p, condicion: this.idCondicion } : p);
       }
     }
 
     this.createMenuListHeaderAC();
   }
 
-  onSelectFocus(id: any) {
+  onSelectFocus(id:any){
     this.idCondicion = id;
   }
 
@@ -1188,6 +1194,7 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
     if (this.isRowSelected == index) {
       rowStyle = 'background-selected-column';
       this.idProductSelected = Number(codProduct);
+      this.idCondicionCbo = this.rows.find((p:any) => p.codProducto == codProduct)?.condicion ?? '';
     }
 
     if (this.isRowHover == index) {
