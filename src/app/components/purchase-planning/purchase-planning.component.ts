@@ -90,210 +90,14 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
 
 
   ngOnInit() {
-    // this.addHeadeTable();
-    // this.cargarProveedores();
-    // this.getCondiciones();
+    this.addHeadeTable();
+    this.cargarProveedores();
+    this.getCondiciones();
     this.global.setGlobalVar('Módulo planificación de compra');
 
   }
 
-   cargardataMockap() {
-    
-    this.contextMenu.dataProductos = [{
-      codProducto: '46298',
-      description: 'APOYO AL PACIENTE',
-      laboratorio: 'nombreLaboratorio',
-      compraFinal: Number('0.00000'),
-      tipo: 'VOLUMEN',
-      check: true,
-      condicion:''
-    }];
-    this.rows.push({
-      ABC: "VOLUMEN",
-      ObservacionAutoriza: "",
-      VVF1: "0.01",
-      VVF2: "0.00",
-      almacen: "0.00000",
-      asociado: "",
-      bonificacion: "0.00000",
-      botica: "8.00000",
-      canje: "0.00000",
-      clasificacion: "",
-      cobOrgAct: "64.56140",
-      cobOrgActCalcNoBotica: "0.00000",
-      cobOrgActNoBotica: "0.00000",
-      codLaboratorio: "APOY",
-      codProducto: "46297",
-      compraFinal: "0.00000",
-      condicion: "AC",
-      cosCom: "0.01",
-      descuento1: "0.00",
-      descuento2: "0.00",
-      descuento3: "0.00",
-      descuento4: "0.00",
-      fracUnidad: "1",
-      igv: "0.00",
-      igvProducto: "18.00",
-      incentivo: "0.00",
-      logisticaInversa: "0.00",
-      maxBot: "0.00000",
-      maxInfraStock: "894.00000",
-      mesActual: "0.00000",
-      mesActualProyeccion: "0.00000",
-      mesCuarto: "5.00000",
-      mesPrimero: "2.00000",
-      mesQuinto: "6.00000",
-      mesSegundo: "8.00000",
-      mesTercero: "2.00000",
-      nombreLaboratorio: "APOYO AL PACIENTE",
-      nombreProducto: "ABBOTT ENSURE ADV.53.5GRX10**",
-      nroOC: "",
-      observaciones: "",
-      oc: "0.00000",
-      ocVencido: "0.00000",
-      ocVigente: "0.00000",
-      org: "8.00000",
-      orgNoBotica: "0.00000",
-      parcial: "0.00",
-      plazoPago: "",
-      preCompra: "1.00000",
-      promMes: "3.80000",
-      relacionado: "",
-      secRelacion: "0",
-      total: "8.00000",
-      totalNoBotica: "0.00000",
-      totalParcial: "0.00",
-      unidadEmpaque: "1",
-      usuarioAutoriza: "",
-      ventaSubDist: "0",
-      isNewRow: false
-    },
-      {
-        ABC: "VOLUMEN2",
-        ObservacionAutoriza: "",
-        VVF1: "0.01",
-        VVF2: "0.00",
-        almacen: "0.00000",
-        asociado: "",
-        bonificacion: "0.00000",
-        botica: "8.00000",
-        canje: "0.00000",
-        clasificacion: "",
-        cobOrgAct: "64.56140",
-        cobOrgActCalcNoBotica: "0.00000",
-        cobOrgActNoBotica: "0.00000",
-        codLaboratorio: "APOY",
-        codProducto: "46298",
-        compraFinal: "2.00000",
-        condicion: "AC",
-        cosCom: "0.01",
-        descuento1: "0.00",
-        descuento2: "0.00",
-        descuento3: "0.00",
-        descuento4: "0.00",
-        fracUnidad: "1",
-        igv: "0.00",
-        igvProducto: "18.00",
-        incentivo: "0.00",
-        logisticaInversa: "0.00",
-        maxBot: "0.00000",
-        maxInfraStock: "894.00000",
-        mesActual: "0.00000",
-        mesActualProyeccion: "0.00000",
-        mesCuarto: "5.00000",
-        mesPrimero: "2.00000",
-        mesQuinto: "6.00000",
-        mesSegundo: "8.00000",
-        mesTercero: "2.00000",
-        nombreLaboratorio: "APOYO AL PACIENTE22",
-        nombreProducto: "ABBOTT ENSURE ADV.53.5GRX102222**",
-        nroOC: "",
-        observaciones: "",
-        oc: "0.00000",
-        ocVencido: "0.00000",
-        ocVigente: "0.00000",
-        org: "8.00000",
-        orgNoBotica: "0.00000",
-        parcial: "0.00",
-        plazoPago: "",
-        preCompra: "1.00000",
-        promMes: "3.80000",
-        relacionado: "",
-        secRelacion: "0",
-        total: "8.00000",
-        totalNoBotica: "0.00000",
-        totalParcial: "0.00",
-        unidadEmpaque: "1",
-        usuarioAutoriza: "",
-        ventaSubDist: "0",
-        isNewRow:false
-      },
-      {
-        ABC: "VOLUMEN2",
-        ObservacionAutoriza: "",
-        VVF1: "0.01",
-        VVF2: "0.00",
-        almacen: "0.00000",
-        asociado: "",
-        bonificacion: "0.00000",
-        botica: "8.00000",
-        canje: "0.00000",
-        clasificacion: "",
-        cobOrgAct: "64.56140",
-        cobOrgActCalcNoBotica: "0.00000",
-        cobOrgActNoBotica: "0.00000",
-        codLaboratorio: "APOY",
-        codProducto: "46299",
-        compraFinal: "5.00000",
-        condicion: "AC",
-        cosCom: "0.01",
-        descuento1: "0.00",
-        descuento2: "0.00",
-        descuento3: "0.00",
-        descuento4: "0.00",
-        fracUnidad: "1",
-        igv: "0.00",
-        igvProducto: "18.00",
-        incentivo: "0.00",
-        logisticaInversa: "0.00",
-        maxBot: "0.00000",
-        maxInfraStock: "894.00000",
-        mesActual: "0.00000",
-        mesActualProyeccion: "0.00000",
-        mesCuarto: "5.00000",
-        mesPrimero: "2.00000",
-        mesQuinto: "6.00000",
-        mesSegundo: "8.00000",
-        mesTercero: "2.00000",
-        nombreLaboratorio: "APOYO AL PACIENTE22",
-        nombreProducto: "ABBOTT ENSURE ADV.53.5GRX1033333**",
-        nroOC: "",
-        observaciones: "",
-        oc: "0.00000",
-        ocVencido: "0.00000",
-        ocVigente: "0.00000",
-        org: "8.00000",
-        orgNoBotica: "0.00000",
-        parcial: "0.00",
-        plazoPago: "",
-        preCompra: "1.00000",
-        promMes: "3.80000",
-        relacionado: "",
-        secRelacion: "0",
-        total: "8.00000",
-        totalNoBotica: "0.00000",
-        totalParcial: "0.00",
-        unidadEmpaque: "1",
-        usuarioAutoriza: "",
-        ventaSubDist: "0",
-        isNewRow:false,
-      }
-    );
 
-    this.rowsDataTotal = this.rows;
-    console.log('Entra');
-    this.createMenuListHeaderAC();
-  }
 
   ngAfterViewInit() {
     // Para poder mover las columnas de la tabla Analisis de compra
@@ -544,6 +348,9 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
         break;
       case 'O-AZ':
         this.getACOrderAZ();
+        break;
+        case'excel':
+        this.ExportExcel();
         break;
       case 'O-ZA':
         this.getACOrderZA()
@@ -1152,36 +959,22 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
   }
 
   updateFilterHeader(event: any,codigo:any) {    
-    console.log("event:",event.target.id);
-    console.log("event:",event.target.value);
-    console.log("condicion",this.idCondicion);
-    if(event.target.id.includes("cboCondicion")){
-      /*const modalInvPoli = this.modalService.open(ConfirmacionModalComponent, {
-      windowClass: "modal-inventori-policy",
-      centered: true,
-      backdrop: false,
-      scrollable: true
-    });*/
+    if(event.target.id.includes("idCondicionCbo")){
       const nuevoValor = event.target.value;
-
-      const confirmar = confirm(`¿Deseas cambiar de opción ${this.valorAnterior} a ${nuevoValor}?`);
-
+      const confirmar = confirm(`¿Deseas cambiar de opción en el campo de comisión`);
+      
       if (confirmar) {        
         this.idCondicionCbo = nuevoValor;
         this.rows = this.rows.map((p:any )=> p.codProducto == codigo ? { ...p, condicion: this.idCondicionCbo } : p);
       } else { 
         this.idCondicionCbo = "";       
-        this.idCondicionCbo = this.idCondicion;
+        this.idCondicionCbo = this.idCondicion;   
         this.rows = this.rows.map((p:any )=> p.codProducto == codigo ? { ...p, condicion: this.idCondicion } : p);
       }
     }
-
     this.createMenuListHeaderAC();
   }
 
-  onSelectFocus(id:any){
-    this.idCondicion = id;
-  }
 
   // hover tabla Analisis Compra
   onRowHover(index: number) {
@@ -1478,14 +1271,50 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
 
     let headInfo: string[] = [];
     this.headTableAnalisisCompra.forEach(dataHeader => {
-      headInfo = [];
       headInfo.push(dataHeader.description);
     });
 
     dataExcel.push(headInfo);
 
     this.rows.forEach(dataBody => {
-      dataExcel.push(dataBody);
+      dataExcel.push([dataBody.codProducto, 
+                      dataBody.nombreProducto,
+                      dataBody.nombreLaboratorio,
+                      dataBody.unidadEmpaque,
+                      this.getNameCondicion(dataBody.condicion), 
+                      dataBody.ABC, 
+                      dataBody.mesQuinto, 
+                      dataBody.mesCuarto,
+                      dataBody.mesTercero, 
+                      dataBody.mesSegundo,
+                      dataBody.mesPrimero,
+                      dataBody.mesActual,
+                      dataBody.mesActualProyeccion,
+                      dataBody.promMes, 
+                      dataBody.preCompra,
+                      dataBody.compraFinal,
+                      dataBody.bonificacion,
+                      dataBody.almacen,
+                      dataBody.org, 
+                      dataBody.canje, 
+                      dataBody.logisticaInversa, 
+                      dataBody.oc, 
+                      dataBody.cobOrgAct, 
+                      dataBody.maxInfraStock, 
+                      dataBody.VVF1, 
+                      dataBody.VVF2, 
+                      dataBody.descuento1,
+                      dataBody.descuento2,
+                      dataBody.descuento3,
+                      dataBody.descuento4, 
+                      dataBody.cosCom, 
+                      dataBody.parcial, 
+                      dataBody.igv, 
+                      dataBody.total, 
+                      dataBody.observaciones
+                    ]);
+
+
     });
 
     const ws: XLSX.WorkSheet = XLSX.utils.aoa_to_sheet(dataExcel);

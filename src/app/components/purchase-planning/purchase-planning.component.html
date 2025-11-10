@@ -1,7 +1,7 @@
 <div id="contenedor" class="col-12 m-0 pt-3" (contextmenu)="denyRightClick($event)">
   <!-- botones cabecera -->
   <div class="container-button">
-    <button class="button-header" (click)="ExportExcel()">
+    <button class="button-header" (click)="CalcularCompra()">
       <i class="fa-solid fa-calculator"></i>
       Calcular Compra
     </button>
@@ -317,14 +317,13 @@
             >
               <select
                 class="input-select-table-AC"
-                id="cboCondicion{{ data.codProducto }}"
-                [(ngModel)]="data.condicion"
-                (focus)="onSelectFocus(data.condicion)"
-                (change)="updateFilterHeader($event, data.condicion)"
+                id="idCondicionCbo"
+                [(ngModel)]="idCondicionCbo"                
+                (change)="updateFilterHeader($event, data.codProducto)"
               >
                 <option value="0" disabled>--Seleccione--</option>
-                <option *ngFor="let data of condiciones" [ngValue]="data.codigoCondicion">
-                  {{ data.descripcion }}
+                <option *ngFor="let dataOption of condiciones" [ngValue]="dataOption.codigoCondicion">
+                      {{ dataOption.descripcion }}
                 </option>
               </select>
             </td>
