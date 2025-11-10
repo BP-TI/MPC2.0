@@ -30,6 +30,7 @@ import { AlertToastComponent } from './shared/components/alertToast/alertToast.c
 import { ShowSubstitutesComponent } from './components/show-substitutes/show-substitutes.component';
 import { AddProductComponent } from './components/add-product/add-product.component';
 import { ConfirmacionModalComponent } from './modales/confirmacionModal/confirmacionModal.component';
+import { ConfirmacionClaveModalComponent } from './modales/confirmacion-clave-modal/confirmacion-clave-modal.component';
 
 @NgModule({
   declarations: [
@@ -50,6 +51,7 @@ import { ConfirmacionModalComponent } from './modales/confirmacionModal/confirma
     ShowSubstitutesComponent,
     AddProductComponent,
     ConfirmacionModalComponent,
+    ConfirmacionClaveModalComponent,
   ],
   imports: [
     NgbModalModule,

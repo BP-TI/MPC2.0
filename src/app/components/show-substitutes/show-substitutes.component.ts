@@ -8,7 +8,6 @@ import { Substitutes } from '../../models/parametros';
   standalone: false,
   templateUrl: './show-substitutes.component.html',
   styleUrl: './show-substitutes.component.css',
-  encapsulation: ViewEncapsulation.None,
 })
 export class ShowSubstitutesComponent implements OnInit {
 
@@ -18,6 +17,9 @@ export class ShowSubstitutesComponent implements OnInit {
   dataTable: any[] = [];
 
   loading: boolean = false;
+  showToast: boolean = false;
+  toastMessage = '';
+  toastType: 'success' | 'error2' | 'info' | 'warning' = 'info';
 
   private isDragging = false;
   private offsetX = 0;
@@ -79,21 +81,29 @@ export class ShowSubstitutesComponent implements OnInit {
 
     this.purchaseService.getSubstitutes(dataRequest).subscribe((response: any) => {
       if (response == null) {
-        //  this.AlertToast(`Información: No se encontraron registros.`, 'info');
+         this.AlertToast(`Información: No se encontraron registros.`, 'info');
       } else {
         if (response.codStatus == 1) {
           if (response.message === "OK") {
             this.dataTable = response.productoSustitutorios;
           } else {
-            // this.AlertToast(`Información: ${response.message}`, 'info');
+            this.AlertToast(`Información: ${response.message}`, 'info');
           }
         }
         else {
-          // this.AlertToast(response.message, 'error2');
+          this.AlertToast(response.message, 'error2');
         }
       }
 
     });
+  }
+
+  AlertToast(message: string, type: 'success' | 'error2' | 'info' | 'warning' = 'info') {
+    this.toastMessage = message;
+    this.toastType = type;
+    this.showToast = true;
+
+    setTimeout(() => this.showToast = false, 5000);
   }
 
 }
