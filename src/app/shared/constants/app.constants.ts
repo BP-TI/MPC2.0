@@ -53,7 +53,7 @@ export const AppConstants = {
     TitleModal: {
         CHANGE_PASSWORD: 'Cambiar contraseña.',
     },
-    TitleTableHeadAC:{
+    TitleTableHeadAC: {
         COD_PROD: 'cod.',
         DESCRIPCION: 'Descripción',
         LABORATORIO: 'Labora.',
@@ -83,8 +83,8 @@ export const AppConstants = {
         TOTAL: 'Total',
         OBSERVACION: 'Observación',
     },
-        TitleTableHeadACAbadi:{
-        R:'#R',
+    TitleTableHeadACAbadi: {
+        R: '#R',
         COD_PROD: 'cod.',
         DESCRIPCION: 'Descripción',
         LABORATORIO: 'Labora.',
@@ -97,10 +97,40 @@ export const AppConstants = {
         BONIFICADO: 'Boni',
         BOTICA: 'Botica',
         OCVIGENTE: 'O/C Vigente',
-        OCVENCIDA:'O/C Vencida',
-        OC:'OC',
-        BOTICAOC:'Botica + OC',
+        OCVENCIDA: 'O/C Vencida',
+        OC: 'OC',
+        BOTICAOC: 'Botica + OC',
         COBERTURA_BOTICA: 'Cobertura Botica (Dia)',
         OBSERVACION: 'Observación',
+    },
+
+    TitleTableHeadUC: {
+        PROVEEDOR: 'Proveedor',
+        S_ORDEN: 'S - Orden',
+        FECHA: 'Fecha',
+        CANT_E: 'Cant.-E',
+        CANT_F: 'Cant.- F',
+        VVF: 'V.V.F',
+        DESC1: 'Dscto1(%)',
+        DESC2: 'Dscto2(%)',
+        DESC3: 'Dscto3(%)',
+        DESC4: 'Dscto4(%)',
+        BONI: 'Boni',
+    },
+    TitleTableHeadUI:{
+      INVRUM:'Invnum',
+      PROVEEDOR:'Proveedor',
+      DOCUMENTO:'Documento',
+      FECHA_INGRESO:'Fecha de ingreso',
+      ORDEN_COMPRA:'Orden de Compra',
+      CANT_E:'Cant.-E',
+      CANT_F:'Cant.-F',
+      VVF:'V.V.F',
+      DESC1:'Dsct1(%)',
+      DESC2:'Dsct2(%)',
+      DESC3:'Dsct3(%)',
+      DESC4:'Dsct4(%)',
+      BONI:'Boni',
     }
+
 }

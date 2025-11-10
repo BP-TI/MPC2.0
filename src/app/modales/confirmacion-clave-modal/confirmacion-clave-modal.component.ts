@@ -1,27 +1,27 @@
-import { Component, ElementRef, HostListener, Input, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, ElementRef, HostListener, ViewEncapsulation } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { PurchasePlanningService } from '../../services/PurchasePlanning/purchasePlanning.service';
-import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
-  selector: 'app-confirmacionModal',
+  selector: 'app-confirmacion-clave-modal',
   standalone: false,
-  templateUrl: './confirmacionModal.component.html',
-  styleUrls: ['./confirmacionModal.component.css'],
+  templateUrl: './confirmacion-clave-modal.component.html',
+  styleUrl: './confirmacion-clave-modal.component.css',
   encapsulation: ViewEncapsulation.None,
 })
-export class ConfirmacionModalComponent implements OnInit {
-
-  @Input() message: string;
+export class ConfirmacionClaveModalComponent {
 
   loading: boolean = false;
-
   private isDragging = false;
   private offsetX = 0;
   private offsetY = 0;
 
-  constructor(private activeModal: NgbActiveModal,
-    private el: ElementRef,) { }
+  constructor(
+    private activeModal: NgbActiveModal,
+    private purchaseService: PurchasePlanningService,
+    private el: ElementRef,
+
+  ) { }
 
   startDrag(event: MouseEvent) {
     this.isDragging = true;
@@ -56,16 +56,13 @@ export class ConfirmacionModalComponent implements OnInit {
 
   // -----
 
-  ngOnInit() {
+  successModal(){
+    this.activeModal.close(true);
+
   }
 
   closeModal() {
     this.activeModal.close(false);
   }
-
-  confirmModal() {
-    this.activeModal.close(true);
-  }
-
 
 }

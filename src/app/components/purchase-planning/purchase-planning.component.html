@@ -134,7 +134,7 @@
     <!-- tabla ultimas compras -->
     <div class="col-md-6 m-0 p-0">
       <div class="subtitle mb-3">Últimas Compras</div>
-      <div class="m-0 p-0 table-scroll" (contextmenu)="openContextMenu($event, 2)">
+      <div class="m-0 p-0 table-scroll" (contextmenu)="openContextExcel($event, 2,'UC')">
         <table id="tablaUltimasCompras" class="table-style2 m-0 p-0">
           <thead>
             <tr>
@@ -166,7 +166,7 @@
     <!-- Tabla Últimos ingresos -->
     <div class="col-md-6 m-0 p-0 pr-4">
       <div class="subtitle mb-3">Últimas ingresos</div>
-      <div class="m-0 p-0 table-scroll" (contextmenu)="openContextMenu($event, 2)">
+      <div class="m-0 p-0 table-scroll" (contextmenu)="openContextExcel($event, 2,'UI')">
         <table id="tablaUltimosIngresos" class="table-style2">
           <thead>
             <tr>

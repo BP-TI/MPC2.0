@@ -10,7 +10,6 @@ import { OptionClickComponent } from '../../shared/components/option-click/optio
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { OptionsCLickHeadMenuAC, OptionsClickHeadMenuAC2 } from '../../shared/models/option-click';
 import { AppConstants } from '../../shared/constants/app.constants';
-import { AgentOutlook } from '../../shared/models/agentOutlook';
 import { AlertMail } from '../../shared/services/alert-mail';
 import { ShowSubstitutesComponent } from '../show-substitutes/show-substitutes.component';
 import { AddProductComponent } from '../add-product/add-product.component';
@@ -20,6 +19,7 @@ import { PurchaseOrderComponent } from '../purchase-order/purchase-order.compone
 import { ConfirmacionModalComponent } from '../../modales/confirmacionModal/confirmacionModal.component';
 import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
+import { ConfirmacionClaveModalComponent } from '../../modales/confirmacion-clave-modal/confirmacion-clave-modal.component';
 
 @Component({
   selector: 'app-purchase-planning',
@@ -67,13 +67,14 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
   idProductSelected: Number = 0;
   deleteColumnAC: HeadTableAC[] = [];
   showFilterTable: boolean = false;
+  tableSelectedExcel: string = '';
 
   showToast = false;
   toastMessage = '';
   idCondicion = "";
   idProducto = "";
   toastType: 'success' | 'error2' | 'info' | 'warning' = 'info';
-  idCondicionCbo = "";
+  idCondicionCbo: string = "";
   valorAnterior = "";
 
 
@@ -96,8 +97,6 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
     this.global.setGlobalVar('Módulo planificación de compra');
 
   }
-
-
 
   ngAfterViewInit() {
     // Para poder mover las columnas de la tabla Analisis de compra
@@ -293,7 +292,8 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
                   unidadEmpaque: data.unidadEmpaque,
                   usuarioAutoriza: data.usuarioAutoriza,
                   ventaSubDist: data.ventaSubDist,
-                  isNewRow: false
+                  isNewRow: false,
+
                 });
               });
               this.rows = response.detalleProductos;
@@ -349,8 +349,18 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
       case 'O-AZ':
         this.getACOrderAZ();
         break;
-        case'excel':
-        this.ExportExcel();
+      case 'excel':
+        switch (this.tableSelectedExcel) {
+          case 'UC':
+            this.ExportExcel_UC();
+            break;
+          case 'UI':
+            this.ExportExcel_UI();
+            break;
+          case 'AC':
+            this.ExportExcel();
+            break;
+        }
         break;
       case 'O-ZA':
         this.getACOrderZA()
@@ -404,33 +414,33 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
     this.deleteColumnAC = this.headTableAnalisisCompra;
 
     this.headTableUltimasCompras = [
-      'Proveedor',
-      ' S - Orden',
-      ' Fecha',
-      ' Cant.-E',
-      ' Cant.- F',
-      ' V.V.F',
-      ' Dscto1(%)',
-      ' Dscto2(%)',
-      ' Dscto3(%)',
-      ' Dscto4(%)',
-      ' Boni',
+      AppConstants.TitleTableHeadUC.PROVEEDOR,
+      AppConstants.TitleTableHeadUC.S_ORDEN,
+      AppConstants.TitleTableHeadUC.FECHA,
+      AppConstants.TitleTableHeadUC.CANT_E,
+      AppConstants.TitleTableHeadUC.CANT_F,
+      AppConstants.TitleTableHeadUC.VVF,
+      AppConstants.TitleTableHeadUC.DESC1,
+      AppConstants.TitleTableHeadUC.DESC2,
+      AppConstants.TitleTableHeadUC.DESC3,
+      AppConstants.TitleTableHeadUC.DESC4,
+      AppConstants.TitleTableHeadUC.BONI,
     ];
 
     this.headTableUltimosIngresos = [
-      'Invnum',
-      'Proveedor',
-      'Documento',
-      'Fecha de ingreso',
-      'Orden de Compra',
-      'Cant.-E',
-      'Cant.-F',
-      'V.V.F',
-      'Dsct1(%)',
-      'Dsct2(%)',
-      'Dsct3(%)',
-      'Dsct4(%)',
-      'Boni',
+      AppConstants.TitleTableHeadUI.INVRUM,
+      AppConstants.TitleTableHeadUI.PROVEEDOR,
+      AppConstants.TitleTableHeadUI.DOCUMENTO,
+      AppConstants.TitleTableHeadUI.FECHA_INGRESO,
+      AppConstants.TitleTableHeadUI.ORDEN_COMPRA,
+      AppConstants.TitleTableHeadUI.CANT_E,
+      AppConstants.TitleTableHeadUI.CANT_F,
+      AppConstants.TitleTableHeadUI.VVF,
+      AppConstants.TitleTableHeadUI.DESC1,
+      AppConstants.TitleTableHeadUI.DESC2,
+      AppConstants.TitleTableHeadUI.DESC3,
+      AppConstants.TitleTableHeadUI.DESC4,
+      AppConstants.TitleTableHeadUI.BONI,
     ];
   }
 
@@ -547,8 +557,15 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
 
   }
 
+  openContextExcel(event: MouseEvent, opcionMenu: number, tabla: string = '') {
+    event.preventDefault();
+    this.tableSelectedExcel = tabla;
+    this.contextMenu.open(event.pageX, event.pageY, opcionMenu);
+  }
+
   openContextMenu(event: MouseEvent, opcionMenu: number, headerColumnAC: string = '') {
     event.preventDefault();
+    this.tableSelectedExcel = 'AC';
     this.contextMenu.filterColumn = headerColumnAC;
     this.contextMenu.dataFilter = [];
     this.rows.forEach((element: any) => {
@@ -615,10 +632,14 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
 
   getCondiciones() {
     this.loading = true;
-
     this.purchaseService.getCondiciones().subscribe((response: any) => {
       if (response.length > 0) {
-        this.condiciones = response;
+        response.forEach((data: any) => {
+          this.condiciones.push({
+            codigoCondicion: data.codigoCondicion,
+            descripcion: data.descripcion
+          })
+        });
       }
     }, (error: HttpErrorResponse) => {
       this.loading = false;
@@ -626,7 +647,6 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
   }
 
   getNameCondicion(cod: string = ''): string {
-
     let filtrado = this.condiciones.find(condicion =>
       condicion.codigoCondicion.toString().trim() == cod.trim()
     );
@@ -958,19 +978,29 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
     this.calculateTotal();
   }
 
-  updateFilterHeader(event: any,codigo:any) {    
-    if(event.target.id.includes("idCondicionCbo")){
-      const nuevoValor = event.target.value;
-      const confirmar = confirm(`¿Deseas cambiar de opción en el campo de comisión`);
-      
-      if (confirmar) {        
-        this.idCondicionCbo = nuevoValor;
-        this.rows = this.rows.map((p:any )=> p.codProducto == codigo ? { ...p, condicion: this.idCondicionCbo } : p);
-      } else { 
-        this.idCondicionCbo = "";       
-        this.idCondicionCbo = this.idCondicion;   
-        this.rows = this.rows.map((p:any )=> p.codProducto == codigo ? { ...p, condicion: this.idCondicion } : p);
-      }
+  updateFilterHeader(event: any, codigo: any) {
+    if (event.target.id.includes("idCondicionCbo")) {
+      const nuevoValor = event.target.value.split(' ')[1];
+      const modalConfirmacion = this.modalService.open(ConfirmacionModalComponent, {
+        windowClass: "modal-confirmacion",
+        backdrop: true,
+        scrollable: true
+      });
+
+      modalConfirmacion.componentInstance.message = '¿Está seguro que desea actualizar la condición del producto?';
+
+      modalConfirmacion.closed.subscribe((confirm: any) => {
+        if (confirm) {
+          this.idCondicionCbo = nuevoValor;
+
+          this.rows = this.rows.map((p: any) => p.codProducto == codigo ? { ...p, condicion: this.idCondicionCbo } : p);
+        } else {
+          this.idCondicionCbo = "";
+          this.idCondicionCbo = this.idCondicion;
+          this.rows = this.rows.map((p: any) => p.codProducto == codigo ? { ...p, condicion: this.idCondicion } : p);
+        }
+      });
+
     }
     this.createMenuListHeaderAC();
   }
@@ -987,7 +1017,7 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
     if (this.isRowSelected == index) {
       rowStyle = 'background-selected-column';
       this.idProductSelected = Number(codProduct);
-      this.idCondicionCbo = this.rows.find((p:any) => p.codProducto == codProduct)?.condicion ?? '';
+      this.idCondicionCbo = this.rows.find((p: any) => p.codProducto == codProduct)?.condicion ?? '';
     }
 
     if (this.isRowHover == index) {
@@ -1029,11 +1059,25 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
   }
 
   openModalPurchaseOrder() {
-    const modalPurchaseOrder = this.modalService.open(PurchaseOrderComponent, {
-      windowClass: "modal-PurchaseOrder",
-      backdrop: true,
+
+    const modalConfirmacionClave = this.modalService.open(ConfirmacionClaveModalComponent, {
+      windowClass: "modal-confirmacion-clave",
+      backdrop: false,
       scrollable: true
     });
+
+    modalConfirmacionClave.closed.subscribe((dataconfirm: any) => {
+
+      if (dataconfirm) {
+        const modalPurchaseOrder = this.modalService.open(PurchaseOrderComponent, {
+          windowClass: "modal-PurchaseOrder",
+          backdrop: true,
+          scrollable: true
+        });
+      }
+
+    });
+
   }
 
   openModalAddProduct() {
@@ -1052,6 +1096,7 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
       backdrop: false,
       scrollable: true
     });
+
     let codLab = 'x';
     modalAddProd.componentInstance.codProv = this.proveedor;
     modalAddProd.componentInstance.codLab = codLab;
@@ -1061,6 +1106,7 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
     });
 
   }
+
 
   averageThreeMonth(): number {
     const hoy = new Date();
@@ -1095,6 +1141,7 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
       if (!confirm('La compra no puede ser mayor a 4 meses de inventario.¿Desea que de todas formas se aumente el pedido?')) {
         if (usuario = "VPAUCAR") {
           this.AlertToast("Solo puede cambiar cantidades de Productos Preferidos.", 'warning');
+
         } else {
           this.rows[indexSelected].observaciones = "";
           this.rows[indexSelected].usuarioAutoriza = usuario;
@@ -1120,23 +1167,35 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
 
   }
 
-  validateCalculateColumn() {
+  calculate_Compra_Final() {
     let ncompraFinal = 0; //ACA debo de obtener el valor de la compra final desde el SP
     let indexSelected = this.rows.findIndex(a => a.codProducto == this.idProductSelected.toString());
 
-    if (ncompraFinal > 0) {
-      if (this.rows[indexSelected].asociado.length == 5 && (this.rows[indexSelected].asociado) != this.rows[indexSelected].codProducto) {
-
-        this.rows.forEach(data => {
-          if (data.codProducto == this.rows[indexSelected].asociado) {
-            data.compraFinal = ncompraFinal.toString();
+    if (this.rows.length > 0) {
+      this.rows[indexSelected].compraFinal = ncompraFinal.toString();
+      if (this.rows[indexSelected].asociado.length == 5 && this.rows[indexSelected].asociado == this.rows[indexSelected].codProducto) {
+        this.rows.forEach(dataRow => {
+          if ((this.rows[indexSelected].asociado == dataRow.codProducto) && (dataRow.asociado == this.rows[indexSelected].codProducto)) {
+            dataRow.compraFinal = ncompraFinal.toString();
           }
-
-
-
         });
+      } else {
+        if (this.rows[indexSelected].asociado.length == 5 && this.rows[indexSelected].asociado == this.rows[indexSelected].codProducto) {
+          this.rows.forEach(datarow => {
+            if (datarow.codProducto == this.rows[indexSelected].asociado && datarow.asociado == this.rows[indexSelected].codProducto) {
+              datarow.compraFinal = ncompraFinal.toString();
+            }
 
+            if (datarow.codProducto == this.rows[indexSelected].asociado && datarow.asociado == this.rows[indexSelected].codProducto) {
+              datarow.compraFinal = ncompraFinal.toString();
+            }
+
+          });
+        }
       }
+      return true;
+    } else {
+      return false;
     }
   }
 
@@ -1264,7 +1323,7 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
     let dataExcel: any[] = [];
 
     const NombreArchivo = "TablaAnalisisCompra_" + today.getFullYear() + (today.getMonth() + 1) + today.getDate() + today.getHours() + today.getMinutes() + today.getSeconds();
-    if (this.rows.length < 0) {
+    if (this.rows.length == 0) {
       this.AlertToast("La tabla Analisis de Compra no tiene información.", 'warning');
       return;
     }
@@ -1277,44 +1336,42 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
     dataExcel.push(headInfo);
 
     this.rows.forEach(dataBody => {
-      dataExcel.push([dataBody.codProducto, 
-                      dataBody.nombreProducto,
-                      dataBody.nombreLaboratorio,
-                      dataBody.unidadEmpaque,
-                      this.getNameCondicion(dataBody.condicion), 
-                      dataBody.ABC, 
-                      dataBody.mesQuinto, 
-                      dataBody.mesCuarto,
-                      dataBody.mesTercero, 
-                      dataBody.mesSegundo,
-                      dataBody.mesPrimero,
-                      dataBody.mesActual,
-                      dataBody.mesActualProyeccion,
-                      dataBody.promMes, 
-                      dataBody.preCompra,
-                      dataBody.compraFinal,
-                      dataBody.bonificacion,
-                      dataBody.almacen,
-                      dataBody.org, 
-                      dataBody.canje, 
-                      dataBody.logisticaInversa, 
-                      dataBody.oc, 
-                      dataBody.cobOrgAct, 
-                      dataBody.maxInfraStock, 
-                      dataBody.VVF1, 
-                      dataBody.VVF2, 
-                      dataBody.descuento1,
-                      dataBody.descuento2,
-                      dataBody.descuento3,
-                      dataBody.descuento4, 
-                      dataBody.cosCom, 
-                      dataBody.parcial, 
-                      dataBody.igv, 
-                      dataBody.total, 
-                      dataBody.observaciones
-                    ]);
-
-
+      dataExcel.push([dataBody.codProducto,
+      dataBody.nombreProducto,
+      dataBody.nombreLaboratorio,
+      dataBody.unidadEmpaque,
+      this.getNameCondicion(dataBody.condicion),
+      dataBody.ABC,
+      dataBody.mesQuinto,
+      dataBody.mesCuarto,
+      dataBody.mesTercero,
+      dataBody.mesSegundo,
+      dataBody.mesPrimero,
+      dataBody.mesActual,
+      dataBody.mesActualProyeccion,
+      dataBody.promMes,
+      dataBody.preCompra,
+      dataBody.compraFinal,
+      dataBody.bonificacion,
+      dataBody.almacen,
+      dataBody.org,
+      dataBody.canje,
+      dataBody.logisticaInversa,
+      dataBody.oc,
+      dataBody.cobOrgAct,
+      dataBody.maxInfraStock,
+      dataBody.VVF1,
+      dataBody.VVF2,
+      dataBody.descuento1,
+      dataBody.descuento2,
+      dataBody.descuento3,
+      dataBody.descuento4,
+      dataBody.cosCom,
+      dataBody.parcial,
+      dataBody.igv,
+      dataBody.total,
+      dataBody.observaciones
+      ]);
     });
 
     const ws: XLSX.WorkSheet = XLSX.utils.aoa_to_sheet(dataExcel);
@@ -1324,6 +1381,98 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
     const excelBuffer: any = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
     const dataBlob: Blob = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
     saveAs(dataBlob, NombreArchivo + '.xlsx');
+  }
+
+  ExportExcel_UC() {
+    let today = new Date();
+    let dataExcel: any[] = [];
+
+    const NombreArchivo = "TablaUltimaCompra_" + today.getFullYear() + (today.getMonth() + 1) + today.getDate() + today.getHours() + today.getMinutes() + today.getSeconds();
+    if (this.rowsUCompras.length == 0) {
+      this.AlertToast("La tabla Ultimas de Compra no tiene información.", 'warning');
+      return;
+    }
+
+    let headInfo: string[] = [];
+    this.headTableUltimasCompras.forEach(dataHeader => {
+      headInfo.push(dataHeader);
+    });
+
+    dataExcel.push(headInfo);
+
+    this.rowsUCompras.forEach(data => {
+      dataExcel.push(
+        [
+          data.nombreProveedor,
+          data.orden,
+          data.fecha,
+          data.cantE,
+          data.cantF,
+          data.vvf,
+          data.dscto1,
+          data.dscto2,
+          data.dscto3,
+          data.dscto4,
+          data.bonificacion
+        ]
+      );
+    });
+
+    const ws: XLSX.WorkSheet = XLSX.utils.aoa_to_sheet(dataExcel);
+    const wb: XLSX.WorkBook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Datos');
+
+    const excelBuffer: any = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
+    const dataBlob: Blob = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+    saveAs(dataBlob, NombreArchivo + '.xlsx');
+
+  }
+
+  ExportExcel_UI() {
+    let today = new Date();
+    let dataExcel: any[] = [];
+
+    const NombreArchivo = "TablaUltimaIngresos_" + today.getFullYear() + (today.getMonth() + 1) + today.getDate() + today.getHours() + today.getMinutes() + today.getSeconds();
+    console.log(this.rowsUIngresos.length);
+    if (this.rowsUIngresos.length == 0) {
+      this.AlertToast("La tabla Ultimas de Ingreso no tiene información.", 'warning');
+      return;
+    }
+
+    let headInfo: string[] = [];
+    this.headTableUltimosIngresos.forEach(dataHeader => {
+      headInfo.push(dataHeader);
+    });
+
+    dataExcel.push(headInfo);
+
+    this.rowsUIngresos.forEach(data => {
+      dataExcel.push(
+        [
+          data.invNum,
+          data.nombreProveedor,
+          data.documento,
+          data.fechaIngreso,
+          data.ordenCompra,
+          data.cantE,
+          data.cantF,
+          data.VVF,
+          data.dscto1,
+          data.dscto2,
+          data.dscto3,
+          data.dscto4,
+          data.bonificacion,
+        ]
+      );
+    });
+    const ws: XLSX.WorkSheet = XLSX.utils.aoa_to_sheet(dataExcel);
+    const wb: XLSX.WorkBook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Datos');
+
+    const excelBuffer: any = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
+    const dataBlob: Blob = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+    saveAs(dataBlob, NombreArchivo + '.xlsx');
+
   }
 
   AlertToast(message: string, type: 'success' | 'error2' | 'info' | 'warning' = 'info') {
