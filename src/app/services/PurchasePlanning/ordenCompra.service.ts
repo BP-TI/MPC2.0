@@ -3,7 +3,7 @@ import { HelperService } from '../../shared/services/helper.service';
 import { environment } from '../../../environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { IAdicionarProductosReq, IUltimasComprasReq } from '../../models/ordenCompra';
+import { IAdicionarProductoCalculoReq, IAdicionarProductosReq, IUltimasComprasReq } from '../../models/ordenCompra';
 
 @Injectable({
   providedIn: 'root'
@@ -32,6 +32,10 @@ export class OrdenCompraService {
 
   getAdicionarProducto(request: IAdicionarProductosReq): Observable<any> {
     return this.httpClient.post<any>(`${this.REQUEST_URL}/AdicionarProductos`, request);
+  }
+
+  getAdicionarProductoCalculo(request: IAdicionarProductoCalculoReq): Observable<any> {
+    return this.httpClient.post<any>(`${this.REQUEST_URL}/AdicionarProductoCalculo`, request);
   }
 
 

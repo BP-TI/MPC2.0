@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, ElementRef, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { Laboratorios, Proveedores, Condiciones } from '../../models/parametros';
-import { IUltimasComprasReq, PurchaseOrder } from '../../models/ordenCompra';
+import { IAdicionarProductoCalculoReq, IUltimasComprasReq, PurchaseOrder } from '../../models/ordenCompra';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { PurchasePlanningService } from '../../services/PurchasePlanning/purchasePlanning.service';
 import { HttpErrorResponse } from '@angular/common/http';
@@ -18,7 +18,8 @@ import { InventoryPolicyComponent } from '../inventory-policy/inventory-policy.c
 import { HeadTableAC } from '../../models/ordenCompra';
 import { PurchaseOrderComponent } from '../purchase-order/purchase-order.component';
 import { ConfirmacionModalComponent } from '../../modales/confirmacionModal/confirmacionModal.component';
-
+import * as XLSX from 'xlsx';
+import { saveAs } from 'file-saver';
 
 @Component({
   selector: 'app-purchase-planning',
@@ -69,8 +70,8 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
 
   showToast = false;
   toastMessage = '';
-  idCondicion="";
-  idProducto="";
+  idCondicion = "";
+  idProducto = "";
   toastType: 'success' | 'error2' | 'info' | 'warning' = 'info';
   idCondicionCbo = "";
   valorAnterior = "";
@@ -95,6 +96,8 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
     this.global.setGlobalVar('Módulo planificación de compra');
 
   }
+
+
 
   ngAfterViewInit() {
     // Para poder mover las columnas de la tabla Analisis de compra
@@ -223,7 +226,7 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
 
     this.ordenCompraService.getCalularCompra(this.proveedor, cadenaLab, "").subscribe(
       (response) => {
-        
+
         this.loading = false;
         if (response == null) {
           this.AlertToast(`Información: No se encontraron registros.`, 'info');
@@ -346,6 +349,9 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
       case 'O-AZ':
         this.getACOrderAZ();
         break;
+        case'excel':
+        this.ExportExcel();
+        break;
       case 'O-ZA':
         this.getACOrderZA()
         break;
@@ -369,7 +375,7 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
       { description: this.showMonth('messegundo'), check: true },
       { description: this.showMonth('mesprimero'), check: true },
       { description: this.showMonth('mesActual'), check: true },
-      { description: this.showMonth('mesProyectado'), check: true },
+      { description: this.showMonth('mesProyectado'), check: true }, //12
       { description: AppConstants.TitleTableHeadAC.PROM_MES, check: true },
       { description: AppConstants.TitleTableHeadAC.PRE_COMPRA, check: true },
       { description: AppConstants.TitleTableHeadAC.COMPRA_FINAL, check: true },
@@ -382,7 +388,7 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
       { description: AppConstants.TitleTableHeadAC.COBERTURA_ORGANIZACIONAL, check: true },
       { description: AppConstants.TitleTableHeadAC.MAXI_INFRASTOCK, check: true },
       { description: AppConstants.TitleTableHeadAC.VVF, check: true },
-      { description: AppConstants.TitleTableHeadAC.VVFNUEVO, check: true },
+      { description: AppConstants.TitleTableHeadAC.VVFNUEVO, check: true }, //25
       { description: AppConstants.TitleTableHeadAC.DESC1, check: true },
       { description: AppConstants.TitleTableHeadAC.DESC2, check: true },
       { description: AppConstants.TitleTableHeadAC.DESC3, check: true },
@@ -391,7 +397,7 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
       { description: AppConstants.TitleTableHeadAC.PARCIAL, check: true },
       { description: AppConstants.TitleTableHeadAC.IGV, check: true },
       { description: AppConstants.TitleTableHeadAC.TOTAL, check: true },
-      { description: AppConstants.TitleTableHeadAC.OBSERVACION, check: true },
+      { description: AppConstants.TitleTableHeadAC.OBSERVACION, check: true }, //34
 
     ];
 
@@ -619,7 +625,8 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
     });
   }
 
-  getNameCondicion(cod: string): string {
+  getNameCondicion(cod: string = ''): string {
+
     let filtrado = this.condiciones.find(condicion =>
       condicion.codigoCondicion.toString().trim() == cod.trim()
     );
@@ -627,6 +634,14 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
   }
 
   addNewProductoList(dataProduct: any) {
+    let dataProductoExists = this.rows.filter(p => p.codProducto == dataProduct.codigoProducto);
+
+    if (dataProductoExists.length > 0) {
+      this.AlertToast("Warning: Este Producto ya se encuentra agregado.", 'warning');
+      return;
+    }
+
+    let dataRequest: IAdicionarProductoCalculoReq = { codProducto: dataProduct.codigoProducto }
     let newData: PurchaseOrder = {
       ABC: "",
       ObservacionAutoriza: "",
@@ -686,16 +701,82 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
       usuarioAutoriza: "",
       ventaSubDist: "0",
       isNewRow: true,
-    }
+    };
 
-    let dataProductoExists = this.rows.filter(p => p.codProducto == newData.codProducto);
+    this.ordenCompraService.getAdicionarProductoCalculo(dataRequest).subscribe(response => {
+      if (response.codStatus == 1) {
+        if (response.message != "OK") {
+          this.AlertToast(response.message, 'warning');
+        } else {
+          if (response.detalleProductos != null && response.detalleProductos.length > 0) {
+            newData.relacionado = response.detalleProductos[0].relacionado;
+            newData.incentivo = response.detalleProductos[0].incentivo;
+            newData.codProducto = response.detalleProductos[0].codProducto;
+            newData.nombreProducto = response.detalleProductos[0].nombreProducto;
+            newData.codLaboratorio = response.detalleProductos[0].codLaboratorio;
+            newData.nombreLaboratorio = response.detalleProductos[0].nombreLaboratorio;
+            newData.fracUnidad = response.detalleProductos[0].fracUnidad;
+            newData.unidadEmpaque = response.detalleProductos[0].unidadEmpaque;
+            newData.condicion = response.detalleProductos[0].condicion;
+            newData.clasificacion = response.detalleProductos[0].clasificacion;
+            newData.ABC = response.detalleProductos[0].ABC;
+            newData.plazoPago = response.detalleProductos[0].plazoPago;
+            newData.mesQuinto = response.detalleProductos[0].mesQuinto;
+            newData.mesCuarto = response.detalleProductos[0].mesCuarto;
+            newData.mesTercero = response.detalleProductos[0].mesTercero;
+            newData.mesSegundo = response.detalleProductos[0].mesSegundo;
+            newData.mesPrimero = response.detalleProductos[0].mesPrimero;
+            newData.mesActual = response.detalleProductos[0].mesActual;
+            newData.mesActualProyeccion = response.detalleProductos[0].mesActualProyeccion;
+            newData.promMes = response.detalleProductos[0].promMes;
+            newData.preCompra = response.detalleProductos[0].preCompra;
+            newData.compraFinal = response.detalleProductos[0].compraFinal;
+            newData.bonificacion = response.detalleProductos[0].bonificacion;
+            newData.botica = response.detalleProductos[0].botica;
+            newData.almacen = response.detalleProductos[0].almacen;
+            newData.org = response.detalleProductos[0].org;
+            newData.canje = response.detalleProductos[0].canje;
+            newData.logisticaInversa = response.detalleProductos[0].logisticaInversa;
+            newData.ocVigente = response.detalleProductos[0].ocVigente;
+            newData.ocVencido = response.detalleProductos[0].ocVencido;
+            newData.oc = response.detalleProductos[0].oc;
+            newData.total = response.detalleProductos[0].total;
+            newData.cobOrgAct = response.detalleProductos[0].cobOrgAct;
+            newData.maxBot = response.detalleProductos[0].maxBot;
+            newData.maxInfraStock = response.detalleProductos[0].maxInfraStock;
+            newData.asociado = response.detalleProductos[0].asociado;
+            newData.nroOC = response.detalleProductos[0].nroOC;
+            newData.secRelacion = response.detalleProductos[0].secRelacion;
+            newData.usuarioAutoriza = response.detalleProductos[0].usuarioAutoriza;
+            newData.ObservacionAutoriza = response.detalleProductos[0].ObservacionAutoriza;
+            newData.ventaSubDist = response.detalleProductos[0].ventaSubDist;
+            newData.orgNoBotica = response.detalleProductos[0].orgNoBotica;
+            newData.totalNoBotica = response.detalleProductos[0].totalNoBotica;
+            newData.cobOrgActNoBotica = response.detalleProductos[0].cobOrgActNoBotica;
+            newData.cobOrgActCalcNoBotica = response.detalleProductos[0].cobOrgActCalcNoBotica;
+            newData.VVF1 = response.detalleProductos[0].VVF1;
+            newData.VVF2 = response.detalleProductos[0].VVF2;
+            newData.descuento1 = response.detalleProductos[0].descuento1;
+            newData.descuento2 = response.detalleProductos[0].descuento2;
+            newData.descuento3 = response.detalleProductos[0].descuento3;
+            newData.descuento4 = response.detalleProductos[0].descuento4;
+            newData.cosCom = response.detalleProductos[0].cosCom;
+            newData.igvProducto = response.detalleProductos[0].igvProducto;
+            newData.parcial = response.detalleProductos[0].parcial;
+            newData.igv = response.detalleProductos[0].igv;
+            newData.totalParcial = response.detalleProductos[0].totalParcial;
+            newData.observaciones = response.detalleProductos[0].observaciones;
 
-    if(dataProductoExists.length>0){
-      this.AlertToast("Warning: Este Producto ya se encuentra agregado.", 'warning');
-    }else{
-      this.rows.push(newData);
-    }
-
+            newData.isNewRow = true;
+            this.rows.push(newData);
+            this.AlertToast("Success: Se agrego el nuevo productro.", 'success');
+          }
+        }
+      }
+      else {
+        this.AlertToast(response.message, 'error2');
+      }
+    });
   }
 
   deleteProductList() {
@@ -741,7 +822,7 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
     let listado: string[] = [];
     let menuOption: OptionsClickHeadMenuAC2[] = [];
 
-    // Produccto
+    // Producto
     menuOption = [];
     listado = [...new Set(dataMenUfilterComplete.map(u => u.description.toString()))];
     listado.forEach((element: string) => {
@@ -877,38 +958,23 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
     this.calculateTotal();
   }
 
-  updateFilterHeader(event: any,codigo:any) {  
-    console.log("valor cbo",this.idCondicionCbo);
-    console.log("event:",event.target.id);
-    console.log("event:",event.target.value);
-    console.log("condicion",this.idCondicion);
+  updateFilterHeader(event: any,codigo:any) {    
     if(event.target.id.includes("idCondicionCbo")){
-      /*const modalInvPoli = this.modalService.open(ConfirmacionModalComponent, {
-      windowClass: "modal-inventori-policy",
-      centered: true,
-      backdrop: false,
-      scrollable: true
-    });*/
       const nuevoValor = event.target.value;
-
-      const confirmar = confirm(`¿Deseas cambiar de opción ${this.valorAnterior} a ${nuevoValor}?`);
-
+      const confirmar = confirm(`¿Deseas cambiar de opción en el campo de comisión`);
+      
       if (confirmar) {        
         this.idCondicionCbo = nuevoValor;
         this.rows = this.rows.map((p:any )=> p.codProducto == codigo ? { ...p, condicion: this.idCondicionCbo } : p);
       } else { 
         this.idCondicionCbo = "";       
-        this.idCondicionCbo = this.idCondicion;
+        this.idCondicionCbo = this.idCondicion;   
         this.rows = this.rows.map((p:any )=> p.codProducto == codigo ? { ...p, condicion: this.idCondicion } : p);
       }
     }
-
     this.createMenuListHeaderAC();
   }
 
-  onSelectFocus(event: any){
-    //this.valorAnterior = this.idCondicionCbo;
-  }
 
   // hover tabla Analisis Compra
   onRowHover(index: number) {
@@ -921,7 +987,7 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
     if (this.isRowSelected == index) {
       rowStyle = 'background-selected-column';
       this.idProductSelected = Number(codProduct);
-      this.idCondicionCbo = this.rows.find((p:any) => p.codProducto == codProduct).condicion;
+      this.idCondicionCbo = this.rows.find((p:any) => p.codProducto == codProduct)?.condicion ?? '';
     }
 
     if (this.isRowHover == index) {
@@ -962,11 +1028,11 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
     }
   }
 
-  openModalPurchaseOrder(){
-    const modalPurchaseOrder = this.modalService.open( PurchaseOrderComponent,{
-       windowClass: "modal-PurchaseOrder",
-        backdrop: true,
-        scrollable: true
+  openModalPurchaseOrder() {
+    const modalPurchaseOrder = this.modalService.open(PurchaseOrderComponent, {
+      windowClass: "modal-PurchaseOrder",
+      backdrop: true,
+      scrollable: true
     });
   }
 
@@ -996,31 +1062,268 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
 
   }
 
+  averageThreeMonth(): number {
+    const hoy = new Date();
+    let totalDias = 0;
 
+    for (let i = 1; i <= 3; i++) {
+      // Restamos i meses al mes actual
+      const fecha = new Date(hoy.getFullYear(), hoy.getMonth() - i, 1);
 
-  // End Modals
-  openOutlook() {
-    let body: AgentOutlook = {
-      subject: 'Prueba',
-      body: 'Este es un mensaje de prueba \n\nsaludos \njheisson Villafuerte',
-      isBodyHtml: 'true',
-      recipients: [
-        "tu@correo.com",
-        "tu2@correo.com"
-      ],
-      attachments: [{
-        filename: "hola.zip",
-        dataBase64: ""
-      }]
+      // Calculamos cuántos días tiene ese mes
+      const diasDelMes = new Date(fecha.getFullYear(), fecha.getMonth() + 1, 0).getDate();
+      totalDias += diasDelMes;
     }
 
-    this.alertMail.openMail(body).subscribe(response => {
-      console.log('entro');
-      console.log(response);
-    }, error => {
-      console.log('error');
+    return totalDias / 3;
+  }
+
+  // calcular columnas
+  calcular_Valores_Input(nameColumn: string) {
+
+    let indexSelected = this.rows.findIndex(a => a.codProducto == this.idProductSelected.toString());
+    let averageMonth = this.averageThreeMonth();
+    let usuario = '';
+    let nCompra_Final = 0; //ACA debo de obtener el valor de la compra final desde el SP
+
+    if (
+      Number(this.rows[indexSelected].promMes) != 0 &&
+      (((Number(this.rows[indexSelected].total) + Number(this.rows[indexSelected].compraFinal)) / Number(this.rows[indexSelected].promMes) * (averageMonth / 3)) > 120) &&
+      Number(this.rows[indexSelected].compraFinal) > nCompra_Final
+    ) {
+      //--------
+      if (!confirm('La compra no puede ser mayor a 4 meses de inventario.¿Desea que de todas formas se aumente el pedido?')) {
+        if (usuario = "VPAUCAR") {
+          this.AlertToast("Solo puede cambiar cantidades de Productos Preferidos.", 'warning');
+        } else {
+          this.rows[indexSelected].observaciones = "";
+          this.rows[indexSelected].usuarioAutoriza = usuario;
+
+        }
+      }
+    }
+
+    if (nameColumn == AppConstants.TitleTableHeadAC.VVFNUEVO
+      || nameColumn == AppConstants.TitleTableHeadAC.DESC1
+      || nameColumn == AppConstants.TitleTableHeadAC.DESC2
+      || nameColumn == AppConstants.TitleTableHeadAC.DESC3
+      || nameColumn == AppConstants.TitleTableHeadAC.DESC4
+      || nameColumn == AppConstants.TitleTableHeadAC.COMPRA_FINAL
+      || nameColumn == AppConstants.TitleTableHeadAC.BONIFICADO
+    ) {
+      this.calcular_Desc();
+    }
+
+    if (nameColumn == AppConstants.TitleTableHeadAC.COSCON) {
+      this.calcular_CosCom();
+    }
+
+  }
+
+  validateCalculateColumn() {
+    let ncompraFinal = 0; //ACA debo de obtener el valor de la compra final desde el SP
+    let indexSelected = this.rows.findIndex(a => a.codProducto == this.idProductSelected.toString());
+
+    if (ncompraFinal > 0) {
+      if (this.rows[indexSelected].asociado.length == 5 && (this.rows[indexSelected].asociado) != this.rows[indexSelected].codProducto) {
+
+        this.rows.forEach(data => {
+          if (data.codProducto == this.rows[indexSelected].asociado) {
+            data.compraFinal = ncompraFinal.toString();
+          }
+
+
+
+        });
+
+      }
+    }
+  }
+
+  calcular_Desc() {
+    let rowSelectData = this.rows.filter(p => p.codProducto == this.idProductSelected.toString())[0];
+    let indexSelected = this.rows.findIndex(a => a.codProducto == this.idProductSelected.toString());
+    let vvf: number = 0;
+    let desc1: number = 0;
+    let desc2: number = 0;
+    let desc3: number = 0;
+    let desc4: number = 0;
+    let d5: number = 0;
+
+    let coscom: number = 0;
+    let igvPro: number = 0;
+    let cantidad: number = 0;
+    let parcial: number = 0;
+    let igv: number = 0;
+    let total: number = 0;
+    let bonificacion: number = 0;
+
+    if (Number(rowSelectData.VVF2) > 0) {
+      vvf = Number(rowSelectData.VVF2);
+    } else {
+      vvf = Number(rowSelectData.VVF1);
+    }
+
+    desc1 = Number(rowSelectData.descuento1);
+    desc2 = Number(rowSelectData.descuento2);
+    desc3 = Number(rowSelectData.descuento3);
+    desc4 = Number(rowSelectData.descuento4);
+    igvPro = Number(rowSelectData.igvProducto);
+    cantidad = Number(rowSelectData.compraFinal);
+    parcial = Number(rowSelectData.parcial);
+    igv = Number(rowSelectData.igv);
+    total = Number(rowSelectData.total);
+    bonificacion = Number(rowSelectData.bonificacion);
+
+    if (Number(rowSelectData.bonificacion) == 0 && Number(rowSelectData.compraFinal) == 0) {
+      d5 = 0;
+    } else {
+      d5 = (Number(rowSelectData.bonificacion) / (Number(rowSelectData.compraFinal) + Number(rowSelectData.bonificacion))) * 100
+    }
+
+    coscom = ((((vvf - (vvf * (desc1 / 100))) -
+      ((vvf - (vvf * (desc1 / 100))) * (desc2 / 100))) -
+      (((vvf - (vvf * (desc1 / 100))) - ((vvf - (vvf * (desc1 / 100))) * (desc2 / 100))) * (desc3 / 100))) -
+      ((((vvf - (vvf * (desc1 / 100))) - ((vvf - (vvf * (desc1 / 100))) * (desc2 / 100))) -
+        (((vvf - (vvf * (desc1 / 100))) - ((vvf - (vvf * (desc1 / 100))) * (desc2 / 100))) * (desc1 / 100))) * ((desc4 + d5) / 100)));
+
+    parcial = coscom * (cantidad + bonificacion);
+    igv = parcial * (igvPro / 100);
+    total = parcial + igv;
+
+    this.rows[indexSelected].total = total.toString();
+    this.rows[indexSelected].igv = igv.toString();
+    this.rows[indexSelected].parcial = parcial.toString();
+    this.calculateTotal();
+    this.AlertToast("Success: Se actualizo los montos.", 'success');
+  }
+
+  calcular_CosCom() {
+    let rowSelectData = this.rows.filter(p => p.codProducto == this.idProductSelected.toString())[0];
+    let indexSelected = this.rows.findIndex(a => a.codProducto == this.idProductSelected.toString());
+    let vvf: number = 0;
+    let vvf2: number = 0;
+    let desc1: number = 0;
+    let desc2: number = 0;
+    let desc3: number = 0;
+    let desc4: number = 0;
+
+    let coscom: number = 0;
+    let igvPro: number = 0;
+    let cantidad: number = 0;
+    let parcial: number = 0;
+    let igv: number = 0;
+    let total: number = 0;
+    let bonificacion: number = 0;
+
+    vvf = Number(rowSelectData.VVF1);
+    vvf2 = Number(rowSelectData.VVF2);
+    desc1 = Number(rowSelectData.descuento1);
+    desc2 = Number(rowSelectData.descuento2);
+    desc3 = Number(rowSelectData.descuento3);
+    desc4 = Number(rowSelectData.descuento4);
+    igvPro = Number(rowSelectData.igvProducto);
+    cantidad = Number(rowSelectData.compraFinal);
+    parcial = Number(rowSelectData.parcial);
+    igv = Number(rowSelectData.igv);
+    total = Number(rowSelectData.total);
+    bonificacion = Number(rowSelectData.bonificacion);
+    coscom = Number(rowSelectData.cosCom);
+
+
+    if (vvf2 > 0) {
+      vvf = vvf2
+    }
+
+    desc1 = 0;
+    desc2 = 0;
+    desc3 = 0;
+    desc4 = 0;
+
+    desc1 = ((vvf - coscom) / vvf) * 100
+    parcial = coscom * (cantidad + bonificacion);
+    igv = parcial * (igvPro / 100)
+    total = parcial + igv;
+
+    this.rows[indexSelected].descuento1 = desc1.toString();
+    this.rows[indexSelected].descuento2 = desc2.toString();
+    this.rows[indexSelected].descuento3 = desc3.toString();
+    this.rows[indexSelected].descuento4 = desc4.toString();
+    this.rows[indexSelected].parcial = parcial.toString();
+    this.rows[indexSelected].igv = igv.toString();
+    this.rows[indexSelected].total = total.toString();
+    this.calculateTotal();
+    this.AlertToast("Success: Se actualizo los montos.", 'success');
+  }
+
+  // End Modals
+
+  // Export Excel
+  ExportExcel() {
+    let today = new Date();
+    let dataExcel: any[] = [];
+
+    const NombreArchivo = "TablaAnalisisCompra_" + today.getFullYear() + (today.getMonth() + 1) + today.getDate() + today.getHours() + today.getMinutes() + today.getSeconds();
+    if (this.rows.length < 0) {
+      this.AlertToast("La tabla Analisis de Compra no tiene información.", 'warning');
+      return;
+    }
+
+    let headInfo: string[] = [];
+    this.headTableAnalisisCompra.forEach(dataHeader => {
+      headInfo.push(dataHeader.description);
     });
 
+    dataExcel.push(headInfo);
+
+    this.rows.forEach(dataBody => {
+      dataExcel.push([dataBody.codProducto, 
+                      dataBody.nombreProducto,
+                      dataBody.nombreLaboratorio,
+                      dataBody.unidadEmpaque,
+                      this.getNameCondicion(dataBody.condicion), 
+                      dataBody.ABC, 
+                      dataBody.mesQuinto, 
+                      dataBody.mesCuarto,
+                      dataBody.mesTercero, 
+                      dataBody.mesSegundo,
+                      dataBody.mesPrimero,
+                      dataBody.mesActual,
+                      dataBody.mesActualProyeccion,
+                      dataBody.promMes, 
+                      dataBody.preCompra,
+                      dataBody.compraFinal,
+                      dataBody.bonificacion,
+                      dataBody.almacen,
+                      dataBody.org, 
+                      dataBody.canje, 
+                      dataBody.logisticaInversa, 
+                      dataBody.oc, 
+                      dataBody.cobOrgAct, 
+                      dataBody.maxInfraStock, 
+                      dataBody.VVF1, 
+                      dataBody.VVF2, 
+                      dataBody.descuento1,
+                      dataBody.descuento2,
+                      dataBody.descuento3,
+                      dataBody.descuento4, 
+                      dataBody.cosCom, 
+                      dataBody.parcial, 
+                      dataBody.igv, 
+                      dataBody.total, 
+                      dataBody.observaciones
+                    ]);
+
+
+    });
+
+    const ws: XLSX.WorkSheet = XLSX.utils.aoa_to_sheet(dataExcel);
+    const wb: XLSX.WorkBook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Datos');
+
+    const excelBuffer: any = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
+    const dataBlob: Blob = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+    saveAs(dataBlob, NombreArchivo + '.xlsx');
   }
 
   AlertToast(message: string, type: 'success' | 'error2' | 'info' | 'warning' = 'info') {
