@@ -1,28 +1,27 @@
-import { Component, ElementRef, HostListener, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, ElementRef, HostListener, Input, OnInit, ViewEncapsulation } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { PurchasePlanningService } from '../../services/PurchasePlanning/purchasePlanning.service';
 import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
-  selector: 'app-inventory-policy',
+  selector: 'app-confirmacionModal',
   standalone: false,
-  templateUrl: './inventory-policy.component.html',
-  styleUrl: './inventory-policy.component.css',
-  encapsulation: ViewEncapsulation.None
+  templateUrl: './confirmacionModal.component.html',
+  styleUrls: ['./confirmacionModal.component.css'],
+  encapsulation: ViewEncapsulation.None,
 })
-export class InventoryPolicyComponent implements OnInit {
+export class ConfirmacionModalComponent implements OnInit {
+
+  @Input() message: string;
 
   loading: boolean = false;
-  rowsLb: any[];
+
   private isDragging = false;
   private offsetX = 0;
   private offsetY = 0;
 
-  constructor(
-    private activeModal: NgbActiveModal,
-    private purchaseService: PurchasePlanningService,
-    private el: ElementRef,
-  ) { }
+  constructor(private activeModal: NgbActiveModal,
+    private el: ElementRef,) { }
 
   startDrag(event: MouseEvent) {
     this.isDragging = true;
@@ -48,34 +47,25 @@ export class InventoryPolicyComponent implements OnInit {
 
     dialog.style.left = `${limitedLeft}px`;
     dialog.style.top = `${limitedTop}px`;
-
   }
 
   @HostListener('document:mouseup')
   onMouseUp() {
     this.isDragging = false;
   }
-  /**/
+
+  // -----
 
   ngOnInit() {
-    this.cargarPoliticas();
-  }
-
-  cargarPoliticas() {
-    this.loading = true;
-    this.purchaseService.getPoliticas().subscribe(
-      (response) => {
-        this.loading = false;
-        this.rowsLb = response;
-      },
-      (error: HttpErrorResponse) => {
-        this.loading = false;
-      }
-    );
   }
 
   closeModal() {
-    this.activeModal.dismiss();
+    this.activeModal.close(false);
   }
+
+  confirmModal() {
+    this.activeModal.close(true);
+  }
+
 
 }

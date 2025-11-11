@@ -8,7 +8,6 @@ import { Substitutes } from '../../models/parametros';
   standalone: false,
   templateUrl: './show-substitutes.component.html',
   styleUrl: './show-substitutes.component.css',
-   encapsulation: ViewEncapsulation.None,
 })
 export class ShowSubstitutesComponent implements OnInit {
 
@@ -18,6 +17,9 @@ export class ShowSubstitutesComponent implements OnInit {
   dataTable: any[] = [];
 
   loading: boolean = false;
+  showToast: boolean = false;
+  toastMessage = '';
+  toastType: 'success' | 'error2' | 'info' | 'warning' = 'info';
 
   private isDragging = false;
   private offsetX = 0;
@@ -27,7 +29,7 @@ export class ShowSubstitutesComponent implements OnInit {
     private activeModal: NgbActiveModal,
     private purchaseService: PurchasePlanningService,
     private el: ElementRef,
-    
+
   ) { }
 
   startDrag(event: MouseEvent) {
@@ -42,8 +44,18 @@ export class ShowSubstitutesComponent implements OnInit {
   onMouseMove(event: MouseEvent) {
     if (!this.isDragging) return;
     const dialog = this.el.nativeElement.closest('.modal-dialog');
-    dialog.style.left = `${event.clientX - this.offsetX}px`;
-    dialog.style.top = `${event.clientY - this.offsetY}px`;
+
+    const newLeft = event.clientX - this.offsetX;
+    const newTop = event.clientY - this.offsetY;
+
+    const maxLeft = window.innerWidth - dialog.offsetWidth;
+    const maxTop = window.innerHeight - dialog.offsetHeight;
+
+    const limitedLeft = Math.max(0, Math.min(newLeft, maxLeft));
+    const limitedTop = Math.max(0, Math.min(newTop, maxTop));
+
+    dialog.style.left = `${limitedLeft}px`;
+    dialog.style.top = `${limitedTop}px`;
   }
 
   @HostListener('document:mouseup')
@@ -69,21 +81,29 @@ export class ShowSubstitutesComponent implements OnInit {
 
     this.purchaseService.getSubstitutes(dataRequest).subscribe((response: any) => {
       if (response == null) {
-        //  this.AlertToast(`Información: No se encontraron registros.`, 'info');
+         this.AlertToast(`Información: No se encontraron registros.`, 'info');
       } else {
         if (response.codStatus == 1) {
           if (response.message === "OK") {
             this.dataTable = response.productoSustitutorios;
           } else {
-            // this.AlertToast(`Información: ${response.message}`, 'info');
+            this.AlertToast(`Información: ${response.message}`, 'info');
           }
         }
         else {
-          // this.AlertToast(response.message, 'error2');
+          this.AlertToast(response.message, 'error2');
         }
       }
 
     });
+  }
+
+  AlertToast(message: string, type: 'success' | 'error2' | 'info' | 'warning' = 'info') {
+    this.toastMessage = message;
+    this.toastType = type;
+    this.showToast = true;
+
+    setTimeout(() => this.showToast = false, 5000);
   }
 
 }

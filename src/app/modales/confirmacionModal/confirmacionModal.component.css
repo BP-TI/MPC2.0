@@ -1,17 +1,16 @@
-.modal-inventori-policy .modal-dialog {
-  margin: 0px;
-  height: 210px;
-  max-width: 100%;
-  padding: 0px;
+.modal-confirmacion .modal-dialog {
+  max-width: 1000px !important;
+  width: 600px !important;
+  height: 200px !important;
   position: absolute !important;
   z-index: 1060;
+  padding: 0px !important;
+  margin: 0px;
   top: 8%;
   left: 30%;
 }
 
 .modal {
-  margin: 0px;
-  padding: 0px;
   background: none !important;
   pointer-events: none;
 }
@@ -26,7 +25,6 @@
 .header-modal {
   background: #134B97;
   color: white;
-  cursor: move;
 }
 
 .button-cancel {
@@ -80,60 +78,46 @@
   color: #FB2C36;
 }
 
-.table-scroll {
-  overflow-x: auto;
-  height: 150px;
-  border: #DCEBFF solid;
-  scrollbar-color: #B0E0E6 white !important;
-  /* margin: 5px !important; */
-}
-
-/* Estilo de la tabla */
-.table-style-Inventory-Policy thead th {
-  position: sticky;
-  top: 0;
-  z-index: 2;
-  padding: 0px;
-  margin: 0px;
-}
-
-.table-style-Inventory-Policy {
-  width: 200%;
-  min-height: auto;
-  max-height: 300px;
-}
-
-.table-style-Inventory-Policy thead th {
+.button-success {
+  height: 35px;
+  width: 50%;
   background: #134B97;
+  border: 1px solid #134B97;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: bold;
   color: white;
 }
 
-.table-style-Inventory-Policy th,
-td {
-  width: 135px;
-  font-family: 'Montserrat' !important;
-  font-style: normal;
-  line-height: 22px;
-}
-
-.table-style-Inventory-Policy th {
+.button-success:hover {
+  height: 35px;
+  width: 50%;
+  background: white;
+  border: 1px solid #134B97;
+  border-radius: 4px;
+  font-size: 12px;
   font-weight: bold;
-  font-size: 10px;
-  color: black;
+  color: #134B97;
+}
+
+.button-close {
+  height: 35px;
+  width: 50%;
+  background: #FB2C36;
+  border: 1px solid #FB2C36;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: bold;
+  color: white;
+}
+
+.button-close:hover {
+  height: 35px;
+  width: 50%;
   background: white;
+  border: 1px solid #FB2C36;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: bold;
+  color: #FB2C36;
 }
-
-.table-style-Inventory-Policy td {
-  font-size: 10px;
-  color: #3C3C3C;
-  background: white;
-}
-
-.table-style-Inventory-Policy th,
-td {
-  white-space: nowrap;
-  padding: 0px;
-  text-align: center;
-}
-
-/* En estiñlos de la tabla */

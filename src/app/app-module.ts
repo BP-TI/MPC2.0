@@ -29,8 +29,11 @@ import { PurchaseOrderComponent } from './components/purchase-order/purchase-ord
 import { AlertToastComponent } from './shared/components/alertToast/alertToast.component';
 import { ShowSubstitutesComponent } from './components/show-substitutes/show-substitutes.component';
 import { AddProductComponent } from './components/add-product/add-product.component';
+import { ConfirmacionModalComponent } from './modales/confirmacionModal/confirmacionModal.component';
+import { ConfirmacionClaveModalComponent } from './modales/confirmacion-clave-modal/confirmacion-clave-modal.component';
 import { AddProductAbadiComponent } from './components/add-product-abadi/add-productAbadi.component';
 import { ShowSubstitutesAbadiComponent } from './components/show-substitutesAbadi/show-substitutesAbadi.component';
+
 
 @NgModule({
   declarations: [
@@ -49,8 +52,10 @@ import { ShowSubstitutesAbadiComponent } from './components/show-substitutesAbad
     PurchaseOrderComponent,
     AlertToastComponent,
     ShowSubstitutesComponent,
+       ConfirmacionModalComponent,
+    ConfirmacionClaveModalComponent,
     AddProductComponent,
-    ShowSubstitutesAbadiComponent,
+        ShowSubstitutesAbadiComponent,
     AddProductAbadiComponent,
   ],
   imports: [
@@ -79,6 +84,7 @@ import { ShowSubstitutesAbadiComponent } from './components/show-substitutesAbad
     AlertToastComponent,
     ShowSubstitutesComponent,
     AddProductComponent,
+    ConfirmacionModalComponent,
     AddProductAbadiComponent,
     ShowSubstitutesAbadiComponent,
   ],

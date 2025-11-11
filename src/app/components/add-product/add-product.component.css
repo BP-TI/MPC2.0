@@ -1,7 +1,10 @@
 .modal-product .modal-dialog {
     max-width: 1000px !important;
-    width: 600px !important;
+    width: 680px !important;
     position: absolute !important;
+    height: 490px;
+    padding: 0px;
+    margin: 0px;
     z-index: 1060;
     top: 8%;
     left: 30%;
@@ -10,6 +13,8 @@
 .modal {
     background: none !important;
     pointer-events: none;
+    margin: 0px;
+    padding: 0px;
 }
 
 .modal-body {
@@ -19,7 +24,7 @@
     width: 100%;
 }
 
-label {
+.lAdd-Product {
     font-family: 'Montserrat';
     font-style: normal;
     font-weight: 600;
@@ -120,7 +125,7 @@ label {
     padding: 0px;
 }
 
-.table-scroll {
+.table-scroll-add-product {
     width: 100%;
     height: 300px;
     padding: 0px;
@@ -132,54 +137,60 @@ label {
     scrollbar-color: #B0E0E6 white !important;
 }
 
-.table-style thead th {
+.table-style-Add-Prodct thead th {
     position: sticky;
     top: 0;
     z-index: 2;
     margin: 0px;
 }
 
-.table-style {
+.table-style-Add-Prodct {
     width: 100%;
     min-height: auto;
+    table-layout: fixed;
 }
 
-.table-style thead th {
+.table-style-Add-Prodct thead th {
     background: #134B97;
     color: white;
+    text-align: center;
 }
 
-.table-style th,
+.table-style-Add-Prodct th,
 td {
     font-family: 'Montserrat';
     font-style: normal;
-    line-height: 22px;
+    overflow: hidden;
 }
 
-.table-style th {
+.table-style-Add-Prodct th {
     font-weight: bold;
     font-size: 10px;
     color: black;
-    background: white;
 }
 
-.table-style td {
+.table-style-Add-Prodct td {
     font-size: 10px;
     color: #3C3C3C;
+     background: white;
+  vertical-align: top;
+  text-align: center;
 }
 
-.table-style th,
+.table-style-Add-Prodct th,
 td {
     text-align: center;
-    white-space: nowrap;
-    padding: 0px 8px;
-    text-align: center;
     margin: 0px;
+    padding: 0px;
 }
 
-tbody tr:hover {
+.table-style-Add-Prodct tbody tr:hover {
     cursor: pointer;
     background: #B0E0E6 !important;
+}
+
+.table-style-Add-Prodct  tr {
+    height: 5px !important;
 }
 
 .button-style {
@@ -197,9 +208,9 @@ tbody tr:hover {
     background: #134B97;
     border: 1px solid #134B97;
     border-radius: 4px;
-    font-size: 11px;
+    font-size: 8px;
 
-    font-family: 'Neo Sans Std';
+    font-family: 'Montserrat';
     font-style: normal;
 
     color: white;
