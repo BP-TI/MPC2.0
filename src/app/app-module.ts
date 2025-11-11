@@ -31,6 +31,9 @@ import { ShowSubstitutesComponent } from './components/show-substitutes/show-sub
 import { AddProductComponent } from './components/add-product/add-product.component';
 import { ConfirmacionModalComponent } from './modales/confirmacionModal/confirmacionModal.component';
 import { ConfirmacionClaveModalComponent } from './modales/confirmacion-clave-modal/confirmacion-clave-modal.component';
+import { AddProductAbadiComponent } from './components/add-product-abadi/add-productAbadi.component';
+import { ShowSubstitutesAbadiComponent } from './components/show-substitutesAbadi/show-substitutesAbadi.component';
+
 
 @NgModule({
   declarations: [
@@ -49,9 +52,11 @@ import { ConfirmacionClaveModalComponent } from './modales/confirmacion-clave-mo
     PurchaseOrderComponent,
     AlertToastComponent,
     ShowSubstitutesComponent,
-    AddProductComponent,
-    ConfirmacionModalComponent,
+       ConfirmacionModalComponent,
     ConfirmacionClaveModalComponent,
+    AddProductComponent,
+        ShowSubstitutesAbadiComponent,
+    AddProductAbadiComponent,
   ],
   imports: [
     NgbModalModule,
@@ -80,6 +85,8 @@ import { ConfirmacionClaveModalComponent } from './modales/confirmacion-clave-mo
     ShowSubstitutesComponent,
     AddProductComponent,
     ConfirmacionModalComponent,
+    AddProductAbadiComponent,
+    ShowSubstitutesAbadiComponent,
   ],
   bootstrap: [App]
 })
