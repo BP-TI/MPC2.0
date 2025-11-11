@@ -29,6 +29,8 @@ import { PurchaseOrderComponent } from './components/purchase-order/purchase-ord
 import { AlertToastComponent } from './shared/components/alertToast/alertToast.component';
 import { ShowSubstitutesComponent } from './components/show-substitutes/show-substitutes.component';
 import { AddProductComponent } from './components/add-product/add-product.component';
+import { AddProductAbadiComponent } from './components/add-product-abadi/add-productAbadi.component';
+import { ShowSubstitutesAbadiComponent } from './components/show-substitutesAbadi/show-substitutesAbadi.component';
 
 @NgModule({
   declarations: [
@@ -47,7 +49,9 @@ import { AddProductComponent } from './components/add-product/add-product.compon
     PurchaseOrderComponent,
     AlertToastComponent,
     ShowSubstitutesComponent,
-    AddProductComponent
+    AddProductComponent,
+    ShowSubstitutesAbadiComponent,
+    AddProductAbadiComponent,
   ],
   imports: [
     NgbModalModule,
@@ -75,6 +79,8 @@ import { AddProductComponent } from './components/add-product/add-product.compon
     AlertToastComponent,
     ShowSubstitutesComponent,
     AddProductComponent,
+    AddProductAbadiComponent,
+    ShowSubstitutesAbadiComponent,
   ],
   bootstrap: [App]
 })

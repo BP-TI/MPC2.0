@@ -70,8 +70,8 @@
         </div>
 
         <div ngbDropdown class="fondoSelect col-12 p-0 m-0 menu-laboratorio">
-          <div ngbDropdownMenu class="dropdown-scroll p-0 m-0">
-            <div *ngFor="let item of laboratorios" class="form-check label-check-lab m-0 p-0 pl-4">
+          <div ngbDropdownMenu class="dropdown-scroll pl-4 m-0">
+            <div *ngFor="let item of laboratorios" class="form-check label-check-lab m-0 p-0 pl-5">
               <input
                 class="form-check-input"
                 type="checkbox"
@@ -104,8 +104,8 @@
         </div>
 
         <div ngbDropdown class="fondoSelect col-12 p-0 m-0 menu-boticas">
-          <div ngbDropdownMenu class="dropdown-scroll p-0 m-0">
-            <div *ngFor="let item of boticas" class="form-check label-check-lab m-0 p-0 pl-4">
+          <div ngbDropdownMenu class="dropdown-scroll pl-4 m-0">
+            <div *ngFor="let item of boticas" class="form-check label-check-lab m-0 p-0 pl-5">
               <input
                 class="form-check-input"
                 type="checkbox"
@@ -283,9 +283,9 @@
             (click)="isRowSelected = i"
             [class.selected]="isRowSelected === i">
 
-            <td *ngIf="showColumn(headTableAnalisisCompra[0])" [ngClass]="siRowSelectedHover(i)">{{data.relacionado}}</td>
-            <td *ngIf="showColumn(headTableAnalisisCompra[1])" [ngClass]="siRowSelectedHover(i)" class="center-text">{{ data.codProducto }}</td>
-            <td *ngIf="showColumn(headTableAnalisisCompra[2])"[ngClass]="siRowSelectedHover(i)">{{ data.nombreProducto }}</td>
+            <td *ngIf="showColumn(headTableAnalisisCompra[0])" [ngClass]="siRowSelectedHover(i, data.codProducto)">{{data.relacionado}}</td>
+            <td *ngIf="showColumn(headTableAnalisisCompra[1])" [ngClass]="siRowSelectedHover(i, data.codProducto)" class="center-text">{{ data.codProducto }}</td>
+            <td *ngIf="showColumn(headTableAnalisisCompra[2])"[ngClass]="siRowSelectedHover(i, data.codProducto)">{{ data.nombreProducto }}</td>
             <td *ngIf="showColumn(headTableAnalisisCompra[3])">{{ data.nombreLaboratorio }}</td>
             <td *ngIf="showColumn(headTableAnalisisCompra[4])">{{data.establecimiento}}</td>
             <td *ngIf="showColumn(headTableAnalisisCompra[5])"class="center-text">{{ data.unidadEmpaque }}</td>
@@ -323,34 +323,6 @@
 </div>
 
 <!-- MODAL -->
-<!-- modal politicas de inventario -->
-<div
-  class="modal fade"
-  id="politicaInventario"
-  data-backdrop="static"
-  data-keyboard="false"
-  tabindex="10"
-  role="dialog"
-  aria-labelledby="staticBackdropLabel"
-  aria-hidden="true"
->
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-      <div
-        class="modal-header d-flex align-items-baseline justify-content-between style-header-popup"
-      >
-        <p class="title-modal">Política de Inventario (Día)</p>
-        <button type="button" class="button-cancel" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <app-inventory-policy></app-inventory-policy>
-      </div>
-    </div>
-  </div>
-</div>
-<!-- End modal politicas de inventario -->
 
 <!-- modal Generar Orden de compra -->
 <div
@@ -366,9 +338,9 @@
   <div class="modal-dialog modal-dialog-centered modal-xl">
     <div class="modal-content">
       <div
-        class="modal-header d-flex align-items-baseline justify-content-between style-header-popup"
+        class="modal-header p-2 m-0 d-flex align-items-baseline justify-content-between style-header-popup"
       >
-        <p class="title-modal">Nueva Orden de Compra</p>
+        <p class="title-modal p-0 m-0">Nueva Orden de Compra</p>
         <button type="button" class="button-cancel" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
