@@ -134,7 +134,7 @@
     <!-- tabla ultimas compras -->
     <div class="col-md-6 m-0 p-0">
       <div class="subtitle mb-3">Últimas Compras</div>
-      <div class="m-0 p-0 table-scroll" (contextmenu)="openContextExcel($event, 2,'UC')">
+      <div class="m-0 p-0 table-scroll" (contextmenu)="openContextExcel($event, 2, 'UC')">
         <table id="tablaUltimasCompras" class="table-style2 m-0 p-0">
           <thead>
             <tr>
@@ -166,7 +166,7 @@
     <!-- Tabla Últimos ingresos -->
     <div class="col-md-6 m-0 p-0 pr-4">
       <div class="subtitle mb-3">Últimas ingresos</div>
-      <div class="m-0 p-0 table-scroll" (contextmenu)="openContextExcel($event, 2,'UI')">
+      <div class="m-0 p-0 table-scroll" (contextmenu)="openContextExcel($event, 2, 'UI')">
         <table id="tablaUltimosIngresos" class="table-style2">
           <thead>
             <tr>
@@ -297,7 +297,9 @@
                 placeholder=""
                 class="input-table-AC"
                 [(ngModel)]="data.unidadEmpaque"
-                (keydown.enter)="updateFilterHeader($event, '')"
+                id="inputuniEmp"
+                (focus)="savePreviousValue(data)"
+                (keyup.enter)="calcular_Valores_Input(headTableAnalisisCompra[3].description)"
               />
             </td>
 
@@ -318,12 +320,15 @@
               <select
                 class="input-select-table-AC"
                 id="idCondicionCbo"
-                [(ngModel)]="idCondicionCbo"                
+                [(ngModel)]="idCondicionCbo"
                 (change)="updateFilterHeader($event, data.codProducto)"
               >
                 <option value="0" disabled>--Seleccione--</option>
-                <option *ngFor="let dataOption of condiciones" [ngValue]="dataOption.codigoCondicion">
-                      {{ dataOption.descripcion }}
+                <option
+                  *ngFor="let dataOption of condiciones"
+                  [ngValue]="dataOption.codigoCondicion"
+                >
+                  {{ dataOption.descripcion }}
                 </option>
               </select>
             </td>
@@ -413,15 +418,16 @@
             <td
               *ngIf="headTableAnalisisCompra[15].check"
               class="center-text"
+              id="input-comFinal"
               [ngClass]="siRowSelectedHover(i, data.codProducto)"
-              (keyup.enter)="calcular_Desc()"
             >
               <input
                 type="number"
                 placeholder=""
                 class="input-table-AC"
                 [(ngModel)]="data.compraFinal"
-                (keydown.enter)="updateFilterHeader($event, 0)"
+                (focus)="savePreviousValue(data)"
+                (keyup.enter)="calcular_Valores_Input(headTableAnalisisCompra[15].description)"
               />
             </td>
             } @else {
@@ -441,11 +447,12 @@
               *ngIf="headTableAnalisisCompra[16].check"
               class="center-text"
               [ngClass]="siRowSelectedHover(i, data.codProducto)"
-              (keyup.enter)="calcular_Desc()"
             >
               <input
                 type="number"
                 placeholder=""
+                (keyup.enter)="calcular_Desc()"
+                id="input-boni"
                 class="input-table-AC"
                 [(ngModel)]="data.bonificacion"
               />
@@ -523,11 +530,11 @@
               *ngIf="headTableAnalisisCompra[25].check"
               class="center-text"
               [ngClass]="siRowSelectedHover(i, data.codProducto)"
-              (keyup.enter)="calcular_Valores_Input(headTableAnalisisCompra[25].description)"
             >
               <input
                 type="number"
                 placeholder=""
+                id="input-VVF2"
                 class="input-table-AC"
                 [(ngModel)]="data.VVF2"
                 (keyup.enter)="calcular_Desc()"
@@ -550,13 +557,13 @@
               class="center-text"
               *ngIf="headTableAnalisisCompra[26].check"
               [ngClass]="siRowSelectedHover(i, data.codProducto)"
-              (keyup.enter)="calcular_Desc()"
             >
               <input
                 type="number"
                 placeholder=""
                 class="input-table-AC"
                 [(ngModel)]="data.descuento1"
+                (keyup.enter)="calcular_Desc()"
               />
             </td>
             }@else{
@@ -576,13 +583,13 @@
               *ngIf="headTableAnalisisCompra[27].check"
               class="center-text"
               [ngClass]="siRowSelectedHover(i, data.codProducto)"
-              (keyup.enter)="calcular_Desc()"
             >
               <input
                 type="number"
                 placeholder=""
                 class="input-table-AC"
                 [(ngModel)]="data.descuento2"
+                (keyup.enter)="calcular_Desc()"
               />
             </td>
             } @else{
@@ -602,13 +609,13 @@
               class="center-text"
               *ngIf="headTableAnalisisCompra[28].check"
               [ngClass]="siRowSelectedHover(i, data.codProducto)"
-              (keyup.enter)="calcular_Desc()"
             >
               <input
                 type="number"
                 placeholder=""
                 class="input-table-AC"
                 [(ngModel)]="data.descuento3"
+                (keyup.enter)="calcular_Desc()"
               />
             </td>
             }@else{
@@ -628,13 +635,13 @@
               class="center-text"
               *ngIf="headTableAnalisisCompra[29].check"
               [ngClass]="siRowSelectedHover(i, data.codProducto)"
-              (keyup.enter)="calcular_Desc()"
             >
               <input
                 type="number"
                 placeholder=""
                 class="input-table-AC"
                 [(ngModel)]="data.descuento4"
+                (keyup.enter)="calcular_Desc()"
               />
             </td>
             }@else{
@@ -654,13 +661,13 @@
               class="center-text"
               *ngIf="headTableAnalisisCompra[30].check"
               [ngClass]="siRowSelectedHover(i, data.codProducto)"
-              (keyup.enter)="calcular_CosCom()"
             >
               <input
                 type="number"
                 placeholder=""
                 class="input-table-AC"
                 [(ngModel)]="data.cosCom"
+                (keyup.enter)="calcular_CosCom()"
               />
             </td>
             }@else{

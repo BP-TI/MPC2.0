@@ -3,7 +3,7 @@ import { HelperService } from '../../shared/services/helper.service';
 import { environment } from '../../../environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { IAdicionarProductoCalculoReq, IAdicionarProductosReq, IUltimasComprasReq } from '../../models/ordenCompra';
+import { IAdicionarProductoCalculoReq, IAdicionarProductosReq, ICompraFinalReq, IDetalleStockBotica, IUltimasComprasReq, IUPdateCondicionProduct } from '../../models/ordenCompra';
 
 @Injectable({
   providedIn: 'root'
@@ -38,6 +38,23 @@ export class OrdenCompraService {
     return this.httpClient.post<any>(`${this.REQUEST_URL}/AdicionarProductoCalculo`, request);
   }
 
+  getCompraFinal(request: ICompraFinalReq) {
+    return this.httpClient.post<any>(`${this.REQUEST_URL}/GetCompraFinal`, request);
+  }
 
+  getDetalleStockBotica(request: IDetalleStockBotica) {
+    return this.httpClient.post<any>(`${this.REQUEST_URL}/GetDetalleStockBotica`, request);
+  }
+  
+  postUpdateCondicionProducto(request: IUPdateCondicionProduct){
+    return this.httpClient.post<any>(`${this.REQUEST_URL}/UpdateCondicionProducto`, request);
+  }
+
+  getDescDescagregadorItem(codProd: string) {
+    let request = {
+      "codpro": codProd,
+    }
+    return this.httpClient.post<any>(`${this.REQUEST_URL}/GetDescDesagregadosItem`, request);
+  }
 
 }

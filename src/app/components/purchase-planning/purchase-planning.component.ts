@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, ElementRef, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { Laboratorios, Proveedores, Condiciones } from '../../models/parametros';
-import { IAdicionarProductoCalculoReq, IUltimasComprasReq, PurchaseOrder } from '../../models/ordenCompra';
+import { IAdicionarProductoCalculoReq, ICompraFinalReq, IUltimasComprasReq, IUPdateCondicionProduct, PurchaseOrder } from '../../models/ordenCompra';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { PurchasePlanningService } from '../../services/PurchasePlanning/purchasePlanning.service';
 import { HttpErrorResponse } from '@angular/common/http';
@@ -20,6 +20,8 @@ import { ConfirmacionModalComponent } from '../../modales/confirmacionModal/conf
 import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
 import { ConfirmacionClaveModalComponent } from '../../modales/confirmacion-clave-modal/confirmacion-clave-modal.component';
+import { AutorizacionModalComponent } from '../../modales/autorizacion-modal/autorizacion-modal.component';
+import { DetalleStockBoticaComponent } from '../../modales/purchase-planning/detalle-stock-botica/detalle-stock-botica.component';
 
 @Component({
   selector: 'app-purchase-planning',
@@ -64,7 +66,7 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
   isHovering: boolean = false;
   isRowHover: Number = -1;
   isRowSelected: Number = -1;
-  idProductSelected: Number = 0;
+  idProductSelected: string = '';
   deleteColumnAC: HeadTableAC[] = [];
   showFilterTable: boolean = false;
   tableSelectedExcel: string = '';
@@ -76,6 +78,8 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
   toastType: 'success' | 'error2' | 'info' | 'warning' = 'info';
   idCondicionCbo: string = "";
   valorAnterior = "";
+  previousValueRow: PurchaseOrder;
+
 
 
   @ViewChild("actionTemplate") actionTemplate: TemplateRef<any>;
@@ -365,6 +369,18 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
       case 'O-ZA':
         this.getACOrderZA()
         break;
+      case 'finalZero':
+        this.compraFinalcero();
+        break
+      case 'stockDetail':
+        this.showStockBotica();
+        break;
+      case 'infraStock':
+        this.showInfraStock();
+        break;
+      case 'discounts':
+        this.getDescDisaggregated();
+        break;
 
     }
   }
@@ -556,13 +572,13 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
     });
 
   }
-
+  // Menu click derecho excel
   openContextExcel(event: MouseEvent, opcionMenu: number, tabla: string = '') {
     event.preventDefault();
     this.tableSelectedExcel = tabla;
     this.contextMenu.open(event.pageX, event.pageY, opcionMenu);
   }
-
+  // Menu click derecho Tabla AC
   openContextMenu(event: MouseEvent, opcionMenu: number, headerColumnAC: string = '') {
     event.preventDefault();
     this.tableSelectedExcel = 'AC';
@@ -600,12 +616,12 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
     this.totalParcial = 0;
     this.proveedor = "0";
     this.isRowSelected = -1;
-    this.idProductSelected = 0;
+    this.idProductSelected = '';
   }
 
   clearDataTablesSecond() {
     this.isRowSelected = -1;
-    this.idProductSelected = 0;
+    this.idProductSelected = '';
     this.rowsUCompras = [];
     this.rowsUIngresos = [];
     this.conscom = undefined;
@@ -981,6 +997,7 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
   updateFilterHeader(event: any, codigo: any) {
     if (event.target.id.includes("idCondicionCbo")) {
       const nuevoValor = event.target.value.split(' ')[1];
+      const indexSelect = this.rows.findIndex(p => p.codProducto == codigo);
       const modalConfirmacion = this.modalService.open(ConfirmacionModalComponent, {
         windowClass: "modal-confirmacion",
         backdrop: true,
@@ -992,8 +1009,22 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
       modalConfirmacion.closed.subscribe((confirm: any) => {
         if (confirm) {
           this.idCondicionCbo = nuevoValor;
-
           this.rows = this.rows.map((p: any) => p.codProducto == codigo ? { ...p, condicion: this.idCondicionCbo } : p);
+
+          this.loading = true;
+          let dataReq: IUPdateCondicionProduct = {
+            codProducto: this.rows[indexSelect].codProducto,
+            codUsuario: Number(this.global.getDataUserLogin().codigoUsuario),
+            codCondicion: this.idCondicionCbo,
+            asociado: this.rows[indexSelect].asociado,
+          }
+          this.ordenCompraService.postUpdateCondicionProducto(dataReq).subscribe( response => {
+            this.loading = false;
+            if(response.codStatus == 1){
+              this.AlertToast(response.message, 'success');
+            }
+          });
+
         } else {
           this.idCondicionCbo = "";
           this.idCondicionCbo = this.idCondicion;
@@ -1004,7 +1035,7 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
     }
     this.createMenuListHeaderAC();
   }
-
+  // End Filtro tabla Analisis de compra
 
   // hover tabla Analisis Compra
   onRowHover(index: number) {
@@ -1016,7 +1047,7 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
 
     if (this.isRowSelected == index) {
       rowStyle = 'background-selected-column';
-      this.idProductSelected = Number(codProduct);
+      this.idProductSelected = codProduct;
       this.idCondicionCbo = this.rows.find((p: any) => p.codProducto == codProduct)?.condicion ?? '';
     }
 
@@ -1107,6 +1138,108 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
 
   }
 
+  showStockBotica() {
+    if (this.idProductSelected.length == 0 || this.idProductSelected == '-1') {
+      this.AlertToast("Warning: Debe de seleccionar el producto", 'warning');
+    }
+
+    let modalDetalleStock = this.modalService.open(DetalleStockBoticaComponent, {
+      windowClass: "modal-detalleStock",
+      backdrop: false,
+      scrollable: true
+    });
+
+    modalDetalleStock.componentInstance.title = 'Detalle Stock Botica';
+    modalDetalleStock.componentInstance.option = AppConstants.DetalleStockBotica.DETALLESTOCKBOTICA;
+    modalDetalleStock.componentInstance.codPro = this.idProductSelected;
+
+  }
+
+  showInfraStock() {
+    if (this.idProductSelected.length == 0 || this.idProductSelected == '-1') {
+      this.AlertToast("Warning: Debe de seleccionar el producto", 'warning');
+    }
+
+    let modalDetalleStock = this.modalService.open(DetalleStockBoticaComponent, {
+      windowClass: "modal-detalleStock",
+      backdrop: false,
+      scrollable: true
+    });
+
+    modalDetalleStock.componentInstance.title = 'Detalle InfraStock';
+    modalDetalleStock.componentInstance.option = AppConstants.DetalleStockBotica.DETALLEINFRASTOCK;
+    modalDetalleStock.componentInstance.codPro = this.idProductSelected;
+
+  }
+
+  // End Modals
+
+  //Calcular valores sobre la tabla de AC
+  savePreviousValue(data: PurchaseOrder) {
+    this.previousValueRow = {
+      ABC: "",
+      ObservacionAutoriza: "",
+      VVF1: "",
+      VVF2: "",
+      almacen: "",
+      asociado: "",
+      bonificacion: "",
+      botica: "",
+      canje: "",
+      clasificacion: "",
+      cobOrgAct: "",
+      cobOrgActCalcNoBotica: "",
+      cobOrgActNoBotica: "",
+      codLaboratorio: "",
+      codProducto: "",
+      compraFinal: "",
+      condicion: "",
+      cosCom: "",
+      descuento1: "",
+      descuento2: "",
+      descuento3: "",
+      descuento4: "",
+      fracUnidad: "",
+      igv: "",
+      igvProducto: "",
+      incentivo: "",
+      logisticaInversa: "",
+      maxBot: "",
+      maxInfraStock: "",
+      mesActual: "",
+      mesActualProyeccion: "",
+      mesCuarto: "",
+      mesPrimero: "",
+      mesQuinto: "",
+      mesSegundo: "",
+      mesTercero: "",
+      nombreLaboratorio: "",
+      nombreProducto: "",
+      nroOC: "",
+      observaciones: "",
+      oc: "",
+      ocVencido: "",
+      ocVigente: "",
+      org: "",
+      orgNoBotica: "",
+      parcial: "",
+      plazoPago: "",
+      preCompra: "",
+      promMes: "",
+      relacionado: "",
+      secRelacion: "",
+      total: "",
+      totalNoBotica: "",
+      totalParcial: "",
+      unidadEmpaque: "",
+      usuarioAutoriza: "",
+      ventaSubDist: "",
+      isNewRow: true,
+    }
+    this.previousValueRow = { ...data };
+  }
+
+
 
   averageThreeMonth(): number {
     const hoy = new Date();
@@ -1124,63 +1257,214 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
     return totalDias / 3;
   }
 
-  // calcular columnas
   calcular_Valores_Input(nameColumn: string) {
 
     let indexSelected = this.rows.findIndex(a => a.codProducto == this.idProductSelected.toString());
     let averageMonth = this.averageThreeMonth();
     let usuario = '';
-    let nCompra_Final = 0; //ACA debo de obtener el valor de la compra final desde el SP
+    usuario = this.global.getDataUserLogin().usuario;
 
-    if (
-      Number(this.rows[indexSelected].promMes) != 0 &&
-      (((Number(this.rows[indexSelected].total) + Number(this.rows[indexSelected].compraFinal)) / Number(this.rows[indexSelected].promMes) * (averageMonth / 3)) > 120) &&
-      Number(this.rows[indexSelected].compraFinal) > nCompra_Final
-    ) {
-      //--------
-      if (!confirm('La compra no puede ser mayor a 4 meses de inventario.¿Desea que de todas formas se aumente el pedido?')) {
-        if (usuario = "VPAUCAR") {
-          this.AlertToast("Solo puede cambiar cantidades de Productos Preferidos.", 'warning');
+    let nCompra_Final = 0;
+    let dataRequest: ICompraFinalReq = {
+      codPro: this.rows[indexSelected].codProducto,
+      codLab: this.rows[indexSelected].codLaboratorio,
+      cant_Unid_Empa: Number(this.rows[indexSelected].unidadEmpaque),
+      pre_Compra: Number(this.rows[indexSelected].preCompra),
+      asociado: this.rows[indexSelected].asociado,
+    }
 
+    // validar unidad de empaque
+    if (nameColumn == AppConstants.TitleTableHeadAC.CANT_UNID_EMPAQUE && (this.rows[indexSelected].unidadEmpaque.toString().length == 0 || isNaN(Number(this.rows[indexSelected].unidadEmpaque)))) {
+      this.AlertToast("Warning: El valor de Unidad de empaque debe de tener información.", 'warning');
+      this.rows[indexSelected].unidadEmpaque = this.previousValueRow.unidadEmpaque;
+      return;
+    }
+
+    if (nameColumn == AppConstants.TitleTableHeadAC.CANT_UNID_EMPAQUE) {
+
+      const modalConfirmacionUE = this.modalService.open(ConfirmacionModalComponent, {
+        windowClass: "modal-confirmacion",
+        backdrop: true,
+        scrollable: true
+      });
+
+      modalConfirmacionUE.componentInstance.message = '¿Está seguro que desea actualizar la Unidad de Empaque del producto?';
+      modalConfirmacionUE.closed.subscribe((confirm: any) => {
+        if (!confirm) {
+          this.rows[indexSelected].unidadEmpaque = this.previousValueRow.unidadEmpaque;
         } else {
-          this.rows[indexSelected].observaciones = "";
-          this.rows[indexSelected].usuarioAutoriza = usuario;
-
+          this.calcular_Desc();
+          this.calculateTotal();
         }
+      });
+      return;
+    }
+
+    // Valida que los descuentos del 1 al 4 sean mayores de 0 y menores de 100
+    if (
+      Number(this.rows[indexSelected].compraFinal) > 0 ||
+      Number(this.rows[indexSelected].bonificacion) > 0 ||
+      Number(this.rows[indexSelected].VVF1) > 0 ||
+      Number(this.rows[indexSelected].VVF2) > 0 ||
+      Number(this.rows[indexSelected].descuento1) > 0 ||
+      Number(this.rows[indexSelected].descuento2) > 0 ||
+      Number(this.rows[indexSelected].descuento3) > 0 ||
+      Number(this.rows[indexSelected].descuento4) > 0 ||
+      Number(this.rows[indexSelected].cosCom) > 0
+    ) {
+      if (Number(this.rows[indexSelected].descuento1) < 0 || Number(this.rows[indexSelected].descuento1) > 100) {
+        this.AlertToast("Warning: El valor de descuento 1 debe de ser mayor o igual a cero y mayor e igual a 100.", 'warning');
+        this.rows[indexSelected].descuento1 = "0";
+        return;
+      }
+      if (Number(this.rows[indexSelected].descuento2) < 0 || Number(this.rows[indexSelected].descuento2) > 100) {
+        this.AlertToast("Warning: El valor de descuento 2 debe de ser mayor o igual a cero y mayor e igual a 100.", 'warning');
+        this.rows[indexSelected].descuento2 = "0";
+        return;
+      }
+      if (Number(this.rows[indexSelected].descuento3) < 0 || Number(this.rows[indexSelected].descuento3) > 100) {
+        this.AlertToast("Warning: El valor de descuento 3 debe de ser mayor o igual a cero y mayor e igual a 100.", 'warning');
+        this.rows[indexSelected].descuento3 = "0";
+        return;
+      }
+      if (Number(this.rows[indexSelected].descuento4) < 0 || Number(this.rows[indexSelected].descuento4) > 100) {
+        this.AlertToast("Warning: El valor de descuento 4 debe de ser mayor o igual a cero y mayor e igual a 100.", 'warning');
+        this.rows[indexSelected].descuento4 = "0";
+        return;
       }
     }
 
-    if (nameColumn == AppConstants.TitleTableHeadAC.VVFNUEVO
-      || nameColumn == AppConstants.TitleTableHeadAC.DESC1
-      || nameColumn == AppConstants.TitleTableHeadAC.DESC2
-      || nameColumn == AppConstants.TitleTableHeadAC.DESC3
-      || nameColumn == AppConstants.TitleTableHeadAC.DESC4
-      || nameColumn == AppConstants.TitleTableHeadAC.COMPRA_FINAL
-      || nameColumn == AppConstants.TitleTableHeadAC.BONIFICADO
-    ) {
-      this.calcular_Desc();
-    }
 
-    if (nameColumn == AppConstants.TitleTableHeadAC.COSCON) {
-      this.calcular_CosCom();
-    }
+    this.loading = true;
+    this.ordenCompraService.getCompraFinal(dataRequest).subscribe(response => {
+      this.loading = false;
+      nCompra_Final = response.Compra_Final;
+
+      // Validar que catn_unidad de empaque
+      if (nameColumn == AppConstants.TitleTableHeadAC.CANT_UNID_EMPAQUE && this.rows[indexSelected].unidadEmpaque.toString().length != 0) {
+        if (Number(this.rows[indexSelected].unidadEmpaque) == 0) {
+          this.AlertToast("Warning: El valor de Unidad de empaque no debe de tener valor de 0.", 'warning');
+
+          this.rows[indexSelected].unidadEmpaque = '1';
+          if (this.calculate_Compra_Final(nCompra_Final)) {
+            this.calcular_Desc();
+            this.calculateTotal();
+          }
+          return;
+        }
+
+        if (this.calculate_Compra_Final(nCompra_Final)) {
+          this.calcular_Desc();
+          this.calculateTotal();
+        }
+        return;
+      }
+
+      // validar Compra final
+      if (nameColumn == AppConstants.TitleTableHeadAC.COMPRA_FINAL && this.rows[indexSelected].compraFinal.toString().length != 0) {
+        let nCanMaxCompra: number;
+        nCanMaxCompra = ((Number(this.rows[indexSelected].promMes) / averageMonth) * 120) - (Number(this.rows[indexSelected].total) + Number(this.rows[indexSelected].compraFinal)) + Number(this.rows[indexSelected].compraFinal);
+
+        if (nCanMaxCompra < 0) {
+          this.AlertToast(`Warning: Cantidad maxima de compra : ${Math.round(Number(this.rows[indexSelected].preCompra))}`, 'warning');
+        } else {
+          this.AlertToast(`Warning: Cantidad maxima de compra : ${Math.round(nCanMaxCompra)}`, 'warning');
+        }
+
+        if (Number(this.rows[indexSelected].compraFinal) != 0 && Number(this.rows[indexSelected].promMes) == 0) {
+          if (usuario == 'VPAUCAR') {
+            this.AlertToast(`Warning: Solo puede cambiar cantidades de Productos Preferidos`, 'warning');
+            if (Number(this.rows[indexSelected]) != 0) {
+              if (this.calculate_Compra_Final(nCompra_Final)) {
+                this.calculateTotal();
+              }
+            }
+            this.calculateTotal();
+            return;
+          } else {
+            this.rows[indexSelected].ObservacionAutoriza = '';
+            this.rows[indexSelected].usuarioAutoriza = usuario;
+            this.calculateTotal();
+            return;
+          }
+        }
+
+        if (Number(this.rows[indexSelected].promMes) != 0 &&
+          (((Number(this.rows[indexSelected].total) + Number(this.rows[indexSelected].compraFinal)) / Number(this.rows[indexSelected].promMes) * averageMonth) > 120 &&
+            Number(this.rows[indexSelected].compraFinal) > nCompra_Final)
+        ) {
+
+          const modalConfirmacion = this.modalService.open(ConfirmacionModalComponent, {
+            windowClass: "modal-confirmacion",
+            backdrop: true,
+            scrollable: true
+          });
+
+          modalConfirmacion.componentInstance.message = 'La compra no puede ser mayor a 4 meses de inventario.';
+          modalConfirmacion.closed.subscribe((confirm: any) => {
+            if (confirm) {
+
+              let modalAutorizacion = this.modalService.open(AutorizacionModalComponent, {
+                windowClass: "modal-autorizacion",
+                backdrop: false,
+                scrollable: true
+              });
+
+            } else {
+              this.rows[indexSelected].compraFinal = this.previousValueRow.compraFinal;
+              if (this.calculate_Compra_Final(nCompra_Final) == true) {
+                this.calculateTotal();
+              }
+            }
+
+          });
+        } else {
+          if (usuario == "VPAUCAR") {
+            this.AlertToast(`Warning: Solo puede cambiar cantidades de Productos Preferidos.`, 'warning');
+            if (this.calculate_Compra_Final(nCompra_Final) == true) {
+              this.calculateTotal();
+            }
+          } else {
+            if (this.calculate_Compra_Final(nCompra_Final) == true) {
+              this.calculateTotal();
+            }
+          }
+        }
+      }
+
+    });
+
+
+    // if (nameColumn == AppConstants.TitleTableHeadAC.VVFNUEVO
+    //   || nameColumn == AppConstants.TitleTableHeadAC.DESC1
+    //   || nameColumn == AppConstants.TitleTableHeadAC.DESC2
+    //   || nameColumn == AppConstants.TitleTableHeadAC.DESC3
+    //   || nameColumn == AppConstants.TitleTableHeadAC.DESC4
+    //   || nameColumn == AppConstants.TitleTableHeadAC.COMPRA_FINAL
+    //   || nameColumn == AppConstants.TitleTableHeadAC.BONIFICADO
+    // ) {
+    //   this.calcular_Desc();
+    // }
+
+    // if (nameColumn == AppConstants.TitleTableHeadAC.COSCON) {
+    //   this.calcular_CosCom();
+    // }
 
   }
 
-  calculate_Compra_Final() {
-    let ncompraFinal = 0; //ACA debo de obtener el valor de la compra final desde el SP
-    let indexSelected = this.rows.findIndex(a => a.codProducto == this.idProductSelected.toString());
-
-    if (this.rows.length > 0) {
+  calculate_Compra_Final(ncompraFinal: any) {
+    if (this.idProductSelected.trim() != '' || this.idProductSelected.trim().length != 0) {
+      let indexSelected = this.rows.findIndex(a => a.codProducto == this.idProductSelected.toString());
       this.rows[indexSelected].compraFinal = ncompraFinal.toString();
-      if (this.rows[indexSelected].asociado.length == 5 && this.rows[indexSelected].asociado == this.rows[indexSelected].codProducto) {
+
+      if (this.rows[indexSelected].asociado.length == 5 && this.rows[indexSelected].asociado != this.rows[indexSelected].codProducto) {
         this.rows.forEach(dataRow => {
           if ((this.rows[indexSelected].asociado == dataRow.codProducto) && (dataRow.asociado == this.rows[indexSelected].codProducto)) {
             dataRow.compraFinal = ncompraFinal.toString();
           }
         });
       } else {
-        if (this.rows[indexSelected].asociado.length == 5 && this.rows[indexSelected].asociado == this.rows[indexSelected].codProducto) {
+        if (this.rows[indexSelected].asociado.length == 5 && this.rows[indexSelected].asociado != this.rows[indexSelected].codProducto) {
           this.rows.forEach(datarow => {
             if (datarow.codProducto == this.rows[indexSelected].asociado && datarow.asociado == this.rows[indexSelected].codProducto) {
               datarow.compraFinal = ncompraFinal.toString();
@@ -1194,12 +1478,12 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
         }
       }
       return true;
-    } else {
-      return false;
     }
+    return false;
   }
 
   calcular_Desc() {
+    console.log('CALCULO DESC');
     let rowSelectData = this.rows.filter(p => p.codProducto == this.idProductSelected.toString())[0];
     let indexSelected = this.rows.findIndex(a => a.codProducto == this.idProductSelected.toString());
     let vvf: number = 0;
@@ -1258,6 +1542,7 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
   }
 
   calcular_CosCom() {
+    console.log('CALCULO COSCOM');
     let rowSelectData = this.rows.filter(p => p.codProducto == this.idProductSelected.toString())[0];
     let indexSelected = this.rows.findIndex(a => a.codProducto == this.idProductSelected.toString());
     let vvf: number = 0;
@@ -1315,7 +1600,33 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
     this.AlertToast("Success: Se actualizo los montos.", 'success');
   }
 
-  // End Modals
+  //click derecho
+
+  compraFinalcero() {
+    this.rows.forEach(datarow => {
+      datarow.compraFinal = "0";
+    });
+
+    this.calcular_Desc();
+    this.calculateTotal();
+  }
+
+  getDescDisaggregated() {
+    if (this.idProductSelected.trim().length == 0 || this.idProductSelected.trim() == '') {
+      this.AlertToast("Warning: Se debe de selccionar un producto primero.", 'warning');
+      return;
+    }
+    let indexSelect = this.rows.findIndex(p => p.codProducto == this.idProductSelected);
+
+    this.ordenCompraService.getDescDescagregadorItem(this.idProductSelected).subscribe(response => {
+      this.rows[indexSelect].descuento1 = response.dscto1;
+      this.rows[indexSelect].descuento2 = response.dscto2;
+      this.rows[indexSelect].descuento3 = response.dscto3;
+      this.rows[indexSelect].descuento4 = response.dscto4;
+      this.calcular_Desc();
+      this.calculateTotal();
+    });
+  }
 
   // Export Excel
   ExportExcel() {

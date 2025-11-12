@@ -131,6 +131,10 @@ export const AppConstants = {
       DESC3:'Dsct3(%)',
       DESC4:'Dsct4(%)',
       BONI:'Boni',
+    },
+    DetalleStockBotica:{
+        DETALLESTOCKBOTICA:1,
+        DETALLEINFRASTOCK:2
     }
 
 }

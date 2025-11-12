@@ -20,6 +20,26 @@ export interface IAdicionarProductosReq {
     codLab: string;
 }
 
+export interface ICompraFinalReq {
+    codPro: string,
+    codLab: string,
+    cant_Unid_Empa: Number,
+    pre_Compra: Number,
+    asociado:string,
+}
+
+export interface IUPdateCondicionProduct{
+    codProducto: string;
+    codUsuario: number;
+    codCondicion: string;
+    asociado: string;
+}
+
+export interface IDetalleStockBotica {
+    codpro:string,
+    repo: number
+}
+
 export interface IAdicionarProductoCalculoReq{
     codProducto: string;
 }
