@@ -1,0 +1,542 @@
+
+
+.icon-filter-colunm-hidden {
+  color: #32509d;
+  font-size: 1.2rem;
+  cursor: pointer;
+}
+
+#contenedor {
+  font-family: 'Montserrat';
+}
+
+.text-total-value {
+  font-size: 10px;
+  color: black;
+  background: white;
+}
+
+.subtitle {
+  font-family: 'Montserrat';
+  font-style: normal;
+  font-weight: 700;
+  font-size: 12px;
+  line-height: 16px;
+  display: flex;
+  align-items: flex-end;
+  letter-spacing: 1.25px;
+  color: #134B97;
+}
+
+.label-text {
+
+  font-family: 'Montserrat';
+  font-style: normal;
+  font-weight: 600;
+  font-size: 12px;
+  line-height: 20px;
+  color: #3C3C3C;
+
+}
+
+.input-select {
+  box-sizing: border-box;
+  width: 300px;
+  height: 35px;
+
+  background: #FFFFFF;
+  border: 1px solid rgba(175, 167, 167, 0.7);
+  border-radius: 4px;
+
+  flex: none;
+  order: 1;
+  align-self: stretch;
+  flex-grow: 0;
+  color: #7A7A7A;
+  padding: 5px;
+  font-size: 10px;
+}
+
+.input-select-table-AC {
+  box-sizing: border-box;
+  width: auto;
+  height: 20px;
+
+  background: #FFFFFF;
+  border: 0.5px solid rgba(175, 167, 167, 0.7);
+  border-radius: 4px;
+
+  flex: none;
+  order: 1;
+  align-self: stretch;
+  flex-grow: 0;
+  color: #7A7A7A;
+  padding: 2px;
+  margin: 0px;;
+  font-size: 8px;
+}
+
+.input-table-AC {
+  box-sizing: border-box;
+  width: 50px;
+  height: 20px;
+
+  background: #FFFFFF;
+  border: 0.5px solid rgba(175, 167, 167, 0.7);
+  border-radius: 4px;
+
+  flex: none;
+  order: 1;
+  align-self: stretch;
+  flex-grow: 0;
+  color: #7A7A7A;
+  padding: 1px;
+  margin: 0px;
+  font-size: 8px;
+  text-align: center;
+}
+
+.container-button {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 0%;
+  padding: 0%;
+  align-items: center;
+  gap: 5px;
+  justify-content: flex-start;
+}
+
+.button-header {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding: 3px 7px;
+  gap: 6px;
+
+  width: 170PX;
+  height: 40px;
+
+  background: #FFFFFF;
+  border: 1px solid #D2D2D2;
+  border-radius: 4px;
+  font-size: 10px;
+
+  font-family: 'Montserrat';
+  font-style: normal;
+
+
+  display: flex;
+  align-items: center;
+  letter-spacing: 1.25px;
+
+  color: #32509d;
+}
+
+.button-header:hover {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+
+  background: #32509d;
+  border: 1px solid #32509d;
+  border-radius: 4px;
+  font-size: 10px;
+
+  font-family: 'Montserrat';
+  font-style: normal;
+
+
+  display: flex;
+  align-items: center;
+  letter-spacing: 1.25px;
+
+  color: #FFFFFF;
+}
+
+.button-header i {
+  width: 13px;
+}
+
+.button-header:hover i {
+  width: 13px;
+  color: #FFFFFF;
+}
+
+.menu-laboratorio {
+  height: 100px;
+  overflow-x: none;
+  overflow-y: none;
+  scrollbar-color: #B0E0E6 white !important;
+}
+
+.menu-boticas {
+  height: 100px;
+  overflow-x: none;
+  overflow-y: none;
+  scrollbar-color: #B0E0E6 white !important;
+}
+
+/* Estilo de la tabla */
+.table-scroll {
+  overflow-x: auto;
+  overflow-y: auto;
+  height: 145px;
+  width: 100%;
+  border: #DCEBFF solid;
+  scrollbar-color: #B0E0E6 white !important;
+}
+
+.table-scroll-AC {
+  overflow-x: auto;
+  overflow-y: auto;
+  height: 240px;
+  width: 100%;
+  border: #DCEBFF solid;
+  scrollbar-color: #B0E0E6 white !important;
+}
+
+.table-style {
+  width: 450%;
+  min-height: auto;
+  max-height: 250px;
+}
+
+.table-style2 {
+  width: 180%;
+  /* height: 100%; */
+  table-layout: fixed;
+  /* == */
+}
+
+.table-style2 tr {
+  height: 5px !important;
+  /* == */
+}
+
+.table-style2 thead th {
+  background: #134B97;
+  color: white;
+  text-align: center;
+
+}
+
+.table-style thead th {
+  background: #134B97;
+  color: white;
+  text-align: center;
+}
+
+.table-style th,
+td {
+  height: 20px;
+  font-family: 'Montserrat';
+  font-style: normal;
+}
+
+.table-style2 th,
+td {
+  overflow: hidden;
+  font-family: 'Montserrat';
+  font-style: normal;
+}
+
+.table-style th {
+  font-weight: bold;
+  font-size: 10px;
+  color: black;
+}
+
+.table-style2 th {
+  font-weight: bold;
+  font-size: 10px;
+  color: black;
+}
+
+.table-style td {
+  font-size: 10px;
+  color: #3C3C3C;
+}
+
+.table-style2 td {
+  font-size: 10px;
+  color: #3C3C3C;
+  background: white;
+  vertical-align: top;
+  text-align: center;
+}
+
+.table-style th,
+td {
+  white-space: nowrap;
+  text-align: left;
+}
+
+.table-style2 th,
+td {
+  white-space: nowrap;
+  padding: 0px;
+}
+
+
+.table-fixed {
+  width: max-content;
+  table-layout: auto;
+}
+
+
+.table-fixed th,
+.table-fixed td {
+  padding: 0px 10px;
+  margin: 0px;
+}
+
+
+.table-fixed thead th {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+}
+
+.table-fixed thead th:nth-child(1),
+th:nth-child(2),
+th:nth-child(3) {
+  z-index: 5 !important;
+}
+
+.table-fixed th:nth-child(1),
+.table-fixed td:nth-child(1) {
+  position: sticky;
+  left: 0;
+  min-width: 60px;
+  z-index: 4;
+  background: white;
+}
+
+.table-fixed th:nth-child(2),
+.table-fixed td:nth-child(2) {
+  position: sticky;
+  left: 60px;
+  min-width: 200px;
+  z-index: 4;
+  background: white;
+}
+
+.table-fixed th:nth-child(3),
+.table-fixed td:nth-child(3) {
+  position: sticky;
+  left: 250px;
+  min-width: 100px;
+  z-index: 4;
+  background-color: white;
+}
+
+
+/* === Estilos para el sombreado del hover y select de la tabla AC === */
+
+#tablaAnalisiCompra tbody tr {
+  background: white;
+}
+
+#tablaAnalisiCompra tbody tr:hover {
+  cursor: pointer;
+  background: #B0E0E6 !important;
+}
+
+.selected {
+  background: #D7E3F3 !important;
+}
+
+/* para las tres columnas fijas */
+.background-hover-fixed-column {
+  background-color: #B0E0E6 !important;
+}
+
+.background-white-fixed-column {
+  background-color: white !important;
+}
+
+.background-selected-column {
+  background-color: #D7E3F3 !important;
+}
+
+/* End estilos de la tabla */
+.title-modal {
+  font-family: 'Montserrat';
+  font-style: normal;
+  font-weight: 700;
+  font-size: 13px;
+  line-height: 20px;
+  padding: 0px;
+}
+
+.button-cancel {
+
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding: 4px 10px;
+  gap: 4px;
+
+  width: auto;
+  height: 25px;
+
+  background: #FB2C36;
+  border: 1px solid #FB2C36;
+  border-radius: 4px;
+  font-size: 12px;
+
+  font-family: 'Montserrat';
+  font-style: normal;
+
+
+  display: flex;
+  align-items: center;
+  letter-spacing: 1.25px;
+
+  color: #ffffff;
+}
+
+.button-cancel:hover {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+
+  background: white;
+  border: 1px solid #FB2C36;
+  border-radius: 4px;
+  font-size: 12px;
+
+  font-family: 'Montserrat';
+  font-style: normal;
+
+
+  display: flex;
+  align-items: center;
+  letter-spacing: 1.25px;
+
+  color: #FB2C36;
+}
+
+.laboratorio-seleccionado {
+  background: #DCEBFF;
+}
+
+.style-header-popup {
+  background: #134B97;
+  color: white;
+  padding: 10px;
+}
+
+hr {
+  margin-top: 5px;
+  margin-bottom: 10px;
+}
+
+.button-style {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding: 4px 24px;
+  gap: 4px;
+
+  width: auto;
+  height: 40px;
+
+  background: #134B97;
+  border: 1px solid #134B97;
+  border-radius: 4px;
+  font-size: 10px;
+
+  font-family: 'Neo Sans Std';
+  font-style: normal;
+
+  display: flex;
+  align-items: center;
+  letter-spacing: 1.25px;
+
+  color: white;
+
+}
+
+.fondoSelect {
+  background-color: #fff;
+  color: #6e707e;
+  background-clip: padding-box;
+  border: 1px solid #d1d3e2;
+  border-radius: 0.35rem;
+}
+
+.label-check-lab {
+  font-size: 10px;
+  height: 9px !important;
+}
+
+.dropdown-scroll {
+  max-height: 95px !important;
+  min-height: 50px !important;
+  overflow-y: auto !important;
+  overflow-x: none !important;
+  min-width: 250px;
+  width: 300px;
+  display: block !important;
+  position: static !important;
+}
+
+
+.filter-table {
+  height: 200px;
+  font-size: 10px;
+  overflow-y: auto;
+}
+
+.center-text {
+  text-align: center;
+}
+
+.options {
+  width: 100%;
+  height: 130px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.options table {
+  width: 200px;
+  border: #DCEBFF solid;
+}
+
+.options div:nth-child(2) {
+  display: flex;
+  justify-content: right;
+
+}
+
+/* para quitar el scroll para los input tipo Number */
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type=number] {
+  -moz-appearance: textfield;
+}
+
+/* Para mostrar la flecha del campo select */
+select {
+  appearance: auto !important;
+  -webkit-appearance: auto !important;
+  -moz-appearance: auto !important;
+  background-image: none !important;
+}

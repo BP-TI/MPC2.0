@@ -1,5 +1,5 @@
 export const AppConstants = {
-Session: {
+    Session: {
         ACCESS_TOKEN: 'ACCESS_TOKEN',
         USERID: 'USERID',
         USERNAME: 'USERNAME',
@@ -18,11 +18,11 @@ Session: {
         CONFIGURATION_BUS: 'CONFIGURATION_BUS',
         SELECT_TOKEN: 'SELECT_TOKEN',
         USERDOCUMENTNUMBER: 'DOCUMENTNUMBER',
-        AGENCYCODEFROMT24:'AGENCYCODEFROMT24',
+        AGENCYCODEFROMT24: 'AGENCYCODEFROMT24',
         TWOFACTOR_REQUIRED: 'TWOFACTOR_REQUIRED',
         TWOFACTOR_ENABLED: 'TWOFACTOR_ENABLED',
 
-        USUARIOLOGIN:"USUARIOLOGIN"
+        USUARIOLOGIN: "USUARIOLOGIN"
     },
     RolesCode: {
         ADMINISTRADOR: 'R0001',
@@ -50,10 +50,91 @@ Session: {
         SUPERVISOR_DE_COLOCACIONES: 'R0053',
         JEFE_DE_CONTROL_INTERNO_DEL_RIESGO: 'R0056',
     },
-
-    TitleModal:{
+    TitleModal: {
         CHANGE_PASSWORD: 'Cambiar contraseña.',
     },
+    TitleTableHeadAC: {
+        COD_PROD: 'cod.',
+        DESCRIPCION: 'Descripción',
+        LABORATORIO: 'Labora.',
+        CANT_UNID_EMPAQUE: 'Cant. Unid. Empaque',
+        CONDICION: 'Condición',
+        TIPO: 'Tipo',
+        PROM_MES: 'Prom. Mes',
+        PRE_COMPRA: 'Pre compra',
+        COMPRA_FINAL: 'Compra final',
+        BONIFICADO: 'Boni',
+        ALMACEN: 'Almacén',
+        ORGANIZACION: 'Organización',
+        CANJE: 'Canje',
+        LOGIS_INVER: 'logis_inver',
+        OC: 'O/C',
+        COBERTURA_ORGANIZACIONAL: 'Cobertura Organizacional',
+        MAXI_INFRASTOCK: 'Maximo Infrastock',
+        VVF: 'V.V.F',
+        VVFNUEVO: 'V.V.F Nuevo',
+        DESC1: 'Dsct.1',
+        DESC2: 'Dsct.2',
+        DESC3: 'Dsct.3',
+        DESC4: 'Dsct.4',
+        COSCON: 'CosCom',
+        PARCIAL: 'Parcial',
+        IGV: 'Igv',
+        TOTAL: 'Total',
+        OBSERVACION: 'Observación',
+    },
+    TitleTableHeadACAbadi: {
+        R: '#R',
+        COD_PROD: 'cod.',
+        DESCRIPCION: 'Descripción',
+        LABORATORIO: 'Labora.',
+        ESTABLECIMIENTO: 'Establecimiento',
+        CANT_UNID_EMPAQUE: 'Cant. Unid. Empaque',
+        CONDICION: 'Condición',
+        PROM_MES: 'Prom. Mes',
+        PRE_COMPRA: 'Pre compra',
+        COMPRA_FINAL: 'Compra final',
+        BONIFICADO: 'Boni',
+        BOTICA: 'Botica',
+        OCVIGENTE: 'O/C Vigente',
+        OCVENCIDA: 'O/C Vencida',
+        OC: 'OC',
+        BOTICAOC: 'Botica + OC',
+        COBERTURA_BOTICA: 'Cobertura Botica (Dia)',
+        OBSERVACION: 'Observación',
+    },
 
+    TitleTableHeadUC: {
+        PROVEEDOR: 'Proveedor',
+        S_ORDEN: 'S - Orden',
+        FECHA: 'Fecha',
+        CANT_E: 'Cant.-E',
+        CANT_F: 'Cant.- F',
+        VVF: 'V.V.F',
+        DESC1: 'Dscto1(%)',
+        DESC2: 'Dscto2(%)',
+        DESC3: 'Dscto3(%)',
+        DESC4: 'Dscto4(%)',
+        BONI: 'Boni',
+    },
+    TitleTableHeadUI:{
+      INVRUM:'Invnum',
+      PROVEEDOR:'Proveedor',
+      DOCUMENTO:'Documento',
+      FECHA_INGRESO:'Fecha de ingreso',
+      ORDEN_COMPRA:'Orden de Compra',
+      CANT_E:'Cant.-E',
+      CANT_F:'Cant.-F',
+      VVF:'V.V.F',
+      DESC1:'Dsct1(%)',
+      DESC2:'Dsct2(%)',
+      DESC3:'Dsct3(%)',
+      DESC4:'Dsct4(%)',
+      BONI:'Boni',
+    },
+    DetalleStockBotica:{
+        DETALLESTOCKBOTICA:1,
+        DETALLEINFRASTOCK:2
+    }
 
 }

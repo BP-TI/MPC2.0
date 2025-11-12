@@ -1,0 +1,139 @@
+.modal-inventori-policy .modal-dialog {
+  margin: 0px;
+  height: 210px;
+  max-width: 100%;
+  padding: 0px;
+  position: absolute !important;
+  z-index: 1060;
+  top: 8%;
+  left: 30%;
+}
+
+.modal {
+  margin: 0px;
+  padding: 0px;
+  background: none !important;
+  pointer-events: none;
+}
+
+.modal-body {
+  padding: 0px;
+  margin: 0px;
+  height: 100%;
+  width: 100%;
+
+}
+
+.header-modal {
+  background: #134B97;
+  color: white;
+  cursor: move;
+}
+
+.button-cancel {
+
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding: 4px 10px;
+  gap: 4px;
+
+  width: auto;
+  height: 25px;
+
+  background: #FB2C36;
+  border: 1px solid #FB2C36;
+  border-radius: 4px;
+  font-size: 12px;
+
+  font-family: 'Montserrat';
+  font-style: normal;
+
+
+  display: flex;
+  align-items: center;
+  letter-spacing: 1.25px;
+
+  color: #ffffff;
+}
+
+.button-cancel:hover {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+
+  background: white;
+  border: 1px solid #FB2C36;
+  border-radius: 4px;
+  font-size: 12px;
+
+  font-family: 'Montserrat';
+  font-style: normal;
+
+
+  display: flex;
+  align-items: center;
+  letter-spacing: 1.25px;
+
+  color: #FB2C36;
+}
+
+.table-scroll {
+  overflow-x: auto;
+  height: 150px;
+  border: #DCEBFF solid;
+  scrollbar-color: #B0E0E6 white !important;
+}
+
+/* Estilo de la tabla */
+.table-style-Inventory-Policy thead th {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  padding: 0px;
+  margin: 0px;
+}
+
+.table-style-Inventory-Policy {
+  width: 200%;
+  min-height: auto;
+  max-height: 300px;
+}
+
+.table-style-Inventory-Policy thead th {
+  background: #134B97;
+  color: white;
+}
+
+.table-style-Inventory-Policy th,
+td {
+  width: 135px;
+  font-family: 'Montserrat' !important;
+  font-style: normal;
+  line-height: 22px;
+}
+
+.table-style-Inventory-Policy th {
+  font-weight: bold;
+  font-size: 10px;
+  color: black;
+  background: white;
+}
+
+.table-style-Inventory-Policy td {
+  font-size: 10px;
+  color: #3C3C3C;
+  background: white;
+}
+
+.table-style-Inventory-Policy th,
+td {
+  white-space: nowrap;
+  padding: 0px;
+  text-align: center;
+}
+
+/* En estiñlos de la tabla */

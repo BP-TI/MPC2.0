@@ -1,0 +1,18 @@
+<div class="page-content m-0 pt-3">
+  <div class="form-row align-items-end">
+    <div class="col-12 m-0 pb-2 d-flex gap-5 align-items-baseline">
+      <label class="label-text" for="ordenCompra">Orden de compra</label>
+      <input type="number" placeholder="Numero de orden" />
+      <button class="button-style" type="button">Buscar OC</button>
+    </div>
+    <hr size="10px" width="100%" color="134B97" />
+    <section class="col-md-12">
+      <pdf-viewer
+        [src]="pdfFilePath"
+        [original-size]="false"
+        style="width: 80vw; height: 80vh"
+        [show-borders]="true"
+      ></pdf-viewer>
+    </section>
+  </div>
+</div>

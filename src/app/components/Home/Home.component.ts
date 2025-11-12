@@ -20,13 +20,15 @@ export class HomeComponent implements OnInit {
   usersessionId: string = sessionStorage.getItem(AppConstants.Session.USERID) ?? "";
   channelName: string = sessionStorage.getItem(AppConstants.Session.SALES_CHANNEL_DESCRIPTION) ?? "";
   loading= false;
+  showToast = false;
+  toastMessage = '';
+  toastType: 'success' | 'error2' | 'info' | 'warning' = 'info';
   constructor() { }
 
   ngOnInit() {
     this.loadScript('assets/js/demo/chart-area-demo.js');
-    
     this.loadScript('assets/js/demo/chart-pie-demo.js');
-    
+    this.AlertToast("Bienvenido!","info");
   }
 
   private loadScript(scriptUrl: string) {
@@ -43,4 +45,13 @@ export class HomeComponent implements OnInit {
   hideMessage() {
   }
 
+  
+
+  AlertToast(message: string, type: 'success' | 'error2' | 'info' | 'warning' = 'info') {
+    this.toastMessage = message;
+    this.toastType = type;
+    this.showToast = true;
+
+    setTimeout(() => this.showToast = false, 5000);
+  }
 }

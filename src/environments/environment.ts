@@ -1,4 +1,5 @@
 export const environment = {
   production: false,
-  apiUrl: 'https://localhost:44351/api'
+  apiUrl: 'http://192.168.1.243/MPC/api',
+  apiAgentOutlook: 'http://localhost:5000'
 };

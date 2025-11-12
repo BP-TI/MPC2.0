@@ -1,0 +1,397 @@
+<div id="contenedor" class="col-12 m-0 pt-3" (contextmenu)="denyRightClick($event)">
+  <!-- botones cabecera -->
+  <div class="container-button">
+    <button class="button-header" (click)="CalcularCompra()">
+      <i class="fa-solid fa-calculator"></i>
+      Calcular Compra
+    </button>
+    <button class="button-header" data-toggle="modal" data-target="#ordenCompra">
+      <i class="fa-solid fa-file-medical"></i>
+      Generar O/C
+    </button>
+    <button class="button-header">
+      <i class="fa-solid fa-file-lines"></i>
+      Ver o/c
+    </button>
+    <button class="button-header" data-toggle="modal" data-target="#generarbasadaoc">
+      <i class="fa-solid fa-file-medical"></i>
+      Generar en base O/C
+    </button>
+    <button class="button-header">
+      <i class="fa-solid fa-file-export"></i>
+      Exportar Excel
+    </button>
+        <button class="button-header" (click)="clearField()">
+      <i class="fa-solid fa-broom"></i>
+      Limpiar
+    </button>
+  </div>
+  <!-- End botones cabecera -->
+  <hr size="10px" width="100%" color="134B97"  />
+
+  <div class="col-12 m-0 p-0">
+    <div class="col-12 m-0 p-0 d-flex align-items-stretch gap-3">
+      <!-- proveedor -->
+      <div class="m-0 p-0">
+        <div>
+          <label class="label-text" for="proveedor">Proveedores</label>
+        </div>
+        <select
+          class="input-select"
+          id="proveedor"
+          [(ngModel)]="proveedor"
+          (change)="onChangeProveedor()"
+        >
+          <option value="0" disabled>--Seleccione--</option>
+          <option *ngFor="let item of proveedores"
+            [ngValue]="item.codigoProveedor"
+            [disabled]="proveedor == item.codigoProveedor">
+            {{ item.descripcion }}
+          </option>
+        </select>
+      </div>
+      <!-- end proveedor -->
+      <!-- laboratorio -->
+       <div class="m-0 p-0">
+        <div class="">
+          <form [formGroup]="opcionesForm">
+            <div class="form-check">
+              <input
+                class="form-check-input"
+                type="checkbox"
+                id="checkTodos"
+                formControlName="todos"
+                (change)="onCheckChange('todos')"
+              />
+              <label class="label-text" for="checkTodos">Todos los Laboratorios</label>
+              <br />
+            </div>
+          </form>
+        </div>
+
+        <div ngbDropdown class="fondoSelect col-12 p-0 m-0 menu-laboratorio">
+          <div ngbDropdownMenu class="dropdown-scroll pl-4 m-0">
+            <div *ngFor="let item of laboratorios" class="form-check label-check-lab m-0 p-0 pl-5">
+              <input
+                class="form-check-input"
+                type="checkbox"
+                [(ngModel)]="item.selected"
+                id="{{ item.codigoLab }}"
+                (change)="onChangeLaboratorios()"
+              />
+              {{ item.descripcion }}
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- end laboratorio -->
+      <!-- boticas -->
+       <div class="m-0 p-0">
+        <div class="">
+          <form [formGroup]="opcionesFormBot">
+            <div class="form-check">
+              <input
+                class="form-check-input"
+                type="checkbox"
+                id="checkTodosBot"
+                formControlName="todos"
+                (change)="onCheckChangeBot('todosBot')"
+              />
+              <label class="label-text" for="checkTodos">Todas las boticas</label>
+              <br />
+            </div>
+          </form>
+        </div>
+
+        <div ngbDropdown class="fondoSelect col-12 p-0 m-0 menu-boticas">
+          <div ngbDropdownMenu class="dropdown-scroll pl-4 m-0">
+            <div *ngFor="let item of boticas" class="form-check label-check-lab m-0 p-0 pl-5">
+              <input
+                class="form-check-input"
+                type="checkbox"
+                [(ngModel)]="item.selected"                
+                id="{{ item.codAlmacen }}"
+              />
+              {{ item.descripcionAlmacen }}
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- end boticas -->
+      <div class="m-0 p-0 options">
+        <div class="m-0 p-0 d-flex d-flex align-items-center gap-2"></div>
+        <!-- tabla de CosCom -->
+          <div *ngIf="conscom">
+            <table class="table-style">
+                <thead>
+                  <tr>
+                    <th>CosCom</th>
+                    <th>CosCom+Impto</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="center-text">{{ conscom }}</td>
+                    <td class="center-text">{{ conscomImpto }}</td>
+                  </tr>
+                </tbody>
+            </table>
+          </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- tablas -->
+  <div class="col-12 m-0 p-0 mt-2 d-flex align-items-baseline gap-4">
+    <!-- tabla ultimas compras -->
+    <div class="col-md-6 m-0 p-0">
+      <div class="subtitle mb-3">Últimas Compras</div>
+      <div class="m-0 p-0 table-scroll" (contextmenu)="openContextMenu($event, 2)">
+        <table id="tablaUltimasCompras" class="table-style2 m-0 p-0">
+          <thead>
+            <tr>
+              <th *ngFor="let data of headTableUltimasCompras">
+                {{ data }}
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of rowsUCompras">
+              <td>{{ item.nombreProveedor }}</td>
+              <td>{{ item.orden }}</td>
+              <td>{{ item.fecha | date : 'dd/MM/yyyy' }}</td>
+              <td>{{ item.cantE }}</td>
+              <td>{{ item.cantF }}</td>
+              <td>{{ item.VVF | number : '1.2-2' }}</td>
+              <td>{{ item.dscto1 | number : '1.2-2' }}</td>
+              <td>{{ item.dscto2 | number : '1.2-2' }}</td>
+              <td>{{ item.dscto3 | number : '1.2-2' }}</td>
+              <td>{{ item.dscto4 | number : '1.2-2' }}</td>
+              <td>{{ item.bonificacion }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <!-- End tabla -->
+
+    <!-- Tabla Últimos ingresos -->
+    <div class="col-md-6 m-0 p-0 pr-4">
+      <div class="subtitle mb-3">Últimas ingresos</div>
+      <div class="m-0 p-0 table-scroll" (contextmenu)="openContextMenu($event, 2)">
+        <table id="tablaUltimosIngresos" class="table-style2">
+          <thead>
+            <tr>
+              <th *ngFor="let data of headTableUltimosIngresos">
+                {{ data }}
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of rowsUIngresos">
+              <td>{{ item.invNum }}</td>
+              <td>{{ item.nombreProveedor }}</td>
+              <td>{{ item.documento }}</td>
+              <td>{{ item.fechaIngreso | date : 'dd/MM/yyyy' }}</td>
+              <td>{{ item.ordenCompra | date : 'dd/MM/yyyy' }}</td>
+              <td>{{ item.cantE }}</td>
+              <td>{{ item.cantF }}</td>
+              <td>{{ item.VVF | number : '1.2-2' }}</td>
+              <td>{{ item.dscto1 | number : '1.2-2' }}</td>
+              <td>{{ item.dscto2 | number : '1.2-2' }}</td>
+              <td>{{ item.dscto3 | number : '1.2-2' }}</td>
+              <td>{{ item.dscto4 | number : '1.2-2' }}</td>
+              <td>{{ item.bonificacion }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <!-- End tabla -->
+  </div>
+  <!-- end tablas -->
+  <!-- tabla Analisis compras -->
+  <div class="col-12 m-0 p-0 mt-2">
+    <!-- head y filter -->
+     <div class="d-flex align-items-baseline justify-content-between m-0 p-0">
+      <div class="subtitle mb-3">Análisis Compras</div>
+
+      <!-- Filtro de la tabla de A.Compra -->
+      <a
+        class="dropdown-toggle"
+        id="userDropdown"
+        role="button"
+        data-toggle="dropdown"
+        data-bs-auto-close="false"
+      >
+        <i class="fa-solid fa-filter"></i>
+      </a>
+      <div
+        class="dropdown-menu dropdown-menu-right shadow  filter-table"
+        aria-labelledby="userDropdown"
+      >
+        <!-- Listado de columnas filtro -->
+        @for(data of headTableAnalisisCompra; track data; let index = $index){ @if(index > 2){
+        <div class="dropdown-item form-check" data-toggle="modal">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            value=""
+            id="flexCheckDefault"
+            (change)="deleteColumn(data, $event)"
+            checked
+          />
+          <label class="form-check-label" for="{{ data }}"> {{ data }} </label>
+        </div>
+        } }
+        <!-- End Listado de columnas filtro -->
+      </div>
+      <!-- End Filtro de la tabla de A.Compra -->
+    </div>
+    <!-- tabla -->
+    <div
+      id="container-table"
+      class="m-0 p-0 table-scroll-AC col-12"
+      (contextmenu)="openContextMenu($event, 3)"
+    >
+      <table id="tablaAnalisiCompra" class="table-style table-fixed">
+        <thead>
+          <tr id="header-row">
+             @for(data of headTableAnalisisCompra; track data){ @if(showColumn(data)){
+            <th draggable="true">
+              {{ data }}
+              @if( data == 'Descripción' || data == 'Tipo' || data == 'Compra final' || data ==
+              'Labora.' || data == 'Condición' ){
+                <i
+                *ngIf="showFilterTable"
+                class="fa-solid fa-filter text-light"
+                (click)="openContextMenu($event, 4, data)"
+              ></i>
+              }
+            </th>
+            }}
+          </tr>
+        </thead>
+        <tbody id="body">
+          <tr 
+          (click)="getTableUltimasCompras(data)"
+          *ngFor="let data of rows; let i = index"
+            (mouseenter)="isHovering = true"
+            (mouseleave)="isNotRowHover()"
+            (mouseover)="onRowHover(i)"
+            (click)="isRowSelected = i"
+            [class.selected]="isRowSelected === i">
+
+            <td *ngIf="showColumn(headTableAnalisisCompra[0])" [ngClass]="siRowSelectedHover(i, data.codProducto)">{{data.relacionado}}</td>
+            <td *ngIf="showColumn(headTableAnalisisCompra[1])" [ngClass]="siRowSelectedHover(i, data.codProducto)" class="center-text">{{ data.codProducto }}</td>
+            <td *ngIf="showColumn(headTableAnalisisCompra[2])"[ngClass]="siRowSelectedHover(i, data.codProducto)">{{ data.nombreProducto }}</td>
+            <td *ngIf="showColumn(headTableAnalisisCompra[3])">{{ data.nombreLaboratorio }}</td>
+            <td *ngIf="showColumn(headTableAnalisisCompra[4])">{{data.establecimiento}}</td>
+            <td *ngIf="showColumn(headTableAnalisisCompra[5])"class="center-text">{{ data.unidadEmpaque }}</td>
+            <td *ngIf="showColumn(headTableAnalisisCompra[6])">{{ data.condicion }}</td>
+            <td *ngIf="showColumn(headTableAnalisisCompra[7])"class="center-text">{{ data.mesQuinto | number : '1.2-2' }}</td>
+            <td *ngIf="showColumn(headTableAnalisisCompra[8])"class="center-text">{{ data.mesCuarto | number : '1.2-2' }}</td>
+            <td *ngIf="showColumn(headTableAnalisisCompra[9])"class="center-text">{{ data.mesTercero | number : '1.2-2' }}</td>
+            <td *ngIf="showColumn(headTableAnalisisCompra[10])"class="center-text">{{ data.mesSegundo | number : '1.2-2' }}</td>
+            <td *ngIf="showColumn(headTableAnalisisCompra[11])"class="center-text">{{ data.mesPrimero | number : '1.2-2' }}</td>
+            <td *ngIf="showColumn(headTableAnalisisCompra[12])"class="center-text">{{ data.mesActual | number : '1.2-2' }}</td>
+            <td *ngIf="showColumn(headTableAnalisisCompra[13])"class="center-text">{{ data.mesActualProyeccion | number : '1.2-2' }}</td>
+            <td *ngIf="showColumn(headTableAnalisisCompra[14])"class="center-text">{{ data.promMes | number : '1.2-2' }}</td>
+            <td *ngIf="showColumn(headTableAnalisisCompra[15])"class="center-text">{{ data.preCompra | number : '1.2-2' }}</td>
+            <td *ngIf="showColumn(headTableAnalisisCompra[16])"class="center-text">{{ data.compraFinal | number : '1.2-2' }}</td>
+            <td *ngIf="showColumn(headTableAnalisisCompra[17])"class="center-text">{{ data.bonificacion | number : '1.2-2' }}</td>
+            <td *ngIf="showColumn(headTableAnalisisCompra[18])"class="center-text">{{ data.botica | number : '1.2-2' }}</td>
+            <td *ngIf="showColumn(headTableAnalisisCompra[19])"class="center-text">{{ data.ocVigente | number : '1.2-2' }}</td>
+            <td *ngIf="showColumn(headTableAnalisisCompra[20])"class="center-text">{{ data.ocVencido | number : '1.2-2' }}</td>
+            <td *ngIf="showColumn(headTableAnalisisCompra[21])"class="center-text">{{ data.oc | number : '1.2-2' }}</td>
+            <td *ngIf="showColumn(headTableAnalisisCompra[22])"class="center-text">{{ data.total | number : '1.2-2' }}</td>
+            <td *ngIf="showColumn(headTableAnalisisCompra[23])"class="center-text">{{ data.cobOrgAct | number : '1.2-2' }}</td>
+            <td *ngIf="showColumn(headTableAnalisisCompra[24])">{{ data.observacionesAbadi }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+      <!-- end tabla Analisis compras -->
+
+  <div class="col-12 d-flex align-items-baseline justify-content-end gap-3 mt-3 mb-3">
+    <p class="text-total-value">Total Parcial: {{ totalParcial | number : '1.2-2' }}</p>
+    <p class="text-total-value">Total IGV (18%): {{ totalIGV | number : '1.2-2' }}</p>
+    <p class="text-total-value">Total Pagar: {{ totalPagar | number : '1.2-2' }}</p>
+  </div>
+</div>
+
+<!-- MODAL -->
+
+<!-- modal Generar Orden de compra -->
+<div
+  class="modal fade"
+  id="ordenCompra"
+  data-backdrop="static"
+  data-keyboard="false"
+  tabindex="10"
+  role="dialog"
+  aria-labelledby="staticBackdropLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered modal-xl">
+    <div class="modal-content">
+      <div
+        class="modal-header p-2 m-0 d-flex align-items-baseline justify-content-between style-header-popup"
+      >
+        <p class="title-modal p-0 m-0">Nueva Orden de Compra</p>
+        <button type="button" class="button-cancel" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <app-purchase-order></app-purchase-order>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- End modal Generar Orden de compra -->
+
+<div
+  class="modal fade"
+  id="generarbasadaoc"
+  data-backdrop="static"
+  data-keyboard="false"
+  tabindex="10"
+  role="dialog"
+  aria-labelledby="staticBackdropLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div
+        class="modal-header d-flex align-items-baseline justify-content-between style-header-popup"
+      >
+        <p class="title-modal">Generar en base a una O/C</p>
+        <button type="button" class="button-cancel" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="d-flex align-items-baseline gap-2">
+          <label for="fechacreacion">Número de O/C</label>
+          <input type="number" placeholder="Orden de compra"/>
+          <button class="button-style">Guardar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- end modal -->
+<app-option-click (action)="handleMenuAction($event)" 
+(filter)="filterData($event)"
+ ></app-option-click>
+<app-alertToast
+  *ngIf="showToast"
+  [message]="toastMessage"
+  [type]="toastType"
+  [duration]="5000"
+></app-alertToast>
+<loading *ngIf="loading"></loading>

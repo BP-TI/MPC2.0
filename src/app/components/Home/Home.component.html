@@ -1,5 +1,5 @@
 
-<div class="container-fluid">
+<div *ngIf="false" class="container-fluid">
 
                     <!-- Content Row -->
                     <div class="row">
@@ -320,4 +320,5 @@
                     </div>
 
                 </div>
+                <app-alertToast *ngIf="showToast" [message]="toastMessage" [type]="toastType" [duration]="5000"></app-alertToast>
                 <loading *ngIf="loading"></loading>

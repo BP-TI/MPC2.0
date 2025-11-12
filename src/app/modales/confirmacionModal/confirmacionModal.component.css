@@ -1,0 +1,123 @@
+.modal-confirmacion .modal-dialog {
+  max-width: 1000px !important;
+  width: 600px !important;
+  height: 200px !important;
+  position: absolute !important;
+  z-index: 1060;
+  padding: 0px !important;
+  margin: 0px;
+  top: 8%;
+  left: 30%;
+}
+
+.modal {
+  background: none !important;
+  pointer-events: none;
+}
+
+.modal-body {
+  padding: 0px;
+  margin: 0px;
+  height: 100%;
+  width: 100%;
+}
+
+.header-modal {
+  background: #134B97;
+  color: white;
+}
+
+.button-cancel {
+
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding: 4px 10px;
+  gap: 4px;
+
+  width: auto;
+  height: 25px;
+
+  background: #FB2C36;
+  border: 1px solid #FB2C36;
+  border-radius: 4px;
+  font-size: 12px;
+
+  font-family: 'Montserrat';
+  font-style: normal;
+
+
+  display: flex;
+  align-items: center;
+  letter-spacing: 1.25px;
+
+  color: #ffffff;
+}
+
+.button-cancel:hover {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+
+  background: white;
+  border: 1px solid #FB2C36;
+  border-radius: 4px;
+  font-size: 12px;
+
+  font-family: 'Montserrat';
+  font-style: normal;
+
+
+  display: flex;
+  align-items: center;
+  letter-spacing: 1.25px;
+
+  color: #FB2C36;
+}
+
+.button-success {
+  height: 35px;
+  width: 50%;
+  background: #134B97;
+  border: 1px solid #134B97;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: bold;
+  color: white;
+}
+
+.button-success:hover {
+  height: 35px;
+  width: 50%;
+  background: white;
+  border: 1px solid #134B97;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: bold;
+  color: #134B97;
+}
+
+.button-close {
+  height: 35px;
+  width: 50%;
+  background: #FB2C36;
+  border: 1px solid #FB2C36;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: bold;
+  color: white;
+}
+
+.button-close:hover {
+  height: 35px;
+  width: 50%;
+  background: white;
+  border: 1px solid #FB2C36;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: bold;
+  color: #FB2C36;
+}

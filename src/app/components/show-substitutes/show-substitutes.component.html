@@ -1,0 +1,60 @@
+<div class="modal-body">
+  <div
+    class="header-modal p-2 m-0 d-flex align-items-baseline justify-content-between"
+    (mousedown)="startDrag($event)"
+  >
+    <p class="title-modal m-0 p-0">Ver Sustitutos</p>
+    <button type="button" class="button-cancel" (click)="closeModal()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+
+  <div class="m-2">
+    <div class="table-scroll-show-Sub">
+      <table class="table-style-show-Sub">
+        <thead>
+          <tr>
+            <th>COD_PRO</th>
+            <th>DES_PRO</th>
+            <th>Prisal</th>
+            <th>stk_alm</th>
+            <th>stk_alm_m</th>
+            <th>cod_Lab</th>
+            <th>ubi_pro</th>
+            <th>cod_gen</th>
+            <th>mon_cod</th>
+            <th>stk_fra</th>
+            <th>cod_alm</th>
+            <th>dto_prox</th>
+            <th>categ_vta</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let data of dataTable">
+            <td>{{ data.codigoProducto }}</td>
+            <td>{{ data.descripcionProducto }}</td>
+            <td>{{ data.prisal }}</td>
+            <td>{{ data.stkalm }}</td>
+            <td>{{ data.stkalm_m }}</td>
+            <td>{{ data.codigoLaboratorio }}</td>
+            <td>{{ data.ubicacionProducto }}</td>
+            <td>{{ data.codigoGenerico }}</td>
+            <td>{{ data.codigoMoneda }}</td>
+            <td>{{ data.stkfra }}</td>
+            <td>{{ data.codigoAlmacen }}</td>
+            <td>{{ data.dtoprox }}</td>
+            <td>{{ data.categvta }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+
+<app-alertToast
+  *ngIf="showToast"
+  [message]="toastMessage"
+  [type]="toastType"
+  [duration]="5000"
+></app-alertToast>

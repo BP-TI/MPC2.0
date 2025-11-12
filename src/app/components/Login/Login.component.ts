@@ -1,6 +1,6 @@
-import { Component, OnInit,EventEmitter,Output } from '@angular/core';
+import { Component, OnInit, EventEmitter, Output } from '@angular/core';
 import { Subscription } from 'rxjs';
-import {FormBuilder, FormGroup,Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { DeviceObject } from '../../models/device';
 import { Router } from '@angular/router';
 import { LoginService } from '../../services/Login/login.service';
@@ -19,11 +19,12 @@ export class LoginComponent implements OnInit {
 
   private singleExecutionSubscription: Subscription;
   public token: string;
+  public logowhite: string = 'assets/images/logo-white.svg';
 
   constructor(private fb: FormBuilder,
-              private router: Router,
-              private loginService: LoginService,
-              private alertaService: AlertService
+    private router: Router,
+    private loginService: LoginService,
+    private alertaService: AlertService
   ) { }
 
   @Output() navigateToEvent = new EventEmitter<string>();
@@ -38,7 +39,7 @@ export class LoginComponent implements OnInit {
   contrasena: string = '';
   isCordova: boolean = false;
   deviceSession: DeviceObject | null = null;
-  //appVersion: string = AppConstants.APP_VERSION;
+
   appVersion: string = "123";
   appCurrentVersion: string = "";
   appCurrentVersionMessage: string = "";
@@ -48,23 +49,20 @@ export class LoginComponent implements OnInit {
   }
 
   createForm() {
-        this.loginForm = this.fb.group({
-            usuario: '',
-            contrasena: ''
-        });
-    }
+    this.loginForm = this.fb.group({
+      usuario: ['', Validators.required],
+      contrasena: ['', Validators.required]
+    });
+  }
 
-  logueo(){
-    
+  logueo() {
     this.loading = true;
-
-    this.loginService.getUserLogin(this.usuario,this.contrasena).subscribe(
+    this.loginService.getUserLogin(this.usuario, this.contrasena).subscribe(
       (response) => {
         this.loading = false;
-        if(response.codigo === 0){
-          this.alertaService.showMessage("Error", response.message, MessageSeverity.error);
-
-        }else{
+        if (response.codigo === 0) {
+          this.AlertToast("Error: Usuario y/o contraseña incorrectos.", 'error2');
+        } else {
           this.cargarDatosSession(response);
           this.router.navigate(['/home']);
         }
@@ -75,17 +73,30 @@ export class LoginComponent implements OnInit {
     );
   }
 
-  cargarDatosSession(model:Usuario){
+  cargarDatosSession(model: Usuario) {
+
     sessionStorage.setItem(AppConstants.Session.USUARIOLOGIN, JSON.stringify(model));
   }
-  
+
 
   navigateTo(route: string) {
-        this.navigateToEvent.next(route);
-    }
+    this.navigateToEvent.next(route);
+  }
 
-  executeCaptcha(){
+  executeCaptcha() {
 
+  }
+
+  showToast = false;
+  toastMessage = '';
+  toastType: 'success' | 'error2' | 'info' | 'warning' = 'info';
+
+  AlertToast(message: string, type: 'success' | 'error2' | 'info' | 'warning' = 'info') {
+    this.toastMessage = message;
+    this.toastType = type;
+    this.showToast = true;
+
+    setTimeout(() => this.showToast = false, 5000);
   }
 
 }

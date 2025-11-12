@@ -1,29 +1,110 @@
-<ul class="custom-menu" *ngIf="visible" [ngStyle]="{ top: y + 'px', left: x + 'px' }">
+<ul
+  class="custom-menu"
+  *ngIf="visible"
+  [ngStyle]="{ top: y + 'px', left: x + 'px' }"
+  style="height: 180px"
+>
   <li (click)="onAction('view')">🔍 Ver Sustitutos</li>
   <li (click)="onAction('filters')">🎛️ Mostrar Filtros</li>
-  <li (click)="onAction('excel')">📊 Copiar a Excel</li>
-  <li (click)="onAction('add')">➕ Adicionar Producto</li>
-  <li (click)="onAction('delete')">🗑️ Eliminar Producto</li>
-  <li (click)="onAction('updateQty')">🔢 Actualizar Cantidad O/C (item)</li>
-  <li (click)="onAction('updateReason')">🧾 Actualizar Motivo O/C (Masivo)</li>
-  <li (click)="onAction('updateVVF')">📦 Actualizar VVF</li>
+  <li (click)="onAction('excel')">📊 Exportar a Excel</li>
+  <li (click)="onAction('addProduct')">➕ Adicionar Producto</li>
+  <li (click)="onAction('delete')">➖ Eliminar Producto</li>
   <li (click)="onAction('stockDetail')">🏥 Detallar Stock Botica</li>
   <li (click)="onAction('infraStock')">📉 Detallar Infrastock</li>
   <li (click)="onAction('finalZero')">0️⃣ Compra Final 0</li>
   <li (click)="onAction('discounts')">💰 Ver Descuentos Desagregados (Item)</li>
 </ul>
 
-<!--<ul class="custom-menu" *ngIf="visible" [ngStyle]="{ top: y + 'px', left: x + 'px' }">
-  <li (click)="onAction('view')"><i class="fa-solid fa-magnifying-glass"></i> Ver Sustitutos</li>
-  <li (click)="onAction('filters')"><i class="fa-solid fa-filter"></i> Mostrar Filtros</li>
-  <li (click)="onAction('excel')"><i class="fa-regular fa-file-excel"></i> Copiar a Excel</li>
-  <li (click)="onAction('add')"><i class="fa-solid fa-plus"></i> Adicionar Producto</li>
-  <li (click)="onAction('delete')"><i class="fa-solid fa-trash"></i> Eliminar Producto</li>
-  <li (click)="onAction('updateQty')"><i class="fa-solid fa-list-ol"></i> Actualizar Cantidad O/C (item)</li>
-  <li (click)="onAction('updateReason')"><i class="fa-solid fa-file-pen"></i> Actualizar Motivo O/C (Masivo)</li>
-  <li (click)="onAction('updateVVF')"><i class="fa-solid fa-box"></i> Actualizar VVF</li>
-  <li (click)="onAction('stockDetail')"><i class="fa-solid fa-store"></i> Detallar Stock Botica</li>
-  <li (click)="onAction('infraStock')"><i class="fa-solid fa-chart-line"></i> Detallar Infrastock</li>
-  <li (click)="onAction('finalZero')"><i class="fa-solid">0</i> Compra Final 0</li>
-  <li (click)="onAction('discounts')"><i class="fa-solid fa-percent"></i> Ver Descuentos Desagregados (Item)</li>
-</ul>-->
+<ul
+  class="custom-menu"
+  *ngIf="visible2"
+  [ngStyle]="{ top: y + 'px', left: x + 'px' }"
+  style="height: 32px"
+>
+  <li (click)="onAction('excel')">📊 Exportar a Excel</li>
+</ul>
+
+<ul
+  class="custom-menu"
+  *ngIf="visible3"
+  [ngStyle]="{ top: y + 'px', left: x + 'px' }"
+  style="height: 180px"
+>
+  <li (click)="onAction('view')">💰 Ver Sustitutos</li>
+  <li (click)="onAction('filters')">🎛️ Mostrar Filtros</li>
+  <li (click)="onAction('excel')">📊 Exportar a Excel</li>
+  <li (click)="onAction('addProduct')">➕ Adicionar Producto</li>
+  <li (click)="onAction('delete')">➖ Eliminar Producto</li>
+  <li (click)="onAction('stockDetail')">🏥 Generar Consolidado O/C </li>
+  <li (click)="onAction('infraStock')">📉 Eliminar Consolidado O/C</li>
+  <li (click)="onAction('finalZero')">0️⃣ Compra Final 0</li>
+
+</ul>
+
+
+<ul
+  class="custom-menu menu-filter lista-filtro"
+  *ngIf="visible4"
+  [ngStyle]="{ top: y + 'px', left: x + 'px' }"
+>
+  <li (click)="onAction('O-AZ')"><i class="fa-solid fa-arrow-up-a-z"></i> Ordernar de A a Z</li>
+  <li (click)="onAction('O-ZA')"><i class="fa-solid fa-arrow-down-z-a"></i> Ordernar de Z a A</li>
+  <li>
+    <div class="m-0 p-0 pl-4 item-list">
+      <input
+        type="checkbox"
+        (change)="onChangeCheckedAll($event)"
+        [(checked)]="checkAllDescription"
+      />
+      TODOS
+    </div>
+    @if(filterColumn == 'Descripción'){
+    <div  *ngFor="let item of menuListProducto" class="m-0 p-0 pl-4 item-list">
+      <div *ngIf="item.visible" class="d-flex gap-2">
+        <input type="checkbox" [(ngModel)]="item.check" (change)="onChangecheckAll()"/>
+        {{ item.description }}
+      </div>
+    </div>
+    } 
+    @if(filterColumn == 'Labora.') {
+    <div *ngFor="let item of menuListLabora" class="m-0 p-0 pl-4 item-list">
+     <div *ngIf="item.visible" class="d-flex gap-2">
+        <input type="checkbox" [(ngModel)]="item.check" (change)="onChangecheckAll()"/>
+        {{ item.description }}
+      </div>
+    </div>
+    }
+    @if(filterColumn == 'Tipo') {
+    <div *ngFor="let item of menuLisTipo" class="m-0 p-0 pl-4 item-list">
+      <div *ngIf="item.visible" class="d-flex gap-2">
+        <input type="checkbox" [(ngModel)]="item.check" (change)="onChangecheckAll()"/>
+        {{ item.description }}
+      </div>
+    </div>
+    }
+    @if(filterColumn == 'Compra final') {
+    <div *ngFor="let item of menuListCompraFinal" class="m-0 p-0 pl-4 item-list">
+     <div *ngIf="item.visible" class="d-flex gap-2">
+        <input type="checkbox" [(ngModel)]="item.check" (change)="onChangecheckAll()"/>
+        {{ item.description }}
+      </div>
+    </div>
+    }
+     @if(filterColumn == 'Condición') {
+    <div *ngFor="let item of menuListCondiciones" class="m-0 p-0 pl-4 item-list">
+     <div *ngIf="item.visible" class="d-flex gap-2">
+        <input type="checkbox" [(ngModel)]="item.check" (change)="onChangecheckAll()"/>
+        {{ item.description }}
+      </div>
+    </div>
+    }
+
+
+  </li>
+  <li>
+    <div class="container-buttons-filter">
+      <button (click)="onActionMenuHeadAC()">Aceptar</button>
+      <button (click)="closeHeadTableAC()">cancelar</button>
+    </div>
+  </li>
+</ul>

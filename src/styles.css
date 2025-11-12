@@ -14,7 +14,7 @@ html, body {
     font-family: Arial, Helvetica, sans-serif;
     background: white;
     height: 100%;
-    overflow: auto;
+    /* overflow: auto; */
 }
 
 .datatable-header {
@@ -914,7 +914,7 @@ select {
     -webkit-appearance: none !important;
     -moz-appearance: none !important;
     -ms-appearance: none !important;
-    background-image: url(/public/assets/images/ic_arrow_down.png) !important;
+    background-image: url('/assets/images/ic_arrow_down.png') !important;
     background-repeat: no-repeat !important;
     background-position-x: 94% !important;
     background-position-y: center !important;
@@ -4465,3 +4465,5 @@ ion-item {
 .box-validacion .validacion-img-msgCPFinal2 {
   margin-top: -10%;
 }
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }

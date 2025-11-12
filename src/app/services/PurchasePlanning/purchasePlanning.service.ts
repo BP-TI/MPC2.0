@@ -3,8 +3,7 @@ import { Injectable } from '@angular/core';
 import { HelperService } from '../../shared/services/helper.service';
 import { environment } from '../../../environments/environment';
 import { Observable } from 'rxjs';
-import { Laboratorios, Politicas, Proveedores } from '../../models/parametros';
-import { LabelItem } from 'chart.js';
+import { Laboratorios, Politicas, Proveedores, Condiciones, Substitutes } from '../../models/parametros';
 
 @Injectable({
   providedIn: 'root'
@@ -32,4 +31,13 @@ export class PurchasePlanningService {
     getPoliticas():Observable<Politicas[]>{
       return this.httpClient.get<Politicas[]>(`${this.REQUEST_URL}/GetPoliticas`);
     }
+
+    getCondiciones():Observable<Condiciones[]>{
+      return this.httpClient.get<Condiciones[]>(`${this.REQUEST_URL}/GetCondiciones`);
+    }
+
+    getSubstitutes(request:Substitutes ){
+      return this.httpClient.post<any[]>(`${this.REQUEST_URL}/GetSustitutorios`, request);
+    }
+
 }

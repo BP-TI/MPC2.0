@@ -19,6 +19,22 @@ import { HttpClientModule } from '@angular/common/http';
 import { ToastaModule } from 'ngx-toasta';
 import { ToastaService } from 'ngx-toasta';
 import { OptionClickComponent } from './shared/components/option-click/option-click.component';
+import { DirectSupplyComponent } from './components/direct-supply/direct-supply.component';
+import { NgbModalModule } from '@ng-bootstrap/ng-bootstrap';
+import { DisplayOrderComponent } from './components/display-order/display-order.component';
+import { PdfViewerModule } from 'ng2-pdf-viewer';
+import { CurrentOrderComponent } from './components/current-order/current-order.component';
+import { InventoryPolicyComponent } from './components/inventory-policy/inventory-policy.component';
+import { PurchaseOrderComponent } from './components/purchase-order/purchase-order.component';
+import { AlertToastComponent } from './shared/components/alertToast/alertToast.component';
+import { ShowSubstitutesComponent } from './components/show-substitutes/show-substitutes.component';
+import { AddProductComponent } from './components/add-product/add-product.component';
+import { ConfirmacionModalComponent } from './modales/confirmacionModal/confirmacionModal.component';
+import { ConfirmacionClaveModalComponent } from './modales/confirmacion-clave-modal/confirmacion-clave-modal.component';
+import { AddProductAbadiComponent } from './components/add-product-abadi/add-productAbadi.component';
+import { ShowSubstitutesAbadiComponent } from './components/show-substitutesAbadi/show-substitutesAbadi.component';
+import { DetalleStockBoticaComponent } from './modales/purchase-planning/detalle-stock-botica/detalle-stock-botica.component';
+import { AutorizacionModalComponent } from './modales/autorizacion-modal/autorizacion-modal.component';
 
 
 @NgModule({
@@ -30,9 +46,24 @@ import { OptionClickComponent } from './shared/components/option-click/option-cl
     HomeComponent,
     HeaderComponent,
     PurchasePlanningComponent,
-    OptionClickComponent
+    DirectSupplyComponent,
+    OptionClickComponent,
+    DisplayOrderComponent,
+    CurrentOrderComponent,
+    InventoryPolicyComponent,
+    PurchaseOrderComponent,
+    AlertToastComponent,
+    ShowSubstitutesComponent,
+    ConfirmacionModalComponent,
+    ConfirmacionClaveModalComponent,
+    AddProductComponent,
+    ShowSubstitutesAbadiComponent,
+    AddProductAbadiComponent,
+    DetalleStockBoticaComponent,
+    AutorizacionModalComponent,
   ],
   imports: [
+    NgbModalModule,
     BrowserModule,
     AppRoutingModule,
     CommonModule,
@@ -41,6 +72,7 @@ import { OptionClickComponent } from './shared/components/option-click/option-cl
     ModalModule.forRoot(),
     NgxDatatableModule,
     NgSelectModule,
+    PdfViewerModule,
     HttpClientModule,
     ToastaModule.forRoot()
   ],
@@ -48,9 +80,19 @@ import { OptionClickComponent } from './shared/components/option-click/option-cl
     provideBrowserGlobalErrorListeners(),
     ToastaService
   ],
-  exports:[
+  exports: [
     LayoutComponent,
-    OptionClickComponent
+    OptionClickComponent,
+    InventoryPolicyComponent,
+    PurchaseOrderComponent,
+    AlertToastComponent,
+    ShowSubstitutesComponent,
+    AddProductComponent,
+    ConfirmacionModalComponent,
+    AddProductAbadiComponent,
+    ShowSubstitutesAbadiComponent,
+    DetalleStockBoticaComponent,
+    AutorizacionModalComponent,
   ],
   bootstrap: [App]
 })

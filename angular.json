@@ -35,13 +35,13 @@
               }
             ],
             "styles": [
+              "src/custom-theme.scss",
               "node_modules/bootstrap/dist/css/bootstrap.min.css",
-              "src/styles.css",
               "node_modules/ngx-toastr/toastr.css",
-              
               "node_modules/bootstrap-float-label/dist/bootstrap-float-label.min.css",
               "public/assets/vendor/fontawesome-free/css/all.min.css",
-              "public/assets/css/sb-admin-2.min.css"
+              "public/assets/css/sb-admin-2.min.css",
+              "src/styles.css"
             ],
             "scripts": [
               "public/assets/vendor/jquery/jquery.min.js",
@@ -53,6 +53,7 @@
           },
           "configurations": {
             "production": {
+              "baseHref": "/planningModule-app/",
               "fileReplacements": [
                 {
                   "replace": "src/environments/environment.ts",
@@ -76,7 +77,8 @@
             "development": {
               "optimization": false,
               "extractLicenses": false,
-              "sourceMap": true
+              "sourceMap": true,
+              "baseHref": "/"
             }
           },
           "defaultConfiguration": "production"
@@ -117,5 +119,8 @@
         }
       }
     }
+  },
+  "cli": {
+    "analytics": "6b75f905-4f84-4f11-8b76-5c944b50ecaf"
   }
 }

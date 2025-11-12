@@ -1,0 +1,43 @@
+<div class="modal-body">
+  <!-- Cabecera -->
+  <div
+    class="header-modal p-2 m-0 d-flex align-items-baseline justify-content-between"
+    (mousedown)="startDrag($event)"
+  >
+    <p class="title-modal m-0 p-0">Autorización</p>
+    <button type="button" class="button-cancel" (click)="closeModal()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="p-4">
+    <div class="d-flex gap-3">
+      <label class="col-3" for="clave">Clave</label>
+      <input class="col-5" type="password" [(ngModel)] = "clave"/>
+    </div>
+    <div class="mt-2 d-flex gap-3">
+      <label class="col-3" for="motivo">Motivo</label>
+      <textarea [(ngModel)]="motivo" class="col-8" id="multilineText" name="message" rows="5" cols="40"></textarea>
+    </div>
+  </div>
+  <div
+    class="text-center p-1 col-12 align-items-center"
+    style="border-top: var(--bs-border-width) solid"
+  >
+    <div class="row g-0 p-2">
+      <div class="col-6 d-flex justify-content-center">
+        <button type="button" class="button-success" (click)="successModal()">ACEPTAR</button>
+      </div>
+      <div class="col-6 d-flex justify-content-center">
+        <button type="button" class="buton-cancel-Aut" (click)="closeModal()">RECHAZAR</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<loading *ngIf="loading"></loading>
+<app-alertToast
+  *ngIf="showToast"
+  [message]="toastMessage"
+  [type]="toastType"
+  [duration]="5000"
+></app-alertToast>
