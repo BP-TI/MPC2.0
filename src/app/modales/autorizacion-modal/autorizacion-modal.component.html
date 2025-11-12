@@ -12,11 +12,11 @@
   <div class="p-4">
     <div class="d-flex gap-3">
       <label class="col-3" for="clave">Clave</label>
-      <input class="col-5" type="text" />
+      <input class="col-5" type="password" [(ngModel)] = "clave"/>
     </div>
     <div class="mt-2 d-flex gap-3">
       <label class="col-3" for="motivo">Motivo</label>
-      <textarea class="col-8" id="multilineText" name="message" rows="5" cols="40"></textarea>
+      <textarea [(ngModel)]="motivo" class="col-8" id="multilineText" name="message" rows="5" cols="40"></textarea>
     </div>
   </div>
   <div
@@ -35,3 +35,9 @@
 </div>
 
 <loading *ngIf="loading"></loading>
+<app-alertToast
+  *ngIf="showToast"
+  [message]="toastMessage"
+  [type]="toastType"
+  [duration]="5000"
+></app-alertToast>

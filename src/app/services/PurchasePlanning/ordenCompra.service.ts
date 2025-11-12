@@ -45,9 +45,16 @@ export class OrdenCompraService {
   getDetalleStockBotica(request: IDetalleStockBotica) {
     return this.httpClient.post<any>(`${this.REQUEST_URL}/GetDetalleStockBotica`, request);
   }
-  
-  postUpdateCondicionProducto(request: IUPdateCondicionProduct){
+
+  postUpdateCondicionProducto(request: IUPdateCondicionProduct) {
     return this.httpClient.post<any>(`${this.REQUEST_URL}/UpdateCondicionProducto`, request);
+  }
+
+  getClaveAutorizacion1(clave:string) {
+    let request = {
+      "clave":clave
+    }
+    return this.httpClient.post<any>(`${this.REQUEST_URL}/GetClaveAutorizacion1`, request);
   }
 
   getDescDescagregadorItem(codProd: string) {

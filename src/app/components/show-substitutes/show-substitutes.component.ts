@@ -8,6 +8,7 @@ import { Substitutes } from '../../models/parametros';
   standalone: false,
   templateUrl: './show-substitutes.component.html',
   styleUrl: './show-substitutes.component.css',
+   encapsulation: ViewEncapsulation.None
 })
 export class ShowSubstitutesComponent implements OnInit {
 

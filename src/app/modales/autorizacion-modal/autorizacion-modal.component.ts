@@ -1,5 +1,6 @@
 import { Component, ElementRef, HostListener, ViewEncapsulation } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { OrdenCompraService } from '../../services/PurchasePlanning/ordenCompra.service';
 
 @Component({
   selector: 'app-autorizacion-modal',
@@ -10,7 +11,12 @@ import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 })
 export class AutorizacionModalComponent {
   loading = false;
+  toastMessage = '';
+  toastType: 'success' | 'error2' | 'info' | 'warning' = 'info';
+  showToast = false;
 
+  clave: string = '';
+  motivo: string = '';
 
   private isDragging = false;
   private offsetX = 0;
@@ -18,6 +24,7 @@ export class AutorizacionModalComponent {
 
   constructor(
     private activeModal: NgbActiveModal,
+    private ordenCompraService: OrdenCompraService,
     private el: ElementRef,
 
   ) { }
@@ -56,10 +63,39 @@ export class AutorizacionModalComponent {
   // -----
 
   successModal() {
-    this.activeModal.close(true);
+    this.clave = this.clave.trim();
+    this.motivo = this.motivo.trim();
+    if (this.clave.length == 0) {
+      this.AlertToast("Wraning: Debe de ingresar la clave.", 'warning');
+      return;
+    }
+    if (this.motivo.length == 0) {
+      this.AlertToast("Wraning: Debe de ingresar el motivo.", 'warning');
+      return;
+    }
+    this.ordenCompraService.getClaveAutorizacion1(this.clave).subscribe(response => {
+      if(response.codStatus == 1){
+        if(response.useusr == null){
+          this.AlertToast(`Wraning: Clave no valida.`, 'warning');          
+        }else {
+          this.AlertToast(`Success: ${response.message}`, 'success');
+          this.activeModal.close(true);
+        }
+      }
+
+    });
   }
 
   closeModal() {
     this.activeModal.close(false);
   }
+
+  AlertToast(message: string, type: 'success' | 'error2' | 'info' | 'warning' = 'info') {
+    this.toastMessage = message;
+    this.toastType = type;
+    this.showToast = true;
+
+    setTimeout(() => this.showToast = false, 5000);
+  }
+
 }

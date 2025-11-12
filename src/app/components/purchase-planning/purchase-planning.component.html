@@ -299,7 +299,7 @@
                 [(ngModel)]="data.unidadEmpaque"
                 id="inputuniEmp"
                 (focus)="savePreviousValue(data)"
-                (keyup.enter)="calcular_Valores_Input(headTableAnalisisCompra[3].description)"
+                (keyup.enter)="calcular_Valores_Input(headTableAnalisisCompra[3].description, $event)"
               />
             </td>
 
@@ -417,17 +417,14 @@
             @if(isRowSelected === i){
             <td
               *ngIf="headTableAnalisisCompra[15].check"
-              class="center-text"
-              id="input-comFinal"
+              class="center-text"      
               [ngClass]="siRowSelectedHover(i, data.codProducto)"
             >
               <input
                 type="number"
-                placeholder=""
                 class="input-table-AC"
-                [(ngModel)]="data.compraFinal"
-                (focus)="savePreviousValue(data)"
-                (keyup.enter)="calcular_Valores_Input(headTableAnalisisCompra[15].description)"
+                [(ngModel)]="inputCompraFinal"
+                (change)="calcular_Valores_Input(headTableAnalisisCompra[15].description, $event)"
               />
             </td>
             } @else {

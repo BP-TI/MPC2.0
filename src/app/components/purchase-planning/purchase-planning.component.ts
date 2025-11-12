@@ -33,16 +33,10 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
 
   @ViewChild('verSustitutosModal') verSustitutosModal: any;
 
-  sustitutos = [
-    { codpro: 'P001', despro: 'Paracetamol 500mg', prisal: 1.2, stk_alm: 50, stk_alm_m: 10, codlab: 'LAB01', ubipro: 'A1', codgen: 'GEN01', moncod: 'PEN', stkfra: 5, codlam: 'L001', dtoprox: '10%', categvta: 'A' },
-    { codpro: 'P002', despro: 'Ibuprofeno 400mg', prisal: 2.5, stk_alm: 40, stk_alm_m: 15, codlab: 'LAB02', ubipro: 'B2', codgen: 'GEN02', moncod: 'PEN', stkfra: 8, codlam: 'L002', dtoprox: '5%', categvta: 'B' },
-  ];
-
   showFilters: boolean = false;
   filteredRows: any[] = [];
   filters: { [key: string]: any } = {};
 
-  // headTableAnalisisCompra: string[] = []
   headTableAnalisisCompra: HeadTableAC[] = []
   headTableUltimasCompras: string[] = []
   headTableUltimosIngresos: string[] = []
@@ -78,9 +72,9 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
   toastType: 'success' | 'error2' | 'info' | 'warning' = 'info';
   idCondicionCbo: string = "";
   valorAnterior = "";
+  inputCompraFinal: string = '';
+  valueCompraFinal: string = '';
   previousValueRow: PurchaseOrder;
-
-
 
   @ViewChild("actionTemplate") actionTemplate: TemplateRef<any>;
   @ViewChild(OptionClickComponent) contextMenu!: OptionClickComponent;
@@ -92,7 +86,6 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
     public global: GlobalService,
     private el: ElementRef,
     private alertMail: AlertMail) { }
-
 
   ngOnInit() {
     this.addHeadeTable();
@@ -524,6 +517,7 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
   getTableUltimasCompras(data: any) {
     this.idCondicion = data.condicion;
     this.idProducto = data.codProducto;
+    this.valueCompraFinal = data.compraFinal;
     if (this.isRowHover == this.isRowSelected) {
       return;
     }
@@ -595,6 +589,7 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
         check: true,
       })
     });
+    this.createMenuListHeaderAC();
     this.contextMenu.open(event.pageX, event.pageY, opcionMenu);
   }
 
@@ -617,6 +612,8 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
     this.proveedor = "0";
     this.isRowSelected = -1;
     this.idProductSelected = '';
+    this.idCondicionCbo = '';
+    this.idCondicion = '';
   }
 
   clearDataTablesSecond() {
@@ -995,6 +992,7 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
   }
 
   updateFilterHeader(event: any, codigo: any) {
+
     if (event.target.id.includes("idCondicionCbo")) {
       const nuevoValor = event.target.value.split(' ')[1];
       const indexSelect = this.rows.findIndex(p => p.codProducto == codigo);
@@ -1018,9 +1016,9 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
             codCondicion: this.idCondicionCbo,
             asociado: this.rows[indexSelect].asociado,
           }
-          this.ordenCompraService.postUpdateCondicionProducto(dataReq).subscribe( response => {
+          this.ordenCompraService.postUpdateCondicionProducto(dataReq).subscribe(response => {
             this.loading = false;
-            if(response.codStatus == 1){
+            if (response.codStatus == 1) {
               this.AlertToast(response.message, 'success');
             }
           });
@@ -1049,6 +1047,7 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
       rowStyle = 'background-selected-column';
       this.idProductSelected = codProduct;
       this.idCondicionCbo = this.rows.find((p: any) => p.codProducto == codProduct)?.condicion ?? '';
+      this.inputCompraFinal = this.rows.find((p: any) => p.codProducto == codProduct)?.compraFinal ?? '';
     }
 
     if (this.isRowHover == index) {
@@ -1176,6 +1175,7 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
 
   //Calcular valores sobre la tabla de AC
   savePreviousValue(data: PurchaseOrder) {
+    console.log('Previo');
     this.previousValueRow = {
       ABC: "",
       ObservacionAutoriza: "",
@@ -1239,8 +1239,6 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
     this.previousValueRow = { ...data };
   }
 
-
-
   averageThreeMonth(): number {
     const hoy = new Date();
     let totalDias = 0;
@@ -1257,8 +1255,9 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
     return totalDias / 3;
   }
 
-  calcular_Valores_Input(nameColumn: string) {
-
+  calcular_Valores_Input(nameColumn: string, event: Event) {
+    const input = event.target as HTMLInputElement;
+    this.inputCompraFinal = input.value.trim();
     let indexSelected = this.rows.findIndex(a => a.codProducto == this.idProductSelected.toString());
     let averageMonth = this.averageThreeMonth();
     let usuario = '';
@@ -1302,7 +1301,7 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
 
     // Valida que los descuentos del 1 al 4 sean mayores de 0 y menores de 100
     if (
-      Number(this.rows[indexSelected].compraFinal) > 0 ||
+      Number(this.inputCompraFinal) > 0 ||
       Number(this.rows[indexSelected].bonificacion) > 0 ||
       Number(this.rows[indexSelected].VVF1) > 0 ||
       Number(this.rows[indexSelected].VVF2) > 0 ||
@@ -1336,7 +1335,9 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
 
 
     this.loading = true;
+
     this.ordenCompraService.getCompraFinal(dataRequest).subscribe(response => {
+      this.inputCompraFinal = input.value.trim();
       this.loading = false;
       nCompra_Final = response.Compra_Final;
 
@@ -1361,9 +1362,10 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
       }
 
       // validar Compra final
-      if (nameColumn == AppConstants.TitleTableHeadAC.COMPRA_FINAL && this.rows[indexSelected].compraFinal.toString().length != 0) {
+
+      if (nameColumn == AppConstants.TitleTableHeadAC.COMPRA_FINAL && Number(this.inputCompraFinal) != 0) {
         let nCanMaxCompra: number;
-        nCanMaxCompra = ((Number(this.rows[indexSelected].promMes) / averageMonth) * 120) - (Number(this.rows[indexSelected].total) + Number(this.rows[indexSelected].compraFinal)) + Number(this.rows[indexSelected].compraFinal);
+        nCanMaxCompra = ((Number(this.rows[indexSelected].promMes) / averageMonth) * 120) - (Number(this.rows[indexSelected].total) + Number(this.inputCompraFinal) + Number(this.inputCompraFinal));
 
         if (nCanMaxCompra < 0) {
           this.AlertToast(`Warning: Cantidad maxima de compra : ${Math.round(Number(this.rows[indexSelected].preCompra))}`, 'warning');
@@ -1371,7 +1373,7 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
           this.AlertToast(`Warning: Cantidad maxima de compra : ${Math.round(nCanMaxCompra)}`, 'warning');
         }
 
-        if (Number(this.rows[indexSelected].compraFinal) != 0 && Number(this.rows[indexSelected].promMes) == 0) {
+        if (Number(this.inputCompraFinal) != 0 && Number(this.rows[indexSelected].promMes) == 0) {
           if (usuario == 'VPAUCAR') {
             this.AlertToast(`Warning: Solo puede cambiar cantidades de Productos Preferidos`, 'warning');
             if (Number(this.rows[indexSelected]) != 0) {
@@ -1390,8 +1392,8 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
         }
 
         if (Number(this.rows[indexSelected].promMes) != 0 &&
-          (((Number(this.rows[indexSelected].total) + Number(this.rows[indexSelected].compraFinal)) / Number(this.rows[indexSelected].promMes) * averageMonth) > 120 &&
-            Number(this.rows[indexSelected].compraFinal) > nCompra_Final)
+          (((Number(this.rows[indexSelected].total) + Number(this.inputCompraFinal)) / Number(this.rows[indexSelected].promMes) * averageMonth) > 120 &&
+            Number(this.inputCompraFinal) > nCompra_Final)
         ) {
 
           const modalConfirmacion = this.modalService.open(ConfirmacionModalComponent, {
@@ -1406,15 +1408,26 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
 
               let modalAutorizacion = this.modalService.open(AutorizacionModalComponent, {
                 windowClass: "modal-autorizacion",
-                backdrop: false,
+                backdrop: true,
                 scrollable: true
               });
 
+              modalAutorizacion.closed.subscribe((confirm: any) => {
+                if (confirm) {
+                  this.rows[indexSelected].compraFinal = input.value.trim();;
+                  this.inputCompraFinal = input.value.trim();
+                  this.calcular_Desc();
+                  this.calculateTotal();
+                } else {
+                  this.inputCompraFinal = '';
+                  this.inputCompraFinal = this.valueCompraFinal;
+                  this.rows = this.rows.map((p: any) => p.codProducto == this.idProductSelected ? { ...p, comprafinal: this.valueCompraFinal } : p);
+                }
+              });
             } else {
-              this.rows[indexSelected].compraFinal = this.previousValueRow.compraFinal;
-              if (this.calculate_Compra_Final(nCompra_Final) == true) {
-                this.calculateTotal();
-              }
+              this.inputCompraFinal = '';
+              this.inputCompraFinal = this.valueCompraFinal;
+              this.rows = this.rows.map((p: any) => p.codProducto == this.idProductSelected ? { ...p, comprafinal: this.valueCompraFinal } : p);
             }
 
           });
@@ -1483,7 +1496,6 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
   }
 
   calcular_Desc() {
-    console.log('CALCULO DESC');
     let rowSelectData = this.rows.filter(p => p.codProducto == this.idProductSelected.toString())[0];
     let indexSelected = this.rows.findIndex(a => a.codProducto == this.idProductSelected.toString());
     let vvf: number = 0;
