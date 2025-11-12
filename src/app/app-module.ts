@@ -34,7 +34,6 @@ import { ConfirmacionClaveModalComponent } from './modales/confirmacion-clave-mo
 import { AddProductAbadiComponent } from './components/add-product-abadi/add-productAbadi.component';
 import { ShowSubstitutesAbadiComponent } from './components/show-substitutesAbadi/show-substitutesAbadi.component';
 
-
 @NgModule({
   declarations: [
     App,
@@ -52,10 +51,10 @@ import { ShowSubstitutesAbadiComponent } from './components/show-substitutesAbad
     PurchaseOrderComponent,
     AlertToastComponent,
     ShowSubstitutesComponent,
-       ConfirmacionModalComponent,
+    ConfirmacionModalComponent,
     ConfirmacionClaveModalComponent,
     AddProductComponent,
-        ShowSubstitutesAbadiComponent,
+    ShowSubstitutesAbadiComponent,
     AddProductAbadiComponent,
   ],
   imports: [
@@ -70,12 +69,9 @@ import { ShowSubstitutesAbadiComponent } from './components/show-substitutesAbad
     NgSelectModule,
     PdfViewerModule,
     HttpClientModule,
-    ToastaModule.forRoot()
+    ToastaModule.forRoot(),
   ],
-  providers: [
-    provideBrowserGlobalErrorListeners(),
-    ToastaService
-  ],
+  providers: [provideBrowserGlobalErrorListeners(), ToastaService],
   exports: [
     LayoutComponent,
     OptionClickComponent,
@@ -88,6 +84,6 @@ import { ShowSubstitutesAbadiComponent } from './components/show-substitutesAbad
     AddProductAbadiComponent,
     ShowSubstitutesAbadiComponent,
   ],
-  bootstrap: [App]
+  bootstrap: [App],
 })
-export class AppModule { }
+export class AppModule {}

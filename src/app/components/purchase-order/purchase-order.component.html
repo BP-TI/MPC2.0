@@ -1,174 +1,118 @@
-<div class="modal-body">
-  <div
-    class="header-modal mb-2 p-2 m-0 d-flex align-items-baseline justify-content-between"
-     >
-    <p class="title-modal m-0 p-0">Generar Orden de compra</p>
-    <button type="button" class="button-cancel" (click)="closeModal()">
-      <span aria-hidden="true">&times;</span>
+<div class="modal-header header-modal d-flex justify-content-between align-items-center px-3 py-2" (mousedown)="startDrag($event)">  
+  <div class="d-flex align-items-center" >
+    <h6 class="m-0">Nueva Orden de Compra</h6>
+  </div>
+  <div class="d-flex align-items-center gap-2">
+    <button class="button-cancel" (click)="closeModal()">
+      <i class="fa-solid fa-xmark"></i> 
     </button>
   </div>
-  <div class="m-0 p-0 body-modal">
-    <!-- botones  -->
-    <div class="col-md-12 d-flex align-items-baseline justify-content-between">
-      <div class="m-0 p-0">
-        <img src="{{ logoHeader }}" class="logo-cabecera" />
-      </div>
-      <div class="d-flex align-items-baseline gap-2">
+</div>
+
+<div class="modal-body body-modal p-3">
+  <!-- Encabezado principal -->
+  <div class="col-12 border border-1 rounded p-2">
+    <!-- Botones -->
+    <div class="d-flex gap-2 mb-2">
+      <button class="button-header">
+        <i class="fa-solid fa-calendar-days"></i> Cronograma Recepción
+      </button>
         <button class="button-header">
-          <i class="fa-solid fa-calendar-days"></i>
-          Cronograma recepción
+        <i class="fa-solid fa-floppy-disk"></i> Guardar
         </button>
-        <button class="button-header">
-          <i class="fa-solid fa-floppy-disk"></i>
-          Guardar
-        </button>
-        <button class="button-header" (click)="openOutlook()">
-          <i class="fa-solid fa-envelope"></i>
-          Enviar
-        </button>
-      </div>
+      <button class="button-header" (click)="openOutlook()">
+        <i class="fa-solid fa-paper-plane"></i> Enviar
+      </button>
     </div>
-    <!-- end botones -->
-    <hr size="10px" width="100%" color="134B97" />
-
-    <!-- datos -->
-    <div class="d-flex justify-content-between">
-      <div class="col m-0 p-0 m-0s">
-        <p class="company-data">Oficina Principal</p>
-        <p class="company-data">JR. Baltazar Grados Nº 810 - SIM - LIMA</p>
-        <p class="company-data">Teléfono principal: 206 - 7000 Anexo: 108 RUC: 20515346113</p>
+    <hr/>
+    <div class="row align-items-center mb-2">  
+        <!-- Datos empresa -->
+      <div class="col-4 text-center">
+        <div class="fw-bold" style="font-size: 11px;">BOTICAS PERU</div>
+        <div class="company-data">OFICINA PRINCIPAL</div>
+        <div class="company-data">JR. BALTAZAR GRADOS N° 810 - SJM - LIMA</div>
+        <div class="company-data">TELÉFONO PRINCIPAL: 206-7000 ANEXO: 108</div>
       </div>
-      <div class="col d-flex align-items-baseline">
-        <div class="row">
-          <label for="fechacreacion">Fecha Creación</label>
-          <div class="m-0 p-0">
-            <input type="date" />
+      <!-- Logo -->
+      <div class="col-4 text-center order-section">
+        <img [src]="logoHeader" alt="logo" width="200" />
+      <!-- RUC y datos de orden -->
+        <div class="row mb-1">
+          <div class="col-12">
+            <label>RUC:</label>
+            <span class="fw-bold ms-2">20515346113</span>
           </div>
-        </div>
-        <div class="row">
-          <label for="ordecompra">Orden Compra</label>
-          <div class="m-0 p-0">
-            <input type="text" placeholder="Número de Orden" />
-          </div>
+        </div>  
+      </div>
+      <!-- Orden de compra -->
+      <div class="col-4 text-center order-section">
+        <div class="fw-bold" style="font-size: 11px;">ORDEN COMPRA N°:</div>
+        <input type="text" class="ms-1" style="width: 120px;" />
+        <div class="company-data mt-1">
+          FECHA DE CREACIÓN:
+          <input type="date" value="2025-11-11" style="width: 120px;" />
         </div>
       </div>
     </div>
-    <!-- end datos -->
-    <hr size="10px" width="100%" color="134B97" />
+    <hr/>
+    <div class="d-flex">
 
-    <!-- formulario -->
-    <div class="col-12 d-flex align-items-baseline">
-      <div class="col-4 m-0 p-0">
-        <div class="row">
-          <label for="proveedor">Proveedor:</label>
-          <input type="text" placeholder="Porveedor" />
+      <!-- Proveedor, RUC, Fecha Entrega -->
+     <div class="col-4">
+        <div class="col-4">
+          <label>PROVEEDOR:</label>
+          <input type="text" value="_CEDI ALIPIO PONCE" />
         </div>
-        <div class="row">
-          <label for="ruc">Ruc</label>
-          <input type="text" placeholder="Ruc" />
+        <div class="col-4">
+          <label>RUC:</label>
+          <input type="text"/>
         </div>
+        <div class="col-4">
+          <label>FACTURAR A:</label>
+          <input type="text" value="_CORP. BOTICAS PERU SAC (ALMACEN)" />
+        </div>
+     </div>
+    <!-- Facturar a, Dirección -->
+    <div class="col-4">
+  
+      <div class="col-6">
+        <label>DIRECCIÓN DE ENTREGA:</label>
+        <select class="input-select" style="width: 210%;">
+          <option>JR. BALTAZAR GRADOS N° 810</option>
+          <option>JR. LOS OLIVOS 124</option>
+        </select>
       </div>
-      <div class="col-4 m-0 p-0">
-        <div class="row">
-          <label for="Factura">Factura a:</label>
-          <input type="text" placeholder="Factura" />
-        </div>
-        <div class="row">
-          <label for="direccionentrega">Dirección de entrega:</label>
-          <input type="text" placeholder="Dirección" />
-        </div>
-      </div>
-      <div class="col m-0 p-0 d-flex align-items-baseline">
-        <div class="row">
-          <label for="fechacreacion">Fecha de creación:</label>
-          <input type="date" />
-        </div>
-        <div class="row">
-          <label for="condicionpago">Condicción de pago:</label>
-          <select class="input-select" id="condicionpago">
-            <option value="0" disabled>--Seleccione--</option>
-          </select>
-        </div>
+            <div class="col-6">
+        <label>FECHA DE ENTREGA:</label>
+        <input type="date" value="2025-11-11" />
       </div>
     </div>
-    <hr size="10px" width="100%" color="134B97" />
-    <!-- end formulario -->
+    <div class="col-4">
 
-    <!-- tabla -->
-    <div class="p-0 table-scroll col-12">
-      <table id="tablaAnalisiCompra" class="table-style table-fixed">
-        <thead>
-          <tr>
-            <th>Index</th>
-            <th draggable="true" class="sticky-col second-col">First Name</th>
-            <th draggable="true">Last Name</th>
-            <th draggable="true">Age</th>
-            <th draggable="true">Enrolled Cours0</th>
-            <th draggable="true">Enrolled Course1</th>
-            <th draggable="true">Enrolled Course2</th>
-            <th draggable="true">Enrolled Course3</th>
-            <th draggable="true">Enrolled Course4</th>
-            <th draggable="true">Enrolled Course5</th>
-            <th draggable="true">Enrolled Course6</th>
-            <th draggable="true">Enrolled Course7</th>
-            <th draggable="true">Enrolled Course8</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <th>1</th>
-            <td class="sticky-col second-col">Raj</td>
-            <td>Shukla</td>
-            <td>23</td>
-            <td>Advanced Java</td>
-            <td>Advanced Java</td>
-            <td>Advanced Java</td>
-            <td>Advanced Java</td>
-            <td>Advanced Java</td>
-            <td>Advanced Java</td>
-            <td>Advanced Java</td>
-            <td>Advanced Java</td>
-            <td>Advanced Java</td>
-          </tr>
-          <tr>
-            <th>2</th>
-            <td class="sticky-col second-col">Rahul</td>
-            <td>Mishra</td>
-            <td>23</td>
-            <td>DSA In JAVA</td>
-            <td>DSA In JAVA</td>
-            <td>DSA In JAVA</td>
-            <td>DSA In JAVA</td>
-            <td>DSA In JAVA</td>
-            <td>DSA In JAVA</td>
-            <td>DSA In JAVA</td>
-            <td>DSA In JAVA</td>
-            <td>DSA In JAVA</td>
-          </tr>
-          <tr>
-            <th>3</th>
-            <td class="sticky-col second-col">Prahant</td>
-            <td>Shuka</td>
-            <td>19</td>
-            <td>Web Development</td>
-            <td>Web Development</td>
-            <td>Web Development</td>
-            <td>Web Development</td>
-            <td>Web Development</td>
-            <td>Web Development</td>
-            <td>Web Development</td>
-            <td>Web Development</td>
-            <td>Web Development</td>
-          </tr>
-        </tbody>
-      </table>
+      <div class="col-12">
+        <label>CONDICIÓN PAGO:</label>
+        <select class="input-select">
+          <option>[ SELECCIONE ]</option>
+          <option>CONTADO</option>
+          <option>CRÉDITO</option>
+        </select>
+      </div>
     </div>
-    <!-- end tabla -->
 
-    <div class="col-12 d-flex align-items-baseline justify-content-end gap-3 mt-3 mb-3">
-      <p class="text-total-value">Total Parcial: 48,1234</p>
-      <p class="text-total-value">Total IGV (18%): 8,6897</p>
-      <p class="text-total-value">Total Pagar: 40,783</p>
+
+    </div>
+    
+    <!-- Observación -->
+    <div class="row">
+      <div class="col-12">
+        <label>OBSERVACIÓN:</label>
+        <textarea rows="4" style="width: 100%; font-size:10px;"></textarea>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12 table-fixed">
+        
+      </div>
     </div>
   </div>
 </div>

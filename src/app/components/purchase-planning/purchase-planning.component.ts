@@ -1071,9 +1071,10 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
       if (dataconfirm) {
         const modalPurchaseOrder = this.modalService.open(PurchaseOrderComponent, {
           windowClass: "modal-PurchaseOrder",
-          backdrop: true,
+          backdrop: false,
           scrollable: true
         });
+        modalPurchaseOrder.componentInstance.rows = this.rows;
       }
 
     });
