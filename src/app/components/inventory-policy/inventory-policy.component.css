@@ -21,6 +21,7 @@
   margin: 0px;
   height: 100%;
   width: 100%;
+
 }
 
 .header-modal {
@@ -85,7 +86,6 @@
   height: 150px;
   border: #DCEBFF solid;
   scrollbar-color: #B0E0E6 white !important;
-  /* margin: 5px !important; */
 }
 
 /* Estilo de la tabla */

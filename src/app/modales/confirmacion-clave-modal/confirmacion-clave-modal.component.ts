@@ -1,6 +1,7 @@
 import { Component, ElementRef, HostListener, ViewEncapsulation } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { PurchasePlanningService } from '../../services/PurchasePlanning/purchasePlanning.service';
+import { OrdenCompraService } from '../../services/PurchasePlanning/ordenCompra.service';
 
 @Component({
   selector: 'app-confirmacion-clave-modal',
@@ -11,6 +12,9 @@ import { PurchasePlanningService } from '../../services/PurchasePlanning/purchas
 })
 export class ConfirmacionClaveModalComponent {
 
+  clave: string = '';
+  motivo: string = '';
+
   loading: boolean = false;
   private isDragging = false;
   private offsetX = 0;
@@ -18,7 +22,7 @@ export class ConfirmacionClaveModalComponent {
 
   constructor(
     private activeModal: NgbActiveModal,
-    private purchaseService: PurchasePlanningService,
+    private ordenCompra: OrdenCompraService,
     private el: ElementRef,
 
   ) { }
@@ -56,9 +60,8 @@ export class ConfirmacionClaveModalComponent {
 
   // -----
 
-  successModal(){
+  successModal() {
     this.activeModal.close(true);
-
   }
 
   closeModal() {
