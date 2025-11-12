@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { HelperService } from '../../shared/services/helper.service';
 import { environment } from '../../../environments/environment';
 import { Observable } from 'rxjs';
-import { Laboratorios,Proveedores, Boticas} from '../../models/parametros';
+import { Laboratorios,Proveedores, Boticas,Substitutes} from '../../models/parametros';
 
 @Injectable({
   providedIn: 'root'
@@ -34,6 +34,9 @@ export class DirectSupplyService {
       };
       return this.httpClient.post<Boticas[]>(`${this.REQUEST_URL}/GetBoticas`, request);
 
+    }
+    getSubstitutes(request:Substitutes ){
+          return this.httpClient.post<any[]>(`${this.REQUEST_URL}/GetSustitutorios`, request);
     }
 
 }

@@ -1,0 +1,102 @@
+<div class="modal-body">
+  <!-- Cabecera -->
+  <div class="header-modal p-2 m-0 d-flex align-items-baseline justify-content-between" (mousedown)="startDrag($event)">
+    <p class="title-modal m-0 p-0">Agregar Producto</p>
+    <button type="button" class="button-cancel" (click)="closeModal()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+
+  <!-- Formulario -->
+   <div class="m-0 p-0 m-2">
+     <label for="buscar">Escriba para buscar </label>
+   </div>
+  <div class="d-flex align-items-baseline m-2">
+    <div class="m-1">
+      <input class="input-search" placeholder="Escriba..." [(ngModel)] = "textFilter"/>
+    </div>
+    <div class="col-md-3">
+      <button class="button-style" (click)="filterDataTable()">Buscar</button>
+    </div>
+  </div>
+
+  <!-- checkbox -->
+  <div class="pl-5 d-flex gap-5 pb-2">
+    <div class="d-flex align-items-baseline gap-4 search-form">
+      <input class="form-check-input" type="checkbox" value="" id="xdescripcion" [(ngModel)] = "chkDescripcion" (change) ="changeChckValue('descripcion',$event)" />
+      <label class="m-0" for="chk-descripcion">Buscar en la descripción</label>
+    </div>
+    <div class="d-flex align-items-baseline gap-4 search-form">
+      <input class="form-check-input" type="checkbox" value="" id="xcodigo" [(ngModel)] = "chkcodProd" (change) ="changeChckValue('codPord',$event)"/>
+      <label class="m-0" for="chk-cod">Buscar por codigo</label>
+    </div>
+  </div>
+<div class="container-addProduct d-flex align-content-center">
+
+  <!-- Tabla -->
+  <div class="table-scroll col-8">
+    <table class="table-style">
+      <thead>
+        <tr>
+          <th>Código</th>
+          <th>Descripción</th>
+          <th>Laboratorio</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let data of datafilter" (dblclick)="selectData(data)">
+          <td>{{ data.codigoProducto }}</td>
+          <td>{{ data.descripcionProducto }}</td>
+          <td>{{ data.descripcionLaboratorio }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="container-boticas col-4"> 
+
+    <div class="m-0 p-0">
+        <div class="">
+          <form [formGroup]="opcionesFormBotAdd">
+            <div class="form-check">
+              <input
+                class="form-check-input"
+                type="checkbox"
+                id="checkTodosBot"
+                formControlName="todos"
+              />
+              <label class="label-text" for="checkTodos">Todas las boticas</label>
+              <br />
+            </div>
+          </form>
+        </div>
+
+        <div ngbDropdown class="fondoSelect col-12 p-0 m-0 menu-boticas">
+          <div ngbDropdownMenu class="dropdown-scroll pl-4 m-0">
+            <div *ngFor="let item of boticasAdd" class="form-check label-check-lab m-0 p-0 pl-5">
+              <input
+                class="form-check-input"
+                type="checkbox"
+                [(ngModel)]="item.selected"                
+                id="{{ item.codAlmacen }}"
+              />
+              {{ item.descripcionAlmacen }}
+            </div>
+          </div>
+        </div>
+      </div>
+
+  </div>
+  
+
+</div>
+  
+</div>
+
+<app-alertToast
+  *ngIf="showToast"
+  [message]="toastMessage"
+  [type]="toastType"
+  [duration]="5000"
+></app-alertToast>
+<loading *ngIf="loading"></loading>
