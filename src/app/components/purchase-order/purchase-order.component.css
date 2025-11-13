@@ -1,18 +1,13 @@
 .modal-PurchaseOrder .modal-dialog {
-    max-width: 100% !important;
-    width: 800px !important;
-    /* height: 600px !important; */
-    max-height: 1000px !important;
+    max-width: 2000px;
+    width: 1050px !important;
+    height: 1000px !important;
     position: absolute !important;
     z-index: 1060;
     padding: 0px !important;
     margin: 0px;;
-    top: 8%;
-    left: 20%;
-}
-
-.modal-PurchaseOrder .modal-content{
-  height: 100% !important;
+    top: 2%;
+    left: 5%;    
 }
 
 .modal {
@@ -25,16 +20,16 @@
   margin: 0px;
   height: 100%;
   width: 100%;
+
 }
 
 .header-modal {
   background: #134B97;
   color: white;
   width: 100%;
-  /* cursor: move; */
-}
-.body-modal{
-
+  cursor: move;
+  padding: 5px;
+  margin: 0px;
 }
 
 .button-cancel {
@@ -97,7 +92,7 @@
   padding: 3px 7px;
   gap: 6px;
   font-size: 8px;
-  width: 170PX;
+  /* width: 170PX; */
   height: 30px;
 
   background: #FFFFFF;
@@ -175,26 +170,27 @@ input {
 }
 
 /* Estilo de la tabla */
-.table-scroll {
+.table-scroll-PO {
+  padding: 0px;
   overflow-x: auto;
-  overflow-y: hidden;
-  height: 100%;
-  width: 100%;
+  height: 250px;
   border: #DCEBFF solid;
+  scrollbar-color: #B0E0E6 white !important;
 }
 
-.table-style {
+.table-style-PO {
+  padding: 0px;
+  margin: 0px;
   width: 100%;
-  table-layout: fixed;
 }
 
-.table-style thead th {
+.table-style-PO thead th {
   background: #134B97;
   color: white;
   text-align: center;
 }
 
-.table-style th,
+.table-style-PO th,
 td {
 
   font-family: 'Montserrat' !important;
@@ -203,7 +199,7 @@ td {
   margin: 0px !important;
 }
 
-.table-style th {
+.table-style-PO th {
   overflow: hidden;
   font-family: 'Montserrat';
   font-style: normal;
@@ -212,7 +208,7 @@ td {
   color: black;
 }
 
-.table-style td {
+.table-style-PO td {
   font-size: 10px;
   color: #3C3C3C;
   background: white;
@@ -220,64 +216,13 @@ td {
   text-align: center;
 }
 
-.table-style th,
+.table-style-PO th,
 td {
   white-space: nowrap;
   padding: 0px;
 }
 
 
-.table-fixed {
-  width: max-content;
-  table-layout: auto;
-}
-
-
-.table-fixed th,
-.table-fixed td {
-  text-align: left;
-  padding: 8px;
-}
-
-
-.table-fixed thead th {
-  position: sticky;
-  top: 0;
-  z-index: 2;
-}
-
-.table-fixed thead th:nth-child(1),
-th:nth-child(2),
-th:nth-child(3) {
-  z-index: 5 !important;
-}
-
-.table-fixed th:nth-child(1),
-.table-fixed td:nth-child(1) {
-  position: sticky;
-  left: 0;
-  min-width: 60px;
-  z-index: 4;
-  background: #B0E0E6;
-}
-
-.table-fixed th:nth-child(2),
-.table-fixed td:nth-child(2) {
-  position: sticky;
-  left: 60px;
-  min-width: 120px;
-  z-index: 4;
-  background: #B0E0E6;
-}
-
-.table-fixed th:nth-child(3),
-.table-fixed td:nth-child(3) {
-  position: sticky;
-  left: 180px;
-  min-width: 180px;
-  z-index: 4;
-  background: #B0E0E6;
-}
 
 /* End estilos de la tabla */
 .text-total-value {

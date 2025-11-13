@@ -36,7 +36,6 @@ import { ShowSubstitutesAbadiComponent } from './components/show-substitutesAbad
 import { DetalleStockBoticaComponent } from './modales/purchase-planning/detalle-stock-botica/detalle-stock-botica.component';
 import { AutorizacionModalComponent } from './modales/autorizacion-modal/autorizacion-modal.component';
 
-
 @NgModule({
   declarations: [
     App,
@@ -74,7 +73,7 @@ import { AutorizacionModalComponent } from './modales/autorizacion-modal/autoriz
     NgSelectModule,
     PdfViewerModule,
     HttpClientModule,
-    ToastaModule.forRoot()
+    ToastaModule.forRoot(),
   ],
   providers: [
     provideBrowserGlobalErrorListeners(),
@@ -93,6 +92,7 @@ import { AutorizacionModalComponent } from './modales/autorizacion-modal/autoriz
     ShowSubstitutesAbadiComponent,
     DetalleStockBoticaComponent,
     AutorizacionModalComponent,
+
   ],
   bootstrap: [App]
 })

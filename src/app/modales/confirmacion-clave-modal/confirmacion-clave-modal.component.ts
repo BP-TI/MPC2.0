@@ -13,9 +13,12 @@ import { OrdenCompraService } from '../../services/PurchasePlanning/ordenCompra.
 export class ConfirmacionClaveModalComponent {
 
   clave: string = '';
-  motivo: string = '';
 
   loading: boolean = false;
+  toastMessage = '';
+  toastType: 'success' | 'error2' | 'info' | 'warning' = 'info';
+  showToast = false;
+
   private isDragging = false;
   private offsetX = 0;
   private offsetY = 0;
@@ -61,11 +64,34 @@ export class ConfirmacionClaveModalComponent {
   // -----
 
   successModal() {
-    this.activeModal.close(true);
+    this.clave = this.clave.trim();
+    if (this.clave.length == 0) {
+      this.AlertToast("Wraning: Debe de ingresar la clave.", 'warning');
+      return;
+    }
+
+    this.ordenCompra.getClaveAutorizacion1(this.clave).subscribe(response => {
+      if (response.codStatus == 1) {
+        if (response.useusr == null) {
+          this.AlertToast(`Wraning: Clave no valida.`, 'warning');
+        } else {
+          this.AlertToast(`Success: ${response.message}`, 'success');
+          this.activeModal.close(true);
+        }
+      }
+    });
   }
 
   closeModal() {
     this.activeModal.close(false);
+  }
+
+  AlertToast(message: string, type: 'success' | 'error2' | 'info' | 'warning' = 'info') {
+    this.toastMessage = message;
+    this.toastType = type;
+    this.showToast = true;
+
+    setTimeout(() => this.showToast = false, 5000);
   }
 
 }
