@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, ElementRef, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { Laboratorios, Proveedores, Condiciones } from '../../models/parametros';
-import { IAdicionarProductoCalculoReq, ICompraFinalReq, IUltimasComprasReq, IUPdateCondicionProduct, PurchaseOrder } from '../../models/ordenCompra';
+import { IAdicionarProductoCalculoReq, ICompraFinalReq, IUltimasComprasReq, IUPdateCondicionProduct, PurchaseOrder, PurchaseOrder_table_modal } from '../../models/ordenCompra';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { PurchasePlanningService } from '../../services/PurchasePlanning/purchasePlanning.service';
 import { HttpErrorResponse } from '@angular/common/http';
@@ -1088,25 +1088,208 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
     }
   }
 
-  openModalPurchaseOrder() {
+  calculatevvf2_PurchaseOrder(dataRowAC: PurchaseOrder, itemValue: string, nconValue: string): PurchaseOrder_table_modal {
+    let vvf1 = Number(dataRowAC.VVF2);
+    let d1 = Number(dataRowAC.descuento1);
+    let d2 = Number(dataRowAC.descuento2);
+    let d3 = Number(dataRowAC.descuento3);
+    let d4 = Number(dataRowAC.descuento4);
+    let d5 = 0;
+    if (Number(dataRowAC.bonificacion) == 0 && Number(dataRowAC.compraFinal) == 0) {
+      d5 = 0
+    } else {
+      d5 = (Number(dataRowAC.bonificacion) / (Number(dataRowAC.compraFinal) + Number(dataRowAC.bonificacion))) * 100;
+    }
+    let igvpro = Number(dataRowAC.igvProducto);
+    let cantidad = Number(dataRowAC.compraFinal);
+    let parcial = Number(dataRowAC.parcial);
+    let igv = Number(dataRowAC.igv);
+    let total = Number(dataRowAC.total);
 
-    const modalConfirmacionClave = this.modalService.open(ConfirmacionClaveModalComponent, {
-      windowClass: "modal-confirmacion-clave",
+    let coscom = ((((vvf1 - (vvf1 * (d1 / 100))) -
+      ((vvf1 - (vvf1 * (d1 / 100))) * (d2 / 100))) -
+      (((vvf1 - (vvf1 * (d1 / 100))) - ((vvf1 - (vvf1 * (d1 / 100))) * (d2 / 100))) * (d3 / 100))) -
+      ((((vvf1 - (vvf1 * (d1 / 100))) - ((vvf1 - (vvf1 * (d1 / 100))) * (d2 / 100))) -
+        (((vvf1 - (vvf1 * (d1 / 100))) - ((vvf1 - (vvf1 * (d1 / 100))) * (d2 / 100))) * (d3 / 100))) * ((d4 + d5) / 100)));
+
+    parcial = parseFloat(coscom.toFixed(2)) * (cantidad + Number(dataRowAC.bonificacion));
+    igv = parseFloat(parcial.toFixed(2)) * (igvpro / 100);
+    total = parcial + igv;
+    let coscom_vvf2 = parseFloat(coscom.toFixed(2));
+    let parcial_vvf2 = parseFloat(parcial.toFixed(2));
+    let igv_vvf2 = parseFloat(igv.toFixed(2));
+    let total_vvf2 = parseFloat(total.toFixed(2));
+
+    return {
+      item: itemValue,
+      codProd: dataRowAC.codProducto,
+      producto: dataRowAC.nombreProducto,
+      codLab: dataRowAC.codLaboratorio,
+      laboratorio: dataRowAC.nombreLaboratorio,
+      EAN: '',
+      cantE: dataRowAC.compraFinal,
+      cantF: "0",
+      boni: dataRowAC.bonificacion,
+      vvf1: dataRowAC.VVF1,
+      vvf2: dataRowAC.VVF2,
+      desct1: dataRowAC.descuento1,
+      desct2: dataRowAC.descuento2,
+      desct3: dataRowAC.descuento3,
+      desct4: dataRowAC.descuento4,
+      coscom: coscom_vvf2.toString(),
+      igv: igv_vvf2.toString(),
+      igvpro: dataRowAC.igvProducto,
+      parcial: parcial_vvf2.toString(),
+      total: total_vvf2.toString(),
+      pro_mes: dataRowAC.promMes,
+      total_stock: dataRowAC.total,
+      Observacion: dataRowAC.observaciones,
+      VVF_Temp: dataRowAC.VVF1,
+      asociado: dataRowAC.asociado,
+      observacion_autoriza: dataRowAC.ObservacionAutoriza,
+      usuario_autoriza: dataRowAC.usuarioAutoriza,
+      SecOrden: nconValue,
+      cantE_temp: dataRowAC.compraFinal,
+      cant_Unid_empa: dataRowAC.unidadEmpaque
+    }
+
+  }
+
+  async openModalPurchaseOrder() {
+    if (this.rows.length == 0) {
+      this.AlertToast("Warning: La tabla Analisis de compra no cuenta con información para procesar.", 'warning');
+      return;
+    }
+    let dataRowPurchaseOrder: PurchaseOrder_table_modal[] = []
+    let item: number = 0;
+    let nCom: number = 0;
+    let accion_restriccion: Number = 0;
+
+    for (const data of this.rows) {
+      if ((Number(data.compraFinal) + Number(data.bonificacion)) > 0) {
+        let prom_mes: number = 0;
+        if (Number(data.promMes) == 0) {
+          prom_mes = 9999;
+        } else {
+          prom_mes = Number(data.promMes);
+        }
+
+        if (((Number(data.org) / prom_mes * 30 >= 120) || (Number(data.almacen) / prom_mes * 30 >= 45)) &&
+          (accion_restriccion == 0 || accion_restriccion == 2)) {
+          if (accion_restriccion == 0) {
+
+            const modalConfirmacionClave = this.modalService.open(ConfirmacionClaveModalComponent, {
+              windowClass: "modal-confirmacion-clave",
+              backdrop: false,
+              scrollable: true
+            });
+
+            try {
+              const dataconfirm: any = await modalConfirmacionClave.result;
+              accion_restriccion = dataconfirm ? 1 : 0;
+              if (dataconfirm) {
+                item += 1;
+                if (Number(data.VVF2) > 0) {
+                  let dataInsert = this.calculatevvf2_PurchaseOrder(data, item.toString(), nCom.toString());
+                  dataRowPurchaseOrder.push(dataInsert);
+
+                } else {
+                  dataRowPurchaseOrder.push({
+                    item: item.toString(),
+                    codProd: data.codProducto,
+                    producto: data.nombreProducto,
+                    codLab: data.codLaboratorio,
+                    laboratorio: data.codLaboratorio,
+                    EAN: "",
+                    cantE: data.compraFinal,
+                    cantF: "0",
+                    boni: data.bonificacion,
+                    vvf1: data.VVF1,
+                    vvf2: data.VVF2,
+                    desct1: data.descuento1,
+                    desct2: data.descuento2,
+                    desct3: data.descuento3,
+                    desct4: data.descuento4,
+                    coscom: data.cosCom,
+                    igv: data.igv,
+                    igvpro: data.igvProducto,
+                    parcial: data.parcial,
+                    total: data.totalParcial,
+                    pro_mes: data.promMes,
+                    total_stock: data.total,
+                    asociado: data.asociado,
+                    VVF_Temp: data.VVF1,
+                    Observacion: data.observaciones,
+                    SecOrden: nCom.toString(),
+                    observacion_autoriza: data.ObservacionAutoriza,
+                    usuario_autoriza: data.usuarioAutoriza,
+                    cantE_temp: data.compraFinal,
+                    cant_Unid_empa: data.unidadEmpaque
+                  });
+
+                }
+                if (item % 25 == 0) { nCom += 1 }
+              }
+            } catch {
+              return;
+            }
+          }
+
+        } else {
+          item += 1;
+          if (Number(data.VVF2) > 0) {
+            let dataInsert = this.calculatevvf2_PurchaseOrder(data, item.toString(), nCom.toString());
+            dataRowPurchaseOrder.push(dataInsert);
+          } else {
+            dataRowPurchaseOrder.push({
+              item: item.toString(),
+              codProd: data.codProducto,
+              producto: data.nombreProducto,
+              codLab: data.codLaboratorio,
+              laboratorio: data.codLaboratorio,
+              EAN: "",
+              cantE: data.compraFinal,
+              cantF: "0",
+              boni: data.bonificacion,
+              vvf1: data.VVF1,
+              vvf2: data.VVF2,
+              desct1: data.descuento1,
+              desct2: data.descuento2,
+              desct3: data.descuento3,
+              desct4: data.descuento4,
+              coscom: data.cosCom,
+              igv: data.igv,
+              igvpro: data.igvProducto,
+              parcial: data.parcial,
+              total: data.totalParcial,
+              pro_mes: data.promMes,
+              total_stock: data.total,
+              asociado: data.asociado,
+              VVF_Temp: data.VVF1,
+              Observacion: data.observaciones,
+              SecOrden: nCom.toString(),
+              observacion_autoriza: data.ObservacionAutoriza,
+              usuario_autoriza: data.usuarioAutoriza,
+              cantE_temp: data.compraFinal,
+              cant_Unid_empa: data.unidadEmpaque
+            });
+          }
+          if (item % 25 == 0) { nCom += 1 }
+        }
+      }
+    };
+
+    let dataPorv = this.proveedores.find(p => p.codigoProveedor == this.proveedor);
+    const modalPurchaseOrder = this.modalService.open(PurchaseOrderComponent, {
+      windowClass: "modal-PurchaseOrder",
       backdrop: false,
       scrollable: true
-    });
-
-    modalConfirmacionClave.closed.subscribe((dataconfirm: any) => {
-
-      if (dataconfirm) {
-        const modalPurchaseOrder = this.modalService.open(PurchaseOrderComponent, {
-          windowClass: "modal-PurchaseOrder",
-          backdrop: true,
-          scrollable: true
-        });
-      }
 
     });
+
+    modalPurchaseOrder.componentInstance.dataRows = dataRowPurchaseOrder;
+    modalPurchaseOrder.componentInstance.scodPorv = dataPorv?.codigoProveedor;
+    modalPurchaseOrder.componentInstance.sdesProv = dataPorv?.descripcion;
 
   }
 

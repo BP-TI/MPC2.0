@@ -50,9 +50,9 @@ export class OrdenCompraService {
     return this.httpClient.post<any>(`${this.REQUEST_URL}/UpdateCondicionProducto`, request);
   }
 
-  getClaveAutorizacion1(clave:string) {
+  getClaveAutorizacion1(clave: string) {
     let request = {
-      "clave":clave
+      "clave": clave
     }
     return this.httpClient.post<any>(`${this.REQUEST_URL}/GetClaveAutorizacion1`, request);
   }
@@ -62,6 +62,13 @@ export class OrdenCompraService {
       "codpro": codProd,
     }
     return this.httpClient.post<any>(`${this.REQUEST_URL}/GetDescDesagregadosItem`, request);
+  }
+
+  getRucProveedor(codProd: string) {
+    let request = {
+      "codprv": codProd,
+    }
+    return this.httpClient.post<any>(`${this.REQUEST_URL}/GetRucProveedor`, request);
   }
 
 }
