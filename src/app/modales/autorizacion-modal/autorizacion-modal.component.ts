@@ -1,23 +1,22 @@
 import { Component, ElementRef, HostListener, ViewEncapsulation } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-import { PurchasePlanningService } from '../../services/PurchasePlanning/purchasePlanning.service';
 import { OrdenCompraService } from '../../services/PurchasePlanning/ordenCompra.service';
 
 @Component({
-  selector: 'app-confirmacion-clave-modal',
+  selector: 'app-autorizacion-modal',
   standalone: false,
-  templateUrl: './confirmacion-clave-modal.component.html',
-  styleUrl: './confirmacion-clave-modal.component.css',
+  templateUrl: './autorizacion-modal.component.html',
+  styleUrl: './autorizacion-modal.component.css',
   encapsulation: ViewEncapsulation.None,
 })
-export class ConfirmacionClaveModalComponent {
-
-  clave: string = '';
-
-  loading: boolean = false;
+export class AutorizacionModalComponent {
+  loading = false;
   toastMessage = '';
   toastType: 'success' | 'error2' | 'info' | 'warning' = 'info';
   showToast = false;
+
+  clave: string = '';
+  motivo: string = '';
 
   private isDragging = false;
   private offsetX = 0;
@@ -25,7 +24,7 @@ export class ConfirmacionClaveModalComponent {
 
   constructor(
     private activeModal: NgbActiveModal,
-    private ordenCompra: OrdenCompraService,
+    private ordenCompraService: OrdenCompraService,
     private el: ElementRef,
 
   ) { }
@@ -65,20 +64,25 @@ export class ConfirmacionClaveModalComponent {
 
   successModal() {
     this.clave = this.clave.trim();
+    this.motivo = this.motivo.trim();
     if (this.clave.length == 0) {
       this.AlertToast("Wraning: Debe de ingresar la clave.", 'warning');
       return;
     }
-
-    this.ordenCompra.getClaveAutorizacion1(this.clave).subscribe(response => {
-      if (response.codStatus == 1) {
-        if (response.useusr == null) {
-          this.AlertToast(`Wraning: Clave no valida.`, 'warning');
-        } else {
+    if (this.motivo.length == 0) {
+      this.AlertToast("Wraning: Debe de ingresar el motivo.", 'warning');
+      return;
+    }
+    this.ordenCompraService.getClaveAutorizacion1(this.clave).subscribe(response => {
+      if(response.codStatus == 1){
+        if(response.useusr == null){
+          this.AlertToast(`Wraning: Clave no valida.`, 'warning');          
+        }else {
           this.AlertToast(`Success: ${response.message}`, 'success');
           this.activeModal.close(true);
         }
       }
+
     });
   }
 

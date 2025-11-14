@@ -1,0 +1,55 @@
+<div class="modal-body">
+  <div
+    class="header-modal p-2 m-0 d-flex align-items-baseline justify-content-between"
+    (mousedown)="startDrag($event)"
+  >
+    <p class="title-modal m-0 p-0">{{ title }}</p>
+    <button type="button" class="button-cancel" (click)="closeModal()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+
+  <div class="m-2">
+    <div class="table-scroll-show-Det">
+      <table class="table-style-show-Det">
+        <thead>
+          <tr>
+            <th *ngFor="let head of headTable">{{ head }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let data of tableBody">
+            <td>{{ data.codigo_material }}</td>
+            <td>{{ data.establecimiento }}</td>
+            <td>{{ data.establecimiento_ventas1 }}</td>
+            <td>{{ data.establecimiento_ventas2 }}</td>
+            <td>{{ data.establecimiento_ventas3 }}</td>
+            <td>{{ data.establecimiento_ventas4 }}</td>
+            <td>{{ data.establecimiento_ventas5 }}</td>
+            <td>{{ data.establecimiento_ventas6 }}</td>
+            <td>{{ data.stock_botica }}</td>
+            <td>{{ data.establecimiento_stockMaximo }}</td>
+            <td>{{ data.max_Infrastock }}</td>
+            <td>{{ data.clasif_botica }}</td>
+          </tr>
+          <tr class="border border-2 border-primary">
+            <td></td>
+            <td class="fw-bold">TOTAL GENERAL</td>
+            <td class="fw-bold">{{ totalMontg6 | number : '1.2-2' }}</td>
+            <td class="fw-bold">{{ totalMontg5 | number : '1.2-2' }}</td>
+            <td class="fw-bold">{{ totalMontg4 | number : '1.2-2' }}</td>
+            <td class="fw-bold">{{ totalMontg3 | number : '1.2-2' }}</td>
+            <td class="fw-bold">{{ totalMontg2 | number : '1.2-2' }}</td>
+            <td class="fw-bold">{{ totalMontg1 | number : '1.2-2' }}</td>
+            <td class="fw-bold">{{ totalStockBoticas | number : '1.2-2' }}</td>
+            <td class="fw-bold">{{ totalMaxBoticas | number : '1.2-2' }}</td>
+            <td class="fw-bold">{{ totalInfrastock | number : '1.2-2' }}</td>
+            <td></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<loading *ngIf="loading"></loading>

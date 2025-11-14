@@ -1,22 +1,25 @@
-<div class="modal-header header-modal d-flex justify-content-between align-items-center px-3 py-2" (mousedown)="startDrag($event)">  
-  <div class="d-flex align-items-center" >
-    <h6 class="m-0">Nueva Orden de Compra</h6>
-  </div>
-  <div class="d-flex align-items-center gap-2">
-    <button class="button-cancel" (click)="closeModal()">
-      <i class="fa-solid fa-xmark"></i> 
+<div class="modal-body">
+  <div
+    class="header-modal mb-0 p-2 d-flex align-items-baseline justify-content-between"
+    (mousedown)="startDrag($event)"
+  >
+    <p class="title-modal m-0 p-0">Generar Orden de compra</p>
+    <button type="button" class="button-cancel" (click)="closeModal()">
+      <span aria-hidden="true">&times;</span>
     </button>
   </div>
-</div>
 
-<div class="modal-body body-modal p-3">
-  <!-- Encabezado principal -->
-  <div class="col-12 border border-1 rounded p-2">
-    <!-- Botones -->
-    <div class="d-flex gap-2 mb-2">
-      <button class="button-header">
-        <i class="fa-solid fa-calendar-days"></i> Cronograma Recepción
-      </button>
+  <div class="m-0 p-0 body-modal">
+    <!-- botones  -->
+    <div class="m-0 p-0 col-md-12 d-flex align-items-baseline justify-content-between">
+      <div class="m-0 p-0">
+        <img src="{{ logoHeader }}" class="logo-cabecera" />
+      </div>
+      <div class="m-0 p-0 d-flex align-items-baseline gap-2">
+        <button class="button-header">
+          <i class="fa-solid fa-calendar-days"></i>
+          Cronograma recepción
+        </button>
         <button class="button-header">
         <i class="fa-solid fa-floppy-disk"></i> Guardar
         </button>
@@ -24,23 +27,21 @@
         <i class="fa-solid fa-paper-plane"></i> Enviar
       </button>
     </div>
-    <hr/>
-    <div class="row align-items-center mb-2">  
-        <!-- Datos empresa -->
-      <div class="col-4 text-center">
-        <div class="fw-bold" style="font-size: 11px;">BOTICAS PERU</div>
-        <div class="company-data">OFICINA PRINCIPAL</div>
-        <div class="company-data">JR. BALTAZAR GRADOS N° 810 - SJM - LIMA</div>
-        <div class="company-data">TELÉFONO PRINCIPAL: 206-7000 ANEXO: 108</div>
+    <!-- end botones -->
+    <hr class="m-0 p-0" size="10px" width="100%" color="134B97" />
+
+    <!-- datos -->
+    <div class="d-flex justify-content-between">
+      <div class="col m-0 p-0 m-0s">
+        <p class="company-data">Oficina Principal</p>
+        <p class="company-data">JR. Baltazar Grados Nº 810 - SIM - LIMA</p>
+        <p class="company-data">Teléfono principal: 206 - 7000 Anexo: 108 RUC: 20515346113</p>
       </div>
-      <!-- Logo -->
-      <div class="col-4 text-center order-section">
-        <img [src]="logoHeader" alt="logo" width="200" />
-      <!-- RUC y datos de orden -->
-        <div class="row mb-1">
-          <div class="col-12">
-            <label>RUC:</label>
-            <span class="fw-bold ms-2">20515346113</span>
+      <div class="col d-flex align-items-baseline">
+        <div class="row">
+          <label for="fechacreacion">Fecha Creación</label>
+          <div class="m-0 p-0">
+            <input type="date"  [(ngModel)]="creationDate"/>            
           </div>
         </div>  
       </div>
@@ -54,65 +55,98 @@
         </div>
       </div>
     </div>
-    <hr/>
-    <div class="d-flex">
+    <!-- end datos -->
+    <hr class="m-0 p-0" size="10px" width="100%" color="134B97" />
 
-      <!-- Proveedor, RUC, Fecha Entrega -->
-     <div class="col-4">
-        <div class="col-4">
-          <label>PROVEEDOR:</label>
-          <input type="text" value="_CEDI ALIPIO PONCE" />
+    <!-- formulario -->
+    <div class="col-12 d-flex align-items-baseline">
+      <div class="col-4 m-0 p-0">
+        <div class="row m-0 p-0">
+          <label for="proveedor">Proveedor:</label>
+          <input type="text" placeholder="Porveedor" [(ngModel)]="sdesProv" readonly />
         </div>
-        <div class="col-4">
-          <label>RUC:</label>
-          <input type="text"/>
+        <div class="row m-0 p-0">
+          <label for="ruc">Ruc</label>
+          <input type="text" placeholder="Ruc" [(ngModel)]="rucProv" readonly />
         </div>
-        <div class="col-4">
-          <label>FACTURAR A:</label>
-          <input type="text" value="_CORP. BOTICAS PERU SAC (ALMACEN)" />
+      </div>
+      <div class="col-4 m-0 p-0">
+        <div class="row m-0 p-0">
+          <label for="Factura">Factura a:</label>
+          <input type="text" placeholder="Factura" />
         </div>
-     </div>
-    <!-- Facturar a, Dirección -->
-    <div class="col-4">
-  
-      <div class="col-6">
-        <label>DIRECCIÓN DE ENTREGA:</label>
-        <select class="input-select" style="width: 210%;">
-          <option>JR. BALTAZAR GRADOS N° 810</option>
-          <option>JR. LOS OLIVOS 124</option>
-        </select>
+        <div class="row m-0 p-0">
+          <label for="direccionentrega">Dirección de entrega:</label>
+          <input type="text" placeholder="Dirección" />
+        </div>
       </div>
-            <div class="col-6">
-        <label>FECHA DE ENTREGA:</label>
-        <input type="date" value="2025-11-11" />
+      <div class="col m-0 p-0 d-flex align-items-baseline">
+        <div class="row m-0 p-0">
+          <label for="fechacreacion">Fecha de creación:</label>
+          <input type="date" />
+        </div>
+        <div class="row m-0 p-0">
+          <label for="condicionpago">Condicción de pago:</label>
+          <select class="input-select" id="condicionpago">
+            <option value="0" disabled>--Seleccione--</option>
+          </select>
+        </div>
       </div>
     </div>
-    <div class="col-4">
+    <hr size="10px" width="100%" color="134B97" />
+    <!-- end formulario -->
 
-      <div class="col-12">
-        <label>CONDICIÓN PAGO:</label>
-        <select class="input-select">
-          <option>[ SELECCIONE ]</option>
-          <option>CONTADO</option>
-          <option>CRÉDITO</option>
-        </select>
-      </div>
+    <!-- tabla -->
+    <div class="table-scroll-PO col-12">
+      <table id="tablaAnalisiCompra" class="table-style-PO">
+        <thead>
+          <tr>
+            <th>Index</th>
+            <th>Codigo</th>
+            <th>Descripcion</th>
+            <th>Laboratorio</th>
+            <th>Cant.</th>
+            <th>Boni</th>
+            <th>V.V.F</th>
+            <th>V.V.F Nuevo</th>
+            <th>Desct.1</th>
+            <th>Desct.2</th>
+            <th>Desct.3</th>
+            <th>Desct.4</th>
+            <th>CosCom</th>
+            <th>Parcial</th>
+            <th>Igv</th>
+            <th>Total</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of dataRows">
+            <td>{{ item.item }}</td>
+            <td>{{ item.codProd }}</td>
+            <td>{{ item.producto }}</td>
+            <td>{{ item.laboratorio }}</td>
+            <td>{{ item.cantE }}</td>
+            <td>{{ item.boni }}</td>
+            <td>{{ item.vvf1 }}</td>
+            <td>{{ item.vvf2 }}</td>
+            <td>{{ item.desct1 }}</td>
+            <td>{{ item.desct2 }}</td>
+            <td>{{ item.desct3 }}</td>
+            <td>{{ item.desct4 }}</td>
+            <td>{{ item.coscom }}</td>
+            <td>{{ item.parcial }}</td>
+            <td>{{ item.igv }}</td>
+            <td>{{ item.total }}</td>
+          </tr>
+        </tbody>
+      </table>
     </div>
+    <!-- end tabla -->
 
-
-    </div>
-    
-    <!-- Observación -->
-    <div class="row">
-      <div class="col-12">
-        <label>OBSERVACIÓN:</label>
-        <textarea rows="4" style="width: 100%; font-size:10px;"></textarea>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-12 table-fixed">
-        
-      </div>
+    <div class="col-12 d-flex align-items-baseline justify-content-end gap-3 m-0">
+      <p class="text-total-value">Total Parcial: 48,1234</p>
+      <p class="text-total-value">Total IGV (18%): 8,6897</p>
+      <p class="text-total-value">Total Pagar: 40,783</p>
     </div>
   </div>
 </div>

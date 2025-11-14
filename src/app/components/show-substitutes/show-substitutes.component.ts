@@ -8,6 +8,7 @@ import { Substitutes } from '../../models/parametros';
   standalone: false,
   templateUrl: './show-substitutes.component.html',
   styleUrl: './show-substitutes.component.css',
+  encapsulation: ViewEncapsulation.None
 })
 export class ShowSubstitutesComponent implements OnInit {
 
@@ -81,7 +82,7 @@ export class ShowSubstitutesComponent implements OnInit {
 
     this.purchaseService.getSubstitutes(dataRequest).subscribe((response: any) => {
       if (response == null) {
-         this.AlertToast(`Información: No se encontraron registros.`, 'info');
+        this.AlertToast(`Información: No se encontraron registros.`, 'info');
       } else {
         if (response.codStatus == 1) {
           if (response.message === "OK") {
