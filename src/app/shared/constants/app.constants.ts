@@ -135,6 +135,10 @@ export const AppConstants = {
     DetalleStockBotica:{
         DETALLESTOCKBOTICA:1,
         DETALLEINFRASTOCK:2
+    },
+    ParameterCode:{
+        DIRECCIONES_ENTREGA:1,
+        MENU_LAYOUT:2
     }
 
 }
