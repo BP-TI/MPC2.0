@@ -6,6 +6,9 @@ import { Router } from '@angular/router';
 import { Usuario } from '../../models/Usuario';
 import { AppConstants } from '../../constants/app.constants';
 import { GlobalService } from '../../../shared/services/global.service';
+import { ParameterService } from '../../../services/Parametros/parameter.service';
+import { HttpErrorResponse } from '@angular/common/http';
+import { Parameter } from '../../../models/parametros';
 
 @Component({
   encapsulation: ViewEncapsulation.None,
@@ -26,6 +29,8 @@ export class LayoutComponent implements OnInit {
   selectedIndex: number = -1;
   titleComponent?: string = "";
   navState: Boolean = true;
+  loading=false;
+  arrayParametros:any;
 
   @ViewChild('prototipoModal') prototipoModal: ModalDirective;
   @ViewChild('invalidateModal') invalidateModal: ModalDirective;
@@ -33,7 +38,8 @@ export class LayoutComponent implements OnInit {
 
   constructor(private emitterService: EmitterService,
     public global: GlobalService,
-    private router: Router
+    private router: Router,
+    private parameterService: ParameterService
   ) { }
 
   ngOnInit() {
@@ -102,34 +108,29 @@ export class LayoutComponent implements OnInit {
 
   }
 
-  arrayMenuOrigen() {
-    this.arrayMenu = [
-      {
-        menuUrl: '/generar-orden',
-        menuImage: 'p-1 fa-solid fa-cart-shopping',
-        menuName: 'Planificación de Compra'
-      },
-      {
-        menuUrl: '/abastecimiento-directo',
-        menuImage: 'p-1 fa-solid fa-cart-plus',
-        menuName: 'Abastecimiento Directo'
-      },
-      {
-        menuUrl: '/vigencia-vencida',
-        menuImage: 'p-1 fa-solid fa-book-skull',
-        menuName: 'O/C Vigencia Vencida'
-      },
-      {
-        menuUrl: '/visualizacion-ordenes',
-        menuImage: 'p-1 fa-solid fa-binoculars',
-        menuName: 'Visualización de O/C'
-      },
-      {
-        menuUrl: '/cronograma-recepcion',
-        menuImage: 'p-1 fa-solid fa-calendar-week',
-        menuName: 'Cronograma Recepción'
-      }
-    ];
+  async GetParametersAsync(array: Array<number>) {
+    let modelRequest = { headerId: array };
+    this.loading = true;
+    await this.parameterService.getParametersList(modelRequest).toPromise().then((response) => {
+          this.arrayParametros = response;
+          this.loading = false;
+        },
+        (error: HttpErrorResponse) => {
+          this.loading = false;
+        });
+  }
+
+  async arrayMenuOrigen() {
+    await this.GetParametersAsync([
+      AppConstants.ParameterCode.MENU_LAYOUT
+    ]);
+
+    this.arrayMenu = this.arrayParametros.filter((x:any) => x.tabCabId === AppConstants.ParameterCode.MENU_LAYOUT)
+          .map((x:any) => ({
+            menuUrl: x.tabDet003,
+            menuImage: x.tabDet007,
+            menuName: x.tabDet001
+          }));
   }
 
   stateNav() {
