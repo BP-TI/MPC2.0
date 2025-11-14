@@ -96,6 +96,26 @@
   text-align: center;
 }
 
+.input-table-AC-lg {
+  box-sizing: border-box;
+  width: 100px;
+  height: 20px;
+
+  background: #FFFFFF;
+  border: 0.5px solid rgba(175, 167, 167, 0.7);
+  border-radius: 4px;
+
+  flex: none;
+  order: 1;
+  align-self: stretch;
+  flex-grow: 0;
+  color: #7A7A7A;
+  padding: 1px;
+  margin: 0px;
+  font-size: 8px;
+  text-align: center;
+}
+
 .container-button {
   display: flex;
   flex-wrap: wrap;
@@ -207,21 +227,17 @@
 
 .table-style2 {
   width: 180%;
-  /* height: 100%; */
   table-layout: fixed;
-  /* == */
 }
 
 .table-style2 tr {
   height: 5px !important;
-  /* == */
 }
 
 .table-style2 thead th {
   background: #134B97;
   color: white;
   text-align: center;
-
 }
 
 .table-style thead th {

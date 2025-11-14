@@ -1,8 +1,9 @@
 import { Component,ElementRef, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { AppConstants } from '../../shared/constants/app.constants';
-import { IUltimasComprasAbadiReq } from '../../models/ordenCompra';
+import { IUltimasComprasAbadiReq,PurchaseOrderAbadi } from '../../models/ordenCompra';
 import { Laboratorios, Proveedores, Boticas, Condiciones } from '../../models/parametros';
 import { FormBuilder, FormGroup } from '@angular/forms';
+import { HeadTableAC } from '../../models/ordenCompra';
 import { DirectSupplyService } from '../../services/DirectSupply/directSupply.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { OrdenCompraAbadiService } from '../../services/DirectSupply/ordenCompraAbadi.service';
@@ -12,7 +13,8 @@ import { ShowSubstitutesAbadiComponent } from '../show-substitutesAbadi/show-sub
 import { AddProductAbadiComponent } from '../add-product-abadi/add-productAbadi.component';
 import { OptionsCLickHeadMenuAC, OptionsClickHeadMenuAC2 } from '../../shared/models/option-click';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-
+import * as XLSX from 'xlsx';
+import { saveAs } from 'file-saver';
 @Component({
   selector: 'app-direct-supply',
   standalone: false,
@@ -32,13 +34,11 @@ export class DirectSupplyComponent implements OnInit {
   channelName: string = sessionStorage.getItem(AppConstants.Session.SALES_CHANNEL_DESCRIPTION) ?? "";
 
   titulo = "Planificacion de Compra Directa a Boticas";
-  tableClass: string = "table-company-0";
-  tableClass2: string = "table-company-4";//table-company-default
-  rows: any = [];
-  headTableAnalisisCompra: string[] = []
+  rows: PurchaseOrderAbadi[] = [];
+  headTableAnalisisCompra: HeadTableAC[] = []
+   deleteColumnAC: HeadTableAC[] = [];
   headTableUltimasCompras: string[] = []
-  headTableUltimosIngresos: string[] = []
-   deleteColumnAC: string[] = [];  
+  headTableUltimosIngresos: string[] = [] 
   rowsLb: any[];
   rowsUCompras: any[];
   rowsUIngresos: any[];
@@ -49,14 +49,11 @@ export class DirectSupplyComponent implements OnInit {
   columns: any = [];
   columnasLb: any = [];
   tipoDocumento: string = "1";
-  //client: ResponseGetClientT24;
   nombres: string = "";
   nroDocumento: string;
   proveedores: Proveedores[];
   laboratorios: Laboratorios[];
   boticas: Boticas[];
-  labotaroiosSeleccionados: number[]; //Eliminar
-  //bsModalRef: BsModalRef;
   loadingIndicator: boolean = false;
   currentFilter: string = "active";
   idProductSelected: Number = 0;
@@ -69,10 +66,11 @@ export class DirectSupplyComponent implements OnInit {
   isRowHover: Number = -1;
   isRowSelected: Number = -1;
   validaCorreo: boolean = false;
-    showFilterTable: boolean = false;
- showToast = false;
+  showFilterTable: boolean = false;
+  showToast = false;
   toastMessage = '';
   toastType: 'success' | 'error2' | 'info' | 'warning' = 'info';
+  tableSelectedExcel: string = '';
 
   @ViewChild("actionTemplate") actionTemplate: TemplateRef<any>;
 
@@ -92,9 +90,9 @@ export class DirectSupplyComponent implements OnInit {
 
 
   ngOnInit() {
+    this.addHeadeTable();
     this.cargarProveedores();
     this.crearGrupoChecks();
-    this.addHeadeTable();
     this.global.setGlobalVar('Módulo Abastecimiento Directo');
   }
 
@@ -141,9 +139,16 @@ export class DirectSupplyComponent implements OnInit {
         });
       });
     });
+        // Para que el menu de filtro columnas de la tabla AC no se cierre
+    const menus = this.el.nativeElement.querySelectorAll('.dropdown-menu');
+    menus.forEach((menu: any) => {
+      menu.addEventListener('click', (event: MouseEvent) => event.stopPropagation());
+    });
 
 
   }
+
+  
 
   crearGrupoChecks() {
     this.opcionesForm = this.fb.group({
@@ -197,9 +202,6 @@ export class DirectSupplyComponent implements OnInit {
           this.boticas=[];
         });
       }
-    }
-    if (opcion === 'unico' && this.opcionesForm.value.unico) {
-      this.opcionesForm.patchValue({ todos: false });
     }
   }
 
@@ -328,6 +330,59 @@ export class DirectSupplyComponent implements OnInit {
         } else {
           if (response.codStatus === 1) {
             if (response.message === "OK") {
+              response.detalleProductos.forEach((data: any) => {
+                this.rows.push({
+                    relacionado:data.relacionado,
+                    incentivo: data.incentivo,
+                    codProducto:data.codProducto,
+                    nombreProducto:data.nombreProducto,
+                    codLaboratorio:data.codLaboratorio,
+                    nombreLaboratorio:data.nombreLaboratorio,
+                    codigoAlmacen:data.codigoAlmacen,
+                    establecimiento:data.establecimiento,
+                    fracUnidad:data.fracUnidad,
+                    unidadEmpaque:data.unidadEmpaque,
+                    condicion:data.condicion,
+                    clasificacion:data.clasificacion,
+                    ABC:data.ABC,
+                    plazoPago:data.plazoPago,
+                    mesQuinto:data.mesQuinto,
+                    mesCuarto:data.mesCuarto,
+                    mesTercero:data.mesTercero,
+                    mesSegundo:data.mesSegundo,
+                    mesPrimero:data.mesPrimero,
+                    mesActual:data.mesActual,
+                    mesActualProyeccion:data.mesActualProyeccion,
+                    promMes:data.promMes,
+                    preCompra:data.preCompra,
+                    compraFinal:data.compraFinal,
+                    bonificacion:data.bonificacion,
+                    botica:data.botica,
+                    almacen:data.almacen,
+                    org:data.org,
+                    canje:data.canje,
+                    ocVigente:data.ocVigente,
+                    ocVencido:data.ocVencido,
+                    oc:data.oc,
+                    total:data.total,
+                    cobOrgAct: data.cobOrgAct,
+                    maxBot:data.maxBot,
+                    maxInfraStock:data.maxInfraStock,
+                    asociado:data.asociado,
+                    nroOC:data.nroOC,
+                    secRelacion: data.secRelacion,
+                    usuarioAutoriza: data.usuarioAutoriza,
+                    ObservacionAutoriza: data.ObservacionAutoriza,
+                    ventaSubDist: data.ventaSubDist,
+                    orgNoBotica: data.orgNoBotica,
+                    totalNoBotica: data.totalNoBotica,
+                    cobOrgActNoBotica: data.cobOrgActNoBotica,
+                    cobOrgActCalcNoBotica: data.cobOrgActCalcNoBotica,
+                    observaciones: data.observaciones,
+                    observacionesAbadi: data.observacionesAbadi,
+                    isNewRow: false,
+                })
+              })
               this.rows = response.detalleProductos;
               this.rowsDataTotal = response.detalleProductos;
               this.createMenuListHeaderAC();
@@ -346,9 +401,27 @@ export class DirectSupplyComponent implements OnInit {
       }
     );
   }
+    applyFilter(columnProp: string, value: string) {
+    this.filters[columnProp] = value.toLowerCase();
+
+    this.filteredRows = this.rows.filter((row: any) => {
+      return Object.keys(this.filters).every((key) => {
+        if (!this.filters[key]) return true;
+        const cellValue = row[key]?.toString().toLowerCase() || '';
+        return cellValue.includes(this.filters[key]);
+      });
+    });
+  }
+
+  openContextExcel(event: MouseEvent, opcionMenu: number, tabla: string = '') {
+    event.preventDefault();
+    this.tableSelectedExcel = tabla;
+    this.contextMenu.open(event.pageX, event.pageY, opcionMenu);
+  }
 
   openContextMenu(event: MouseEvent, opcionMenu: number, headerColumnAC: string = '') {
     event.preventDefault();
+    this.tableSelectedExcel = 'AC';
     this.contextMenu.filterColumn = headerColumnAC;
     this.contextMenu.dataFilter = [];
     this.rows.forEach((element: any) => {
@@ -362,9 +435,6 @@ export class DirectSupplyComponent implements OnInit {
         check: true,
       })
     });
-
-
-
     this.contextMenu.open(event.pageX, event.pageY, opcionMenu);
   }
 
@@ -393,7 +463,18 @@ export class DirectSupplyComponent implements OnInit {
       case 'O-ZA':
         this.getACOrderZA()
         break;
-
+      case 'excel':
+        switch (this.tableSelectedExcel) {
+          case 'UC':
+            this.ExportExcel_UC();
+            break;
+          case 'UI':
+            this.ExportExcel_UI();
+            break;
+          case 'AC':
+            this.ExportExcel();
+            break;
+        }
     }
   }
 
@@ -401,78 +482,71 @@ export class DirectSupplyComponent implements OnInit {
 
   addHeadeTable() {
     this.headTableAnalisisCompra = [
-      AppConstants.TitleTableHeadACAbadi.R,
-      AppConstants.TitleTableHeadACAbadi.COD_PROD,
-      AppConstants.TitleTableHeadACAbadi.DESCRIPCION,
-      AppConstants.TitleTableHeadACAbadi.LABORATORIO,
-      AppConstants.TitleTableHeadACAbadi.ESTABLECIMIENTO,
-      AppConstants.TitleTableHeadACAbadi.CANT_UNID_EMPAQUE,
-      AppConstants.TitleTableHeadACAbadi.CONDICION,
-      this.showMonth('mesquinto'),
-      this.showMonth('mescuarto'),
-      this.showMonth('mestercero'),
-      this.showMonth('messegundo'),
-      this.showMonth('mesprimero'),
-      this.showMonth('mesActual'),
-      this.showMonth('mesProyectado'),
-      AppConstants.TitleTableHeadACAbadi.PROM_MES,
-      AppConstants.TitleTableHeadACAbadi.PRE_COMPRA,
-      AppConstants.TitleTableHeadACAbadi.COMPRA_FINAL,
-      AppConstants.TitleTableHeadACAbadi.BONIFICADO,
-      AppConstants.TitleTableHeadACAbadi.BOTICA,
-      AppConstants.TitleTableHeadACAbadi.OCVIGENTE,
-      AppConstants.TitleTableHeadACAbadi.OCVENCIDA,
-      AppConstants.TitleTableHeadACAbadi.OC,
-      AppConstants.TitleTableHeadACAbadi.BOTICAOC,
-      AppConstants.TitleTableHeadACAbadi.COBERTURA_BOTICA,
-      AppConstants.TitleTableHeadACAbadi.OBSERVACION,
+      {description: AppConstants.TitleTableHeadACAbadi.R,check:true},
+      {description: AppConstants.TitleTableHeadACAbadi.COD_PROD,check:true},
+      {description: AppConstants.TitleTableHeadACAbadi.DESCRIPCION,check:true},
+      {description: AppConstants.TitleTableHeadACAbadi.LABORATORIO,check:true},
+      {description: AppConstants.TitleTableHeadACAbadi.ESTABLECIMIENTO,check:true},
+      {description: AppConstants.TitleTableHeadACAbadi.CANT_UNID_EMPAQUE,check:true},
+      {description: AppConstants.TitleTableHeadACAbadi.CONDICION,check:true},
+      {description: this.showMonth('mesquinto'),check:true},
+      {description: this.showMonth('mescuarto'),check:true},
+      {description: this.showMonth('mestercero'),check:true},
+      {description: this.showMonth('messegundo'),check:true},
+      {description: this.showMonth('mesprimero'),check:true},
+      {description: this.showMonth('mesActual'),check:true},
+      {description: this.showMonth('mesProyectado'),check:true},
+      {description: AppConstants.TitleTableHeadACAbadi.PROM_MES,check:true},
+      {description: AppConstants.TitleTableHeadACAbadi.PRE_COMPRA,check:true},
+      {description: AppConstants.TitleTableHeadACAbadi.COMPRA_FINAL,check:true},
+      {description: AppConstants.TitleTableHeadACAbadi.BONIFICADO,check:true},
+      {description: AppConstants.TitleTableHeadACAbadi.BOTICA,check:true},
+      {description: AppConstants.TitleTableHeadACAbadi.OCVIGENTE,check:true},
+      {description: AppConstants.TitleTableHeadACAbadi.OCVENCIDA,check:true},
+      {description: AppConstants.TitleTableHeadACAbadi.OC,check:true},
+      {description: AppConstants.TitleTableHeadACAbadi.BOTICAOC,check:true},
+      {description: AppConstants.TitleTableHeadACAbadi.COBERTURA_BOTICA,check:true},
+      {description: AppConstants.TitleTableHeadACAbadi.OBSERVACION,check:true},
     ];
     this.deleteColumnAC = this.headTableAnalisisCompra;
 
     this.headTableUltimasCompras = [
-      'Proveedor',
-      ' S - Orden',
-      ' Fecha',
-      ' Cant.-E',
-      ' Cant.- F',
-      ' V.V.F',
-      ' Dscto1(%)',
-      ' Dscto2(%)',
-      ' Dscto3(%)',
-      ' Dscto4(%)',
-      ' Boni',
+      AppConstants.TitleTableHeadUC.PROVEEDOR,
+      AppConstants.TitleTableHeadUC.S_ORDEN,
+      AppConstants.TitleTableHeadUC.FECHA,
+      AppConstants.TitleTableHeadUC.CANT_E,
+      AppConstants.TitleTableHeadUC.CANT_F,
+      AppConstants.TitleTableHeadUC.VVF,
+      AppConstants.TitleTableHeadUC.DESC1,
+      AppConstants.TitleTableHeadUC.DESC2,
+      AppConstants.TitleTableHeadUC.DESC3,
+      AppConstants.TitleTableHeadUC.DESC4,
+      AppConstants.TitleTableHeadUC.BONI,
     ];
 
     this.headTableUltimosIngresos = [
-      'Invnum',
-      'Proveedor',
-      'Documento',
-      'Fecha de ingreso',
-      'Orden de Compra',
-      'Cant.-E',
-      'Cant.-F',
-      'V.V.F',
-      'Dsct1(%)',
-      'Dsct2(%)',
-      'Dsct3(%)',
-      'Dsct4(%)',
-      'Boni',
+      AppConstants.TitleTableHeadUI.INVRUM,
+      AppConstants.TitleTableHeadUI.PROVEEDOR,
+      AppConstants.TitleTableHeadUI.DOCUMENTO,
+      AppConstants.TitleTableHeadUI.FECHA_INGRESO,
+      AppConstants.TitleTableHeadUI.ORDEN_COMPRA,
+      AppConstants.TitleTableHeadUI.CANT_E,
+      AppConstants.TitleTableHeadUI.CANT_F,
+      AppConstants.TitleTableHeadUI.VVF,
+      AppConstants.TitleTableHeadUI.DESC1,
+      AppConstants.TitleTableHeadUI.DESC2,
+      AppConstants.TitleTableHeadUI.DESC3,
+      AppConstants.TitleTableHeadUI.DESC4,
+      AppConstants.TitleTableHeadUI.BONI,
     ];
   }
 
-    showColumn(headColumn: string) {
-    if (this.deleteColumnAC.find(p => p == headColumn)) {
-      return true;
-    } else {
-      return false;
-    }
-  }
-  deleteColumn(headColumna: string, event: Event) {
-    let isChecked = (event.target as HTMLInputElement).checked;
-    if (isChecked) {
+  deleteColumn(headColumna: HeadTableAC) {
+    headColumna.check = !headColumna.check;
+    if (headColumna.check) {
       this.deleteColumnAC.push(headColumna);
     } else {
-      this.deleteColumnAC = this.deleteColumnAC.filter(p => p != headColumna);
+      this.deleteColumnAC = this.deleteColumnAC.filter(p => p.check);
     }
   }
 
@@ -896,5 +970,152 @@ export class DirectSupplyComponent implements OnInit {
 
     setTimeout(() => this.showToast = false, 5000);
   }
+
+
+    ExportExcel_UI() {
+      let today = new Date();
+      let dataExcel: any[] = [];
+  
+      const NombreArchivo = "TablaUltimaIngresos_" + today.getFullYear() + (today.getMonth() + 1) + today.getDate() + today.getHours() + today.getMinutes() + today.getSeconds();
+      console.log(this.rowsUIngresos.length);
+      if (this.rowsUIngresos.length == 0) {
+        this.AlertToast("La tabla Ultimas de Ingreso no tiene información.", 'warning');
+        return;
+      }
+  
+      let headInfo: string[] = [];
+      this.headTableUltimosIngresos.forEach(dataHeader => {
+        headInfo.push(dataHeader);
+      });
+  
+      dataExcel.push(headInfo);
+  
+      this.rowsUIngresos.forEach(data => {
+        dataExcel.push(
+          [
+            data.invNum,
+            data.nombreProveedor,
+            data.documento,
+            data.fechaIngreso,
+            data.ordenCompra,
+            data.cantE,
+            data.cantF,
+            data.VVF,
+            data.dscto1,
+            data.dscto2,
+            data.dscto3,
+            data.dscto4,
+            data.bonificacion,
+          ]
+        );
+      });
+      const ws: XLSX.WorkSheet = XLSX.utils.aoa_to_sheet(dataExcel);
+      const wb: XLSX.WorkBook = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, ws, 'Datos');
+  
+      const excelBuffer: any = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
+      const dataBlob: Blob = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+      saveAs(dataBlob, NombreArchivo + '.xlsx');
+  
+    }
+    ExportExcel_UC() {
+        let today = new Date();
+        let dataExcel: any[] = [];
+    
+        const NombreArchivo = "TablaUltimaCompra_" + today.getFullYear() + (today.getMonth() + 1) + today.getDate() + today.getHours() + today.getMinutes() + today.getSeconds();
+        if (this.rowsUCompras.length == 0) {
+          this.AlertToast("La tabla Ultimas de Compra no tiene información.", 'warning');
+          return;
+        }
+    
+        let headInfo: string[] = [];
+        this.headTableUltimasCompras.forEach(dataHeader => {
+          headInfo.push(dataHeader);
+        });
+    
+        dataExcel.push(headInfo);
+    
+        this.rowsUCompras.forEach(data => {
+          dataExcel.push(
+            [
+              data.nombreProveedor,
+              data.orden,
+              data.fecha,
+              data.cantE,
+              data.cantF,
+              data.vvf,
+              data.dscto1,
+              data.dscto2,
+              data.dscto3,
+              data.dscto4,
+              data.bonificacion
+            ]
+          );
+        });
+    
+        const ws: XLSX.WorkSheet = XLSX.utils.aoa_to_sheet(dataExcel);
+        const wb: XLSX.WorkBook = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, 'Datos');
+    
+        const excelBuffer: any = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
+        const dataBlob: Blob = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+        saveAs(dataBlob, NombreArchivo + '.xlsx');
+    
+      }
+      ExportExcel() {
+          let today = new Date();
+          let dataExcel: any[] = [];
+      
+          const NombreArchivo = "TablaAnalisisCompra_" + today.getFullYear() + (today.getMonth() + 1) + today.getDate() + today.getHours() + today.getMinutes() + today.getSeconds();
+          if (this.rows.length == 0) {
+            this.AlertToast("La tabla Analisis de Compra no tiene información.", 'warning');
+            return;
+          }
+      
+          let headInfo: string[] = [];
+          this.headTableAnalisisCompra.forEach(dataHeader => {
+            headInfo.push(dataHeader.description);
+          });
+      
+          dataExcel.push(headInfo);
+      
+          this.rows.forEach(dataBody => {
+            dataExcel.push([
+            dataBody.relacionado,
+            dataBody.codProducto,
+            dataBody.nombreProducto,
+            dataBody.nombreLaboratorio,
+            dataBody.establecimiento,
+            dataBody.unidadEmpaque,
+            dataBody.condicion,
+            dataBody.mesQuinto,
+            dataBody.mesCuarto,
+            dataBody.mesTercero,
+            dataBody.mesSegundo,
+            dataBody.mesPrimero,
+            dataBody.mesActual,
+            dataBody.mesActualProyeccion,
+            dataBody.promMes,
+            dataBody.preCompra,
+            dataBody.compraFinal,
+            dataBody.bonificacion,
+            dataBody.botica,
+            dataBody.ocVigente,
+            dataBody.ocVencido,
+            dataBody.oc,
+            dataBody.total,
+            dataBody.cobOrgAct,
+            dataBody.observacionesAbadi
+            ]);
+          });
+      
+          const ws: XLSX.WorkSheet = XLSX.utils.aoa_to_sheet(dataExcel);
+          const wb: XLSX.WorkBook = XLSX.utils.book_new();
+          XLSX.utils.book_append_sheet(wb, ws, 'Datos');
+      
+          const excelBuffer: any = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
+          const dataBlob: Blob = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+          saveAs(dataBlob, NombreArchivo + '.xlsx');
+        }
 
 }

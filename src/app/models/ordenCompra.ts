@@ -96,3 +96,56 @@ export class PurchaseOrder {
     ventaSubDist: string;
     isNewRow: boolean;
 } 
+
+export class PurchaseOrderAbadi {
+  relacionado:string;
+  incentivo: string;
+  codProducto:string;
+  nombreProducto:string;
+  codLaboratorio:string;
+  nombreLaboratorio:string;
+  codigoAlmacen:string;
+  establecimiento:string;
+  fracUnidad:string;
+  unidadEmpaque:string;
+  condicion:string;
+  clasificacion:string;
+  ABC:string;
+  plazoPago:string;
+  mesQuinto:string;
+  mesCuarto:string;
+  mesTercero:string;
+  mesSegundo:string;
+  mesPrimero:string;
+  mesActual:string;
+  mesActualProyeccion:string;
+  promMes:string;
+  preCompra:string;
+  compraFinal:string;
+  bonificacion:string;
+  botica:string;
+  almacen:string;
+  org:string;
+  canje:string;
+  ocVigente:string;
+  ocVencido:string;
+  oc:string;
+  total:string;
+  cobOrgAct: string;
+  maxBot:string;
+  maxInfraStock:string;
+  asociado:string;
+  nroOC:string;
+  secRelacion: string;
+  usuarioAutoriza: string;
+  ObservacionAutoriza: string;
+  ventaSubDist: string;
+  orgNoBotica: string;
+  totalNoBotica: string;
+  cobOrgActNoBotica: string;
+  cobOrgActCalcNoBotica: string;
+  observaciones: string;
+  observacionesAbadi: string;
+  isNewRow: boolean;
+} 
+

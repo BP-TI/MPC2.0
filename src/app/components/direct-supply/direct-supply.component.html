@@ -222,10 +222,8 @@
         class="dropdown-toggle"
         id="userDropdown"
         role="button"
-        data-toggle="dropdown"
-        data-bs-auto-close="false"
-      >
-        <i class="fa-solid fa-filter"></i>
+        data-toggle="dropdown">
+        <i class="fa-solid fa-filter  .icon-filter-colunm-hidden"></i>
       </a>
       <div
         class="dropdown-menu dropdown-menu-right shadow  filter-table"
@@ -233,16 +231,15 @@
       >
         <!-- Listado de columnas filtro -->
         @for(data of headTableAnalisisCompra; track data; let index = $index){ @if(index > 2){
-        <div class="dropdown-item form-check" data-toggle="modal">
+        <div class="dropdown-item form-check" (click)="deleteColumn(data)">
           <input
             class="form-check-input"
             type="checkbox"
-            value=""
-            id="flexCheckDefault"
-            (change)="deleteColumn(data, $event)"
-            checked
+            id="{{ data.description }}"
+            (change)="deleteColumn(data)"
+            [checked]="data.check"
           />
-          <label class="form-check-label" for="{{ data }}"> {{ data }} </label>
+          <label class="form-check-label" for="{{ data.description }}"> {{ data.description }} </label>
         </div>
         } }
         <!-- End Listado de columnas filtro -->
@@ -258,15 +255,15 @@
       <table id="tablaAnalisiCompra" class="table-style table-fixed">
         <thead>
           <tr id="header-row">
-             @for(data of headTableAnalisisCompra; track data){ @if(showColumn(data)){
+             @for(data of headTableAnalisisCompra; track data){ @if(data.check){
             <th draggable="true">
-              {{ data }}
-              @if( data == 'Descripción' || data == 'Tipo' || data == 'Compra final' || data ==
-              'Labora.' || data == 'Condición' ){
+              {{ data.description }}
+              @if( data.description == 'Descripción' || data.description == 'Tipo' || data.description == 'Compra final' || data.description ==
+              'Labora.' || data.description == 'Condición' ){
                 <i
                 *ngIf="showFilterTable"
                 class="fa-solid fa-filter text-light"
-                (click)="openContextMenu($event, 4, data)"
+                (click)="openContextMenu($event, 4, data.description)"
               ></i>
               }
             </th>
@@ -283,31 +280,31 @@
             (click)="isRowSelected = i"
             [class.selected]="isRowSelected === i">
 
-            <td *ngIf="showColumn(headTableAnalisisCompra[0])" [ngClass]="siRowSelectedHover(i, data.codProducto)">{{data.relacionado}}</td>
-            <td *ngIf="showColumn(headTableAnalisisCompra[1])" [ngClass]="siRowSelectedHover(i, data.codProducto)" class="center-text">{{ data.codProducto }}</td>
-            <td *ngIf="showColumn(headTableAnalisisCompra[2])"[ngClass]="siRowSelectedHover(i, data.codProducto)">{{ data.nombreProducto }}</td>
-            <td *ngIf="showColumn(headTableAnalisisCompra[3])">{{ data.nombreLaboratorio }}</td>
-            <td *ngIf="showColumn(headTableAnalisisCompra[4])">{{data.establecimiento}}</td>
-            <td *ngIf="showColumn(headTableAnalisisCompra[5])"class="center-text">{{ data.unidadEmpaque }}</td>
-            <td *ngIf="showColumn(headTableAnalisisCompra[6])">{{ data.condicion }}</td>
-            <td *ngIf="showColumn(headTableAnalisisCompra[7])"class="center-text">{{ data.mesQuinto | number : '1.2-2' }}</td>
-            <td *ngIf="showColumn(headTableAnalisisCompra[8])"class="center-text">{{ data.mesCuarto | number : '1.2-2' }}</td>
-            <td *ngIf="showColumn(headTableAnalisisCompra[9])"class="center-text">{{ data.mesTercero | number : '1.2-2' }}</td>
-            <td *ngIf="showColumn(headTableAnalisisCompra[10])"class="center-text">{{ data.mesSegundo | number : '1.2-2' }}</td>
-            <td *ngIf="showColumn(headTableAnalisisCompra[11])"class="center-text">{{ data.mesPrimero | number : '1.2-2' }}</td>
-            <td *ngIf="showColumn(headTableAnalisisCompra[12])"class="center-text">{{ data.mesActual | number : '1.2-2' }}</td>
-            <td *ngIf="showColumn(headTableAnalisisCompra[13])"class="center-text">{{ data.mesActualProyeccion | number : '1.2-2' }}</td>
-            <td *ngIf="showColumn(headTableAnalisisCompra[14])"class="center-text">{{ data.promMes | number : '1.2-2' }}</td>
-            <td *ngIf="showColumn(headTableAnalisisCompra[15])"class="center-text">{{ data.preCompra | number : '1.2-2' }}</td>
-            <td *ngIf="showColumn(headTableAnalisisCompra[16])"class="center-text">{{ data.compraFinal | number : '1.2-2' }}</td>
-            <td *ngIf="showColumn(headTableAnalisisCompra[17])"class="center-text">{{ data.bonificacion | number : '1.2-2' }}</td>
-            <td *ngIf="showColumn(headTableAnalisisCompra[18])"class="center-text">{{ data.botica | number : '1.2-2' }}</td>
-            <td *ngIf="showColumn(headTableAnalisisCompra[19])"class="center-text">{{ data.ocVigente | number : '1.2-2' }}</td>
-            <td *ngIf="showColumn(headTableAnalisisCompra[20])"class="center-text">{{ data.ocVencido | number : '1.2-2' }}</td>
-            <td *ngIf="showColumn(headTableAnalisisCompra[21])"class="center-text">{{ data.oc | number : '1.2-2' }}</td>
-            <td *ngIf="showColumn(headTableAnalisisCompra[22])"class="center-text">{{ data.total | number : '1.2-2' }}</td>
-            <td *ngIf="showColumn(headTableAnalisisCompra[23])"class="center-text">{{ data.cobOrgAct | number : '1.2-2' }}</td>
-            <td *ngIf="showColumn(headTableAnalisisCompra[24])">{{ data.observacionesAbadi }}</td>
+            <td *ngIf="headTableAnalisisCompra[0].check" [ngClass]="siRowSelectedHover(i, data.codProducto)">{{data.relacionado}}</td>
+            <td *ngIf="headTableAnalisisCompra[1].check" [ngClass]="siRowSelectedHover(i, data.codProducto)" class="center-text">{{ data.codProducto }}</td>
+            <td *ngIf="headTableAnalisisCompra[2].check"[ngClass]="siRowSelectedHover(i, data.codProducto)">{{ data.nombreProducto }}</td>
+            <td *ngIf="headTableAnalisisCompra[3].check">{{ data.nombreLaboratorio }}</td>
+            <td *ngIf="headTableAnalisisCompra[4].check">{{data.establecimiento}}</td>
+            <td *ngIf="headTableAnalisisCompra[5].check"class="center-text">{{ data.unidadEmpaque }}</td>
+            <td *ngIf="headTableAnalisisCompra[6].check">{{ data.condicion }}</td>
+            <td *ngIf="headTableAnalisisCompra[7].check"class="center-text">{{ data.mesQuinto | number : '1.2-2' }}</td>
+            <td *ngIf="headTableAnalisisCompra[8].check"class="center-text">{{ data.mesCuarto | number : '1.2-2' }}</td>
+            <td *ngIf="headTableAnalisisCompra[9].check"class="center-text">{{ data.mesTercero | number : '1.2-2' }}</td>
+            <td *ngIf="headTableAnalisisCompra[10].check"class="center-text">{{ data.mesSegundo | number : '1.2-2' }}</td>
+            <td *ngIf="headTableAnalisisCompra[11].check"class="center-text">{{ data.mesPrimero | number : '1.2-2' }}</td>
+            <td *ngIf="headTableAnalisisCompra[12].check"class="center-text">{{ data.mesActual | number : '1.2-2' }}</td>
+            <td *ngIf="headTableAnalisisCompra[13].check"class="center-text">{{ data.mesActualProyeccion | number : '1.2-2' }}</td>
+            <td *ngIf="headTableAnalisisCompra[14].check"class="center-text">{{ data.promMes | number : '1.2-2' }}</td>
+            <td *ngIf="headTableAnalisisCompra[15].check"class="center-text">{{ data.preCompra | number : '1.2-2' }}</td>
+            <td *ngIf="headTableAnalisisCompra[16].check"class="center-text">{{ data.compraFinal | number : '1.2-2' }}</td>
+            <td *ngIf="headTableAnalisisCompra[17].check"class="center-text">{{ data.bonificacion | number : '1.2-2' }}</td>
+            <td *ngIf="headTableAnalisisCompra[18].check"class="center-text">{{ data.botica | number : '1.2-2' }}</td>
+            <td *ngIf="headTableAnalisisCompra[19].check"class="center-text">{{ data.ocVigente | number : '1.2-2' }}</td>
+            <td *ngIf="headTableAnalisisCompra[20].check"class="center-text">{{ data.ocVencido | number : '1.2-2' }}</td>
+            <td *ngIf="headTableAnalisisCompra[21].check"class="center-text">{{ data.oc | number : '1.2-2' }}</td>
+            <td *ngIf="headTableAnalisisCompra[22].check"class="center-text">{{ data.total | number : '1.2-2' }}</td>
+            <td *ngIf="headTableAnalisisCompra[23].check"class="center-text">{{ data.cobOrgAct | number : '1.2-2' }}</td>
+            <td *ngIf="headTableAnalisisCompra[24].check">{{ data.observacionesAbadi }}</td>
           </tr>
         </tbody>
       </table>
@@ -321,69 +318,6 @@
     <p class="text-total-value">Total Pagar: {{ totalPagar | number : '1.2-2' }}</p>
   </div>
 </div>
-
-<!-- MODAL -->
-
-<!-- modal Generar Orden de compra -->
-<!-- <div
-  class="modal fade"
-  id="ordenCompra"
-  data-backdrop="static"
-  data-keyboard="false"
-  tabindex="10"
-  role="dialog"
-  aria-labelledby="staticBackdropLabel"
-  aria-hidden="true"
->
-  <div class="modal-dialog modal-dialog-centered modal-xl">
-    <div class="modal-content">
-      <div
-        class="modal-header p-2 m-0 d-flex align-items-baseline justify-content-between style-header-popup"
-      >
-        <p class="title-modal p-0 m-0">Nueva Orden de Compra</p>
-        <button type="button" class="button-cancel" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <app-purchase-order></app-purchase-order>
-      </div>
-    </div>
-  </div>
-</div> -->
-<!-- End modal Generar Orden de compra -->
-
-<!-- <div
-  class="modal fade"
-  id="generarbasadaoc"
-  data-backdrop="static"
-  data-keyboard="false"
-  tabindex="10"
-  role="dialog"
-  aria-labelledby="staticBackdropLabel"
-  aria-hidden="true"
->
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-      <div
-        class="modal-header d-flex align-items-baseline justify-content-between style-header-popup"
-      >
-        <p class="title-modal">Generar en base a una O/C</p>
-        <button type="button" class="button-cancel" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <div class="d-flex align-items-baseline gap-2">
-          <label for="fechacreacion">Número de O/C</label>
-          <input type="number" placeholder="Orden de compra"/>
-          <button class="button-style">Guardar</button>
-        </div>
-      </div>
-    </div>
-  </div>
-</div> -->
-
 <!-- end modal -->
 <app-option-click (action)="handleMenuAction($event)" 
 (filter)="filterData($event)"
