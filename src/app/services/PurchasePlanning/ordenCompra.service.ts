@@ -3,7 +3,7 @@ import { HelperService } from '../../shared/services/helper.service';
 import { environment } from '../../../environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { IAdicionarProductoCalculoReq, IAdicionarProductosReq, ICompraFinalReq, IDetalleStockBotica, IUltimasComprasReq, IUPdateCondicionProduct } from '../../models/ordenCompra';
+import { bodyMail, IAdicionarProductoCalculo2Req, IAdicionarProductoCalculoReq, IAdicionarProductosReq, ICompraFinalReq, IDetalleStockBotica, IGenerarOrdenCompra, IUltimasComprasReq, IUPdateCondicionProduct } from '../../models/ordenCompra';
 
 @Injectable({
   providedIn: 'root'
@@ -38,6 +38,10 @@ export class OrdenCompraService {
     return this.httpClient.post<any>(`${this.REQUEST_URL}/AdicionarProductoCalculo`, request);
   }
 
+  getAdicionarProductoCalculo2(request: IAdicionarProductoCalculo2Req): Observable<any> {
+    return this.httpClient.post<any>(`${this.REQUEST_URL}/AdicionarProductoCalculo2`, request);
+  }
+
   getCompraFinal(request: ICompraFinalReq) {
     return this.httpClient.post<any>(`${this.REQUEST_URL}/GetCompraFinal`, request);
   }
@@ -70,5 +74,14 @@ export class OrdenCompraService {
     }
     return this.httpClient.post<any>(`${this.REQUEST_URL}/GetRucProveedor`, request);
   }
+
+  getCuerpoCorreo() {
+    return this.httpClient.get<bodyMail>(`${this.REQUEST_URL}/GetEstructuraCorreo`);
+  }
+  
+  postGenerarOrdenCompra(reques: IGenerarOrdenCompra){
+    return this.httpClient.post<any>(`${this.REQUEST_URL}/GenerarOrdenCompra`,reques);
+  }
+
 
 }

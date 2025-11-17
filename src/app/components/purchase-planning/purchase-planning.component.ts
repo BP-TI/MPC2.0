@@ -327,7 +327,6 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
       case 'view':
         this.openModalSubstitutes();
         break;
-
       case 'filters':
         this.showFilterTable = !this.showFilterTable;
         break;
@@ -1505,7 +1504,6 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
         return;
       }
     }
-
 
     this.loading = true;
 

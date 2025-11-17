@@ -1,8 +1,8 @@
 import { Component, ElementRef, HostListener, Input, input, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { AgentOutlook } from '../../shared/models/agentOutlook';
 import { AlertMail } from '../../shared/services/alert-mail';
-import { NgbActiveModal, NgbCalendar, NgbDateAdapter } from '@ng-bootstrap/ng-bootstrap';
-import { PurchaseOrder_table_modal } from '../../models/ordenCompra';
+import { NgbActiveModal, NgbCalendar, NgbDateAdapter, NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { IAdicionarProductoCalculo2Req, IAdicionarProductoCalculoReq, ICompraFinalReq, PurchaseOrder_table_modal } from '../../models/ordenCompra';
 import { OrdenCompraService } from '../../services/PurchasePlanning/ordenCompra.service';
 import { AppConstants } from '../../shared/constants/app.constants';
 import { GlobalService } from '../../shared/services/global.service';
@@ -10,6 +10,8 @@ import { UserDataLogin } from '../../models/persona';
 import { OptionClickComponent } from '../../shared/components/option-click/option-click.component';
 import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
+import { AddProductComponent } from '../add-product/add-product.component';
+import { ConfirmacionModalComponent } from '../../modales/confirmacionModal/confirmacionModal.component';
 
 @Component({
   selector: 'app-purchase-order',
@@ -65,6 +67,7 @@ export class PurchaseOrderComponent implements OnInit {
     private ngbCalendar: NgbCalendar,
     private dateAdapter: NgbDateAdapter<string>,
     private globalService: GlobalService,
+    private modalService: NgbModal,
   ) { }
 
   ngOnInit(): void {
@@ -148,19 +151,216 @@ export class PurchaseOrderComponent implements OnInit {
       case 'excel':
         this.exportExcel();
         break;
+      case 'deleteProduct':
+        this.deleteRow();
+        break;
+      case 'addProduct':
+        this.addRow();
+        break;
+      case 'consider':
+        this.consider();
+        break;
+      case 'noconsider':
+        this.noConsider();
+        break;
     }
   }
+
+  addRow() {
+
+    const modalAddProd = this.modalService.open(AddProductComponent, {
+      windowClass: "modal-product",
+      backdrop: false,
+      scrollable: true
+    });
+
+    let codLab = 'x';
+    modalAddProd.componentInstance.codProv = this.scodPorv;
+    modalAddProd.componentInstance.codLab = codLab;
+
+    modalAddProd.closed.subscribe((response: any) => {
+      this.addNewProductoList(response);
+    });
+    this.calculateTotal();
+  }
+
+  addNewProductoList(dataProduct: any) {
+    let dataProductExist = this.dataRows.filter(p => p.codProd == dataProduct.codigoProducto);
+
+    if (dataProductExist.length > 0) {
+      this.AlertToast("WARNING: Este Producto ya se encuentra agregado.", 'warning');
+      return;
+    }
+    let dataRequest: IAdicionarProductoCalculoReq = { codProducto: dataProduct.codigoProducto }
+    let newDate: PurchaseOrder_table_modal = {
+      item: '',
+      codProd: '',
+      producto: '',
+      codLab: '',
+      laboratorio: '',
+      EAN: '',
+      cantE: '',
+      cantF: '',
+      boni: '',
+      vvf1: '',
+      vvf2: '',
+      desct1: '',
+      desct2: '',
+      desct3: '',
+      desct4: '',
+      coscom: '',
+      igv: '',
+      igvpro: '',
+      parcial: '',
+      total: '',
+      pro_mes: '',
+      total_stock: '',
+      Observacion: '',
+      VVF_Temp: '',
+      asociado: '',
+      observacion_autoriza: '',
+      usuario_autoriza: '',
+      SecOrden: '',
+      cantE_temp: '',
+      cant_Unid_empa: '',
+    };
+    this.loading = true;
+    this.orderCompraService.getAdicionarProductoCalculo(dataRequest).subscribe(response => {
+      this.loading = false;
+
+
+      if (response.codStatus == 1) {
+        if (response.message != "OK") {
+          this.AlertToast(response.message, 'warning');
+        } else {
+          if (response.detalleProductos != null && response.detalleProductos.length > 0) {
+
+            newDate.item = (this.dataRows.length + 1).toString();
+            newDate.codProd = response.detalleProductos[0].codProducto.toString();
+            newDate.producto = response.detalleProductos[0].nombreProducto;
+            newDate.codLab = response.detalleProductos[0].codLaboratorio;
+            newDate.laboratorio = response.detalleProductos[0].nombreLaboratorio;
+            newDate.EAN = '';
+            newDate.cantE = response.detalleProductos[0].compraFinal;
+            newDate.cantF = '0.00';
+            newDate.boni = response.detalleProductos[0].bonificacion;
+            newDate.vvf1 = response.detalleProductos[0].VVF1;
+            newDate.vvf2 = response.detalleProductos[0].VVF2;
+            newDate.desct1 = response.detalleProductos[0].descuento1;
+            newDate.desct2 = response.detalleProductos[0].descuento2;
+            newDate.desct3 = response.detalleProductos[0].descuento3;
+            newDate.desct4 = response.detalleProductos[0].descuento4;
+            newDate.coscom = response.detalleProductos[0].cosCom;
+            newDate.igv = response.detalleProductos[0].igv;
+            newDate.igvpro = response.detalleProductos[0].igvProducto;
+            newDate.parcial = response.detalleProductos[0].parcial;
+            newDate.total = response.detalleProductos[0].total;
+            newDate.pro_mes = response.detalleProductos[0].promMes;
+            newDate.total_stock = response.detalleProductos[0].total;
+            newDate.Observacion = response.detalleProductos[0].observaciones;
+            newDate.VVF_Temp = response.detalleProductos[0].VVF1;
+            newDate.asociado = response.detalleProductos[0].asociado;
+            newDate.observacion_autoriza = response.detalleProductos[0].ObservacionAutoriza;
+            newDate.usuario_autoriza = response.detalleProductos[0].usuarioAutoriza;
+            newDate.SecOrden = this.dataRows[0].coscom;
+            newDate.cantE_temp = response.detalleProductos[0].compraFinal;
+            newDate.cant_Unid_empa = response.detalleProductos[0].unidadEmpaque;
+          }
+
+          this.dataRows.push(newDate);
+        }
+      } else {
+        this.AlertToast(response.message, 'warning');
+      }
+    });
+
+    this.calculateTotal();
+  }
+
+  deleteRow() {
+    if (this.isRowSelectedGOC == -1) {
+      this.AlertToast("WARNING: Debe de seleccionar una fila.", 'warning');
+      return;
+    }
+
+    this.dataRows.splice(this.isRowSelectedGOC, 1);
+    this.isRowSelectedGOC = -1;
+    this.AlertToast("SUCCESS: Se elimino el producto.", 'success');
+    this.calculateTotal();
+  }
+
   filterData(filter: string) {
     this.contextMenu.closeHeadTableAC();
   }
+
   openContextMenu(event: MouseEvent, opcionMenu: number) {
     event.preventDefault();
     this.contextMenu.open(event.pageX, event.pageY, opcionMenu);
   }
+
+  consider() {
+    if (this.dataRows.length == 0) {
+      this.AlertToast(`Warning: No hay productos seleccionados.`, 'warning');
+      return;
+    }
+
+    if (this.isRowSelectedGOC == -1) {
+      this.AlertToast(`Warning: No se selecciono un producto.`, 'warning');
+      return;
+    }
+
+    let modalConfirm = this.modalService.open(ConfirmacionModalComponent, {
+      windowClass: "modal-confirmacion",
+      backdrop: true,
+      scrollable: true
+    });
+
+    modalConfirm.componentInstance.message = '¿Desea considerar la Bonificación en el Costo de Compra del producto seleccionado?';
+
+    modalConfirm.closed.subscribe((confirn: any) => {
+      if (confirn) {
+
+        this.calculateDesc(this.isRowSelectedGOC);;
+        this.calculateTotal();
+
+      } else {
+        this.dataRows[this.isRowSelectedGOC].cantE = this.valorAnterior;
+        return;
+      }
+
+    });
+
+  }
+
+  noConsider() {
+    if (this.dataRows.length == 0) {
+      this.AlertToast(`Warning: No hay productos seleccionados.`, 'warning');
+      return;
+    }
+
+    if (this.isRowSelectedGOC == -1) {
+      this.AlertToast(`Warning: No se selecciono un producto.`, 'warning');
+      return;
+    }
+
+    let modalConfirm = this.modalService.open(ConfirmacionModalComponent, {
+      windowClass: "modal-confirmacion",
+      backdrop: true,
+      scrollable: true
+    });
+
+    modalConfirm.componentInstance.message = '¿Desea considerar la Bonificación en el Costo de Compra del producto seleccionado?';
+
+    this.calculateDesc(this.isRowSelectedGOC);
+    this.calculateTotal();
+
+
+  }
+
   // ExportarExcel
   exportExcel() {
     if (this.dataRows.length == 0) {
-      this.AlertToast("La tabla Analisis de Compra no tiene información.", 'warning');
+      this.AlertToast("WARNING: La tabla Analisis de Compra no tiene información.", 'warning');
       return;
     }
 
@@ -255,6 +455,67 @@ export class PurchaseOrderComponent implements OnInit {
 
     // Validar cantidad
     if (nameColumn == this.headtable.CANT) {
+
+      let dataRquest: IAdicionarProductoCalculo2Req = {
+        codProveedor: '',
+        codLab: '',
+        codProducto: this.dataRows[this.isRowSelectedGOC].codProd,
+        usuarioLogin: '',
+        codUusario: '',
+        flag: 2
+      }
+
+      this.orderCompraService.getAdicionarProductoCalculo2(dataRquest).subscribe(response => {
+
+        let nProm_Ultimos3Meses: number = 0;
+        let nCanMaxCompra: number = 0;
+
+        if (response.codStatus == 1) {
+          if (response.message == 'OK') {
+            nProm_Ultimos3Meses = Number(response.detalleProductos.prom_ult3Meses);
+            nCanMaxCompra = (((Number(response.detalleProductos.promMes)) / (nProm_Ultimos3Meses / 3)) * 120) - ((Number(response.detalleProductos.total)) + Number(this.dataRows[this.isRowSelectedGOC].cantE)) + Number(this.dataRows[this.isRowSelectedGOC].cantE);
+
+            if (nCanMaxCompra < 0) {
+              this.AlertToast(`Warning: Cantidad máxima a comprar: ${response.detalleProductos.preCompra}.`, 'warning');
+            } else {
+              this.AlertToast(`Warning: Cantidad máxima a comprar: ${nCanMaxCompra}.`, 'warning');
+            }
+
+
+            let dataCFReq: ICompraFinalReq = {
+              codPro: this.dataRows[this.isRowSelectedGOC].codProd,
+              codLab: this.dataRows[this.isRowSelectedGOC].codLab,
+              cant_Unid_Empa: (Number(this.dataRows[this.isRowSelectedGOC])) ? Number(this.dataRows[this.isRowSelectedGOC].cantE) : 1,
+              pre_Compra: Number(this.dataRows[this.isRowSelectedGOC].cantE_temp),
+              asociado: this.dataRows[this.isRowSelectedGOC].asociado,
+            }
+            this.loading = true;
+            let nCompra_Final: number = 0;
+            this.orderCompraService.getCompraFinal(dataCFReq).subscribe(responseCF => {
+              this.loading = false;
+              nCompra_Final = response.Compra_Final;
+
+              if (Number(this.dataRows[this.isRowSelectedGOC].pro_mes) == 0 && Number(response.detalleProductos.promMes) == 0) {
+
+                let modalConfirm = this.modalService.open(ConfirmacionModalComponent, {
+                  windowClass: "modal-confirmacion",
+                  backdrop: true,
+                  scrollable: true
+                });
+
+                modalConfirm.componentInstance.message = 'El producto no tiene Venta en los últimos 3 meses.';
+
+              }
+
+            });
+
+          } else {
+
+          }
+        }
+
+
+      });
 
     }
 
@@ -417,26 +678,41 @@ export class PurchaseOrderComponent implements OnInit {
   // End Hover
   // -----
   openOutlook() {
-    let body: AgentOutlook = {
-      subject: 'Prueba',
-      body: 'Este es un mensaje de prueba \n\nsaludos \njheisson Villafuerte',
-      isBodyHtml: 'true',
-      recipients: [
-        "tu@correo.com",
-        "tu2@correo.com"
-      ],
-      attachments: [{
-        filename: "hola.zip",
-        dataBase64: ""
-      }]
-    }
+    let todayFormat = this.today.getDate() + '-' + (this.today.getMonth() + 1) + '-' + this.today.getFullYear();
 
-    this.alertMail.openMail(body).subscribe(response => {
-      console.log('entro');
-      console.log(response);
-    }, error => {
-      console.log('error');
+    this.orderCompraService.getCuerpoCorreo().subscribe(response => {
+
+      let massageAsunto = response.CorreoAsunto.replace('{1}', todayFormat);
+      let massageFooter = 'Gracias por su gentil atención.' + "\n\n" + "Atentamente" + "\n" + this.dataUsuario.NombreUsuario;
+      let massageBody = response.CorreoMensaje1 + "\n\n" + response.CorreoMensaje2 + "\n" + response.CorreoMensaje3 + "\n" + response.CorreoMensaje4 + "\n" + response.CorreoMensaje5 + "\n\n" + massageFooter
+      massageBody = massageBody.replace(/<br\s*\/?>/gi, "").trim();
+
+      let body: AgentOutlook = {
+        subject: massageAsunto,
+        body: massageBody,
+        isBodyHtml: 'true',
+        recipients: [
+          "tu@correo.com",
+          "tu2@correo.com"
+        ],
+        attachments: [{
+          filename: "hola.zip",
+          dataBase64: ""
+        }]
+      }
+
+      this.alertMail.openMail(body).subscribe(response => {
+        console.log('entro');
+        console.log(response);
+      }, error => {
+        console.log('error');
+      });
+
     });
+
+
+
+
   }
 
   closeModal() {
