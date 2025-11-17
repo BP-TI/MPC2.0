@@ -135,6 +135,24 @@ export const AppConstants = {
     DetalleStockBotica:{
         DETALLESTOCKBOTICA:1,
         DETALLEINFRASTOCK:2
+    },
+    TtitleHeadGOC:{
+        INDEX:'index',
+        CODIGO:'Código',
+        DESCRIPCION:'Descripción',
+        LABORATORIO:'Laboratorio',
+        CANT:'Cant.',
+        BONI:'Boni',
+        VVF:'V.V.F',
+        VVFNUEVO:'V.V.F Nuevo',
+        DESCT1:'Desct.1',
+        DESCT2:'Desct.2',
+        DESCT3:'Desct.3',
+        DESCT4:'Desct.4',
+        COSCOM:'CosCom',
+        PARCIAL:'Parcial',
+        IGV:'Igv',
+        TOTAL:'Total',
     }
 
 }

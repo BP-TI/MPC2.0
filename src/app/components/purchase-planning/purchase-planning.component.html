@@ -241,7 +241,6 @@
       <table id="tablaAnalisiCompra" class="table-style table-fixed">
         <thead>
           <tr id="header-row">
-            <!-- @for(data of headTableAnalisisCompra; track data){ @if(showColumn(data)){ -->
             @for(data of headTableAnalisisCompra; track data){ @if(data.check){
             <th draggable="true">
               {{ data.description }}
@@ -299,7 +298,9 @@
                 [(ngModel)]="data.unidadEmpaque"
                 id="inputuniEmp"
                 (focus)="savePreviousValue(data)"
-                (keyup.enter)="calcular_Valores_Input(headTableAnalisisCompra[3].description, $event)"
+                (keyup.enter)="
+                  calcular_Valores_Input(headTableAnalisisCompra[3].description, $event)
+                "
               />
             </td>
 
@@ -417,7 +418,7 @@
             @if(isRowSelected === i){
             <td
               *ngIf="headTableAnalisisCompra[15].check"
-              class="center-text"      
+              class="center-text"
               [ngClass]="siRowSelectedHover(i, data.codProducto)"
             >
               <input
