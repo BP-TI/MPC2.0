@@ -37,6 +37,7 @@ import { DetalleStockBoticaComponent } from './modales/purchase-planning/detalle
 import { AutorizacionModalComponent } from './modales/autorizacion-modal/autorizacion-modal.component';
 import { NgbDatepickerModule, NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
+
 @NgModule({
   declarations: [
     App,
@@ -74,9 +75,8 @@ import { NgbDatepickerModule, NgbModule } from '@ng-bootstrap/ng-bootstrap';
     NgSelectModule,
     PdfViewerModule,
     HttpClientModule,
-    ToastaModule.forRoot(),
-    NgbDatepickerModule,
-    
+    ToastaModule.forRoot()
+       NgbDatepickerModule,
   ],
   providers: [
     provideBrowserGlobalErrorListeners(),

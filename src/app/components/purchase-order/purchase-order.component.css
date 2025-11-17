@@ -204,12 +204,18 @@ input {
 /* Estilo de la tabla */
 .table-scroll-PO {
   padding: 0px;
+.table-scroll-PO {
+  padding: 0px;
   overflow-x: auto;
   height: 230px;
   border: #DCEBFF solid;
   scrollbar-color: #B0E0E6 white !important;
+  scrollbar-color: #B0E0E6 white !important;
 }
 
+.table-style-PO {
+  padding: 0px;
+  margin: 0px;
 .table-style-PO {
   padding: 0px;
   margin: 0px;
@@ -217,11 +223,13 @@ input {
 }
 
 .table-style-PO thead th {
+.table-style-PO thead th {
   background: #134B97;
   color: white;
   text-align: center;
 }
 
+.table-style-PO th,
 .table-style-PO th,
 td {
 
@@ -232,6 +240,7 @@ td {
 }
 
 .table-style-PO th {
+.table-style-PO th {
   overflow: hidden;
   font-family: 'Montserrat';
   font-style: normal;
@@ -241,6 +250,7 @@ td {
 }
 
 .table-style-PO td {
+.table-style-PO td {
   font-size: 10px;
   color: #3C3C3C;
   background: white;
@@ -248,6 +258,7 @@ td {
   text-align: center;
 }
 
+.table-style-PO th,
 .table-style-PO th,
 td {
   white-space: nowrap;

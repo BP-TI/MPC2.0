@@ -21,6 +21,7 @@ import { ConfirmacionModalComponent } from '../../modales/confirmacionModal/conf
   encapsulation: ViewEncapsulation.None,
 })
 export class PurchaseOrderComponent implements OnInit {
+export class PurchaseOrderComponent implements OnInit {
   logoHeader = 'assets/images/logo-color.svg';
 
   @Input() dataRows!: PurchaseOrder_table_modal[];

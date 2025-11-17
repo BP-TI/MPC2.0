@@ -55,7 +55,9 @@ export class OrdenCompraService {
   }
 
   getClaveAutorizacion1(clave: string) {
+  getClaveAutorizacion1(clave: string) {
     let request = {
+      "clave": clave
       "clave": clave
     }
     return this.httpClient.post<any>(`${this.REQUEST_URL}/GetClaveAutorizacion1`, request);

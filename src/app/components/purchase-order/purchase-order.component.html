@@ -3,6 +3,9 @@
     class="header-modal mb-0 p-2 d-flex align-items-baseline justify-content-between"
     (mousedown)="startDrag($event)"
   >
+    class="header-modal mb-0 p-2 d-flex align-items-baseline justify-content-between"
+    (mousedown)="startDrag($event)"
+  >
     <p class="title-modal m-0 p-0">Generar Orden de compra</p>
     <button type="button" class="button-cancel" (click)="closeModal()">
       <span aria-hidden="true">&times;</span>
@@ -17,6 +20,7 @@
       <div class="m-0 p-0">
         <img src="{{ logoHeader }}" class="logo-cabecera" />
       </div>
+      <div class="m-0 p-0 d-flex align-items-baseline gap-2">
       <div class="m-0 p-0 d-flex align-items-baseline gap-2">
         <button class="button-header">
           <i class="fa-solid fa-calendar-days"></i>
@@ -33,6 +37,7 @@
       </div>
     </div>
     <!-- end botones -->
+    <hr class="m-0 p-0" size="10px" width="100%" color="134B97" />
     <hr class="m-0 p-0" size="10px" width="100%" color="134B97" />
 
     <!-- datos -->
@@ -74,6 +79,7 @@
       </div>
     </div>
     <!-- end datos -->
+    <hr class="m-0 p-0" size="10px" width="100%" color="134B97" />
     <hr class="m-0 p-0" size="10px" width="100%" color="134B97" />
 
     <!-- formulario -->
