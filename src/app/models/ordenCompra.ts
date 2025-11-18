@@ -87,6 +87,17 @@ export interface IAdicionarProductoCalculo2Req {
     flag: number;
 }
 
+export interface ICondicionesPago {
+    codigoProveedor: string;
+    codigoLaboratorio: string;
+    codigoProducto: string;
+}
+
+export interface ICondicionesPagoResp{
+    codCondicion: string;
+    descripcion:string;
+}
+
 export interface IUPdateCondicionProduct {
     codProducto: string;
     codUsuario: number;
@@ -218,4 +229,13 @@ export class bodyMail {
     codStatus: string;
     message: string;
     observation: string;
+}
+
+export class dataDirectionOC {
+    ssiscod: string;
+    scodalm: string;
+    facturarA: string;
+    direccionEntrega: string;
+    distrito: string;
+    direccionCompleta: string;
 }

@@ -18,15 +18,15 @@
         <img src="{{ logoHeader }}" class="logo-cabecera" />
       </div>
       <div class="m-0 p-0 d-flex align-items-baseline gap-2">
-        <button class="button-header">
+        <!-- <button class="button-header">
           <i class="fa-solid fa-calendar-days"></i>
           Cronograma recepción
-        </button>
-        <button class="button-header">
+        </button> -->
+        <button class="button-header" (click)="saveOrdenCompra()" [disabled]="isGenerationOC">
           <i class="fa-solid fa-floppy-disk"></i>
           Guardar
         </button>
-        <button class="button-header" (click)="openOutlook()">
+        <button class="button-header" (click)="openOutlook()" [disabled]="!isGenerationOC">
           <i class="fa-solid fa-envelope"></i>
           Enviar
         </button>
@@ -39,7 +39,7 @@
     <div class="col-12 d-flex justify-content-between m-0 pr-3 pl-3 pt-2 pb-2">
       <div class="col-8 m-0 p-0 pt-1">
         <p class="company-data">Oficina Principal</p>
-        <p class="company-data">JR. Baltazar Grados Nº 810 - SIM - LIMA</p>
+        <p class="company-data">{{ directionSelect.direccionCompleta }}</p>
         <p class="company-data">Teléfono principal: 206 - 7000 Anexo: 108 RUC: 20515346113</p>
       </div>
       <div class="col-4 d-flex align-items-start gap-3 justify-content-end">
@@ -77,9 +77,9 @@
     <hr class="m-0 p-0" size="10px" width="100%" color="134B97" />
 
     <!-- formulario -->
-    <div class="col-12 d-flex align-items-baseline m-0 pl-3 pr-3 pt-2 pb-2 gap-2">
+    <div class="col-12 d-flex align-items-baseline m-0 pl-3 pr-3 pt-2 pb-2 gap-1">
       <!-- columna  1 -->
-      <div class="col-4 m-0 p-0">
+      <div class="col-5 m-0 p-0">
         <div class="m-0 p-0 pb-2">
           <label class="label_title" for="proveedor">Proveedor:</label>
           <input type="text" placeholder="Porveedor" [(ngModel)]="sdesProv" readonly />
@@ -90,7 +90,7 @@
         </div>
         <div class="m-0 p-0">
           <label class="label_title" for="Factura">Factura a:</label>
-          <input type="text" placeholder="Factura" />
+          <input type="text" [value]="directionSelect.facturarA" readonly/>
         </div>
       </div>
       <!-- Columna 2 -->
@@ -119,28 +119,24 @@
         </div>
         <div class="m-0 p-0">
           <label class="label_title" for="direccionentrega">Dirección entrega:</label>
-          <select class="m-0 input-select">
-            <option selected>Elige una opción</option>
-            <option value="1">Opción 1</option>
-            <option value="2">Opción 2</option>
-            <option value="3">Opción 3</option>
+          <select class="m-0 input-select" [(ngModel)]="directionSelect">
+            <option *ngFor="let data of arrayDirections" [ngValue]="data">
+              {{ data.direccionEntrega }}
+            </option>
           </select>
         </div>
       </div>
       <!-- Columna 3 -->
-      <div class="col-4 m-0 p-0">
+      <div class="col-3 m-0 p-0">
         <label class="label_title" for="condicionpago">Condición pago</label>
-        <select class="m-0 input-select">
-          <option selected>Elige una opción</option>
-          <option value="1">Opción 1</option>
-          <option value="2">Opción 2</option>
-          <option value="3">Opción 3</option>
+        <select class="m-0 input-select-option" [(ngModel)]="condicionesPagoSelect">
+          <option *ngFor="let item of condicionesPaog" [ngValue]="item">{{ item.descripcion }}</option>
         </select>
       </div>
     </div>
     <div class="col-12 m-0 pl-3 pr-3 pt-0 pb-2">
       <label class="label_title" for="observación">Observación:</label>
-      <textarea class="col-12 textarea_input" name="observacion" rows="1"></textarea>
+      <textarea class="col-12 textarea_input" name="observacion" rows="1" [(ngModel)]="obs"></textarea>
     </div>
     <hr size="10px" width="100%" color="134B97" />
     <!-- end formulario -->

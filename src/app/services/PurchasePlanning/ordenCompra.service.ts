@@ -78,16 +78,16 @@ export class OrdenCompraService {
   getCuerpoCorreo() {
     return this.httpClient.get<bodyMail>(`${this.REQUEST_URL}/GetEstructuraCorreo`);
   }
-  
-  getProductoIncentivo(codProduct:string) {
+
+  getProductoIncentivo(codProduct: string) {
     let request = {
       codProucto: codProduct
     }
-    return this.httpClient.post<any>(`${this.REQUEST_URL}/GetEstructuraCorreo`,request);
+    return this.httpClient.post<any>(`${this.REQUEST_URL}/GetEstructuraCorreo`, request);
   }
-  
-  postGenerarOrdenCompra(reques: IGenerarOrdenCompra){
-    return this.httpClient.post<any>(`${this.REQUEST_URL}/GenerarOrdenCompra`,reques);
+
+  postGenerarOrdenCompra(reques: IGenerarOrdenCompra) {
+    return this.httpClient.post<any>(`${this.REQUEST_URL}/GenerarOrdenCompra`, reques);
   }
 
 

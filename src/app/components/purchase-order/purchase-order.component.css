@@ -95,7 +95,6 @@
   padding: 3px 7px;
   gap: 6px;
   font-size: 8px;
-  /* width: 170PX; */
   height: 30px;
 
   background: #FFFFFF;
@@ -163,7 +162,7 @@
 
 input {
   box-sizing: border-box;
-  width: 180px;
+  width: 280px;
   height: 30px;
   background: #FFFFFF;
   border: 1px solid rgba(175, 167, 167, 0.7);
@@ -184,7 +183,22 @@ input {
 
 .input-select {
   box-sizing: border-box;
-  width: 200px;
+  width: 330px;
+  height: 30px;
+  background: #FFFFFF;
+  border: 1px solid rgba(175, 167, 167, 0.7);
+  border-radius: 4px;
+  order: 1;
+  align-self: stretch;
+  flex-grow: 0;
+  color: #7A7A7A;
+  padding: 0px;
+  font-size: 10px;
+}
+
+.input-select-option {
+  box-sizing: border-box;
+  width: 120px;
   height: 30px;
   background: #FFFFFF;
   border: 1px solid rgba(175, 167, 167, 0.7);

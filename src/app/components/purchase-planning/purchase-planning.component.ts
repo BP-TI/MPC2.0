@@ -731,6 +731,7 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
           this.AlertToast(response.message, 'warning');
         } else {
           if (response.detalleProductos != null && response.detalleProductos.length > 0) {
+            console.log(response);
             newData.relacionado = response.detalleProductos[0].relacionado;
             newData.incentivo = response.detalleProductos[0].incentivo;
             newData.codProducto = response.detalleProductos[0].codProducto;
@@ -1279,6 +1280,13 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
     modalPurchaseOrder.componentInstance.dataRows = dataRowPurchaseOrder;
     modalPurchaseOrder.componentInstance.scodPorv = dataPorv?.codigoProveedor;
     modalPurchaseOrder.componentInstance.sdesProv = dataPorv?.descripcion;
+    
+    let dataFilter = this.laboratorios.filter(x => x.selected == true);
+    if( dataFilter.length == 1 ){
+      modalPurchaseOrder.componentInstance.sdesProv = dataFilter[0].codigoLab;     
+    } else {
+      modalPurchaseOrder.componentInstance.sdesProv = "";     
+    }
 
   }
 

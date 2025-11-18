@@ -2,7 +2,7 @@ import { Component, ElementRef, HostListener, Input, input, OnInit, ViewChild, V
 import { AgentOutlook } from '../../shared/models/agentOutlook';
 import { AlertMail } from '../../shared/services/alert-mail';
 import { NgbActiveModal, NgbCalendar, NgbDateAdapter, NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { IAdicionarProductoCalculo2Req, IAdicionarProductoCalculoReq, ICompraFinalReq, PurchaseOrder_table_modal } from '../../models/ordenCompra';
+import { dataDirectionOC, IAdicionarProductoCalculo2Req, IAdicionarProductoCalculoReq, ICompraFinalReq, ICondicionesPago, ICondicionesPagoResp, IDataPorduct, IGenerarOrdenCompra, PurchaseOrder_table_modal } from '../../models/ordenCompra';
 import { OrdenCompraService } from '../../services/PurchasePlanning/ordenCompra.service';
 import { AppConstants } from '../../shared/constants/app.constants';
 import { GlobalService } from '../../shared/services/global.service';
@@ -28,6 +28,7 @@ export class PurchaseOrderComponent implements OnInit {
   @Input() dataRows!: PurchaseOrder_table_modal[];
   @Input() scodPorv!: string;
   @Input() sdesProv!: string;
+  @Input() scodLab!: string;
   @ViewChild(OptionClickComponent) contextMenu!: OptionClickComponent;
   // -----------------
 
@@ -36,8 +37,21 @@ export class PurchaseOrderComponent implements OnInit {
   creationDate: any;
   deliveryDate: any;
   valorAnterior: any;
+  isGenerationOC: boolean = false;
+  directionSelect: dataDirectionOC = {
+    ssiscod: '',
+    scodalm: '',
+    facturarA: '',
+    direccionEntrega: '',
+    distrito: '',
+    direccionCompleta: '',
+  };
+
+  condicionesPagoSelect: ICondicionesPagoResp;
+  condicionesPaog: ICondicionesPagoResp[] = [];
+  obs: "";
   // parametros
-  arrayDirections: any = [];
+  arrayDirections: dataDirectionOC[] = [];
   arrayParametros: any;
   // data usuaro
   dataUsuario: UserDataLogin;
@@ -78,6 +92,7 @@ export class PurchaseOrderComponent implements OnInit {
 
   ngOnInit(): void {
     this.arrayMenuOrigen();
+    this.getCondicionesPago();
     this.getHeadTable();
     this.getRuctProv();
     this.loadData();
@@ -88,6 +103,28 @@ export class PurchaseOrderComponent implements OnInit {
     this.creationDate = this.dateAdapter.toModel(this.ngbCalendar.getToday())!;
     this.deliveryDate = this.dateAdapter.toModel(this.ngbCalendar.getToday())!;
     this.dataUsuario = this.globalService.getDataUserLogin();
+  }
+
+  getCondicionesPago() {
+    let dataRequest: ICondicionesPago = {
+      codigoProveedor: this.scodPorv,
+      codigoLaboratorio: this.scodLab,
+      codigoProducto: '',
+    };
+
+    this.parameterService.getCondicionesPago(dataRequest).subscribe(response => {
+
+      response.forEach((dataCondicionesPago: any) => {
+        this.condicionesPaog.push({
+          codCondicion: dataCondicionesPago.codCondicion,
+          descripcion: dataCondicionesPago.descripcion
+        });
+      });
+
+      this.condicionesPagoSelect = this.condicionesPaog[0];
+
+    });
+
   }
 
   startDrag(event: MouseEvent) {
@@ -152,13 +189,137 @@ export class PurchaseOrderComponent implements OnInit {
     ];
   }
 
+  // Generar Orden de compra
+
+  saveOrdenCompra() {
+
+    if (this.conditionOC()) {
+      return;
+    }
+
+    let modalConfirm = this.modalService.open(ConfirmacionModalComponent, {
+      windowClass: "modal-confirmacion",
+      backdrop: true,
+      scrollable: true
+    });
+
+    modalConfirm.componentInstance.message = '¿Está seguro que desea grabar la Orden de Compra?';
+
+    modalConfirm.closed.subscribe((confirn) => {
+      if (confirn) {
+
+        this.loading = true;
+        let dataRequest: IGenerarOrdenCompra = {
+          secuencia: "0",
+          codAlmacen: this.directionSelect.scodalm,
+          sisCod: this.directionSelect.ssiscod,
+          codProveedor: this.scodPorv,
+          fecha: this.creationDate.year + '-' + this.creationDate.month + '-' + this.creationDate.day,
+          obs: this.obs,
+          username: this.dataUsuario.usuario,
+          fechaEntrega: this.deliveryDate.year + '-' + this.deliveryDate.month + '-' + this.deliveryDate.day,
+          direccion: this.directionSelect.direccionEntrega,
+          detalleProducts: []
+        };
+
+        let dataRowsArray: IDataPorduct[] = []
+
+        this.dataRows.forEach(data => {
+          dataRowsArray.push({
+            item: data.item,
+            codPro: data.codProd,
+            producto: data.producto,
+            codLab: data.codLab,
+            laboratorio: data.laboratorio,
+            ean: data.EAN,
+            cantE: data.cantE,
+            cantF: data.cantF,
+            boni: data.boni,
+            vvF1: data.vvf1,
+            vvF2: data.vvf2,
+            dscto1: data.desct1,
+            dscto2: data.desct2,
+            dscto3: data.desct3,
+            dscto4: data.desct4,
+            cosCom: data.coscom,
+            igvpro: data.igvpro,
+            parcial: data.parcial,
+            igv: data.igv,
+            total: data.total,
+            prom_Mes: data.pro_mes,
+            total_Stock: data.total_stock,
+            asociado: data.asociado,
+            observacion: data.Observacion,
+            vvF_Temp: data.VVF_Temp,
+            secOrden: data.SecOrden,
+            observacion_autoriza: data.observacion_autoriza,
+            usuario_autoriza: data.usuario_autoriza,
+            cantE_Temp: data.cantE_temp,
+            cant_Unid_Empa: data.cant_Unid_empa
+          });
+        });
+
+        dataRequest.detalleProducts = dataRowsArray;
+
+        this.orderCompraService.postGenerarOrdenCompra(dataRequest).subscribe(response => {
+          this.loading = false;
+          console.log(response);
+
+        });
+
+      } else {
+        return;
+      }
+    });
+
+
+
+  }
+
+  conditionOC(): Boolean {
+    if (this.dataRows.length == 0) {
+      this.AlertToast(`Warning: No tiene productos seleccionados.`, 'warning');
+      return true;
+    }
+
+    if (this.directionSelect == null || this.directionSelect == undefined) {
+      this.AlertToast(`Warning: Debe de seleccionar una dirección.`, 'warning');
+      return true;
+    }
+
+    if (this.condicionesPagoSelect == null || this.condicionesPagoSelect == undefined) {
+      this.AlertToast(`Warning: Debe de seleccionar una condición de pago.`, 'warning');
+      return true;
+    }
+
+    let diaEntrega = new Date(this.deliveryDate.year, (this.deliveryDate.month - 1), this.deliveryDate.day);
+    let diaGenerarOC = new Date(this.creationDate.year, (this.creationDate.month - 1), this.creationDate.day);
+    let today = new Date();
+
+    if (diaEntrega.getDay() == 0) {
+      this.AlertToast(`Warning: La fecha de pago no debe de ser Domingo.`, 'warning');
+      return true;
+    }
+
+    if (diaEntrega < today) {
+      this.AlertToast(`Warning: La fecha de Entrega deben de ser mayor a hoy.`, 'warning');
+      return true;
+    }
+
+    if (diaGenerarOC < today) {
+      this.AlertToast(`Warning: La fecha de creación deben de ser mayor a hoy.`, 'warning');
+      return true;
+    }
+
+    return false;
+  }
+
   //Direcciones
   async GetParametersAsync(array: Array<number>) {
     let modelRequest = { headerId: array };
     this.loading = true;
     await this.parameterService.getParametersList(modelRequest).toPromise().then((response) => {
       this.arrayParametros = response;
-      console.log(response);
       this.loading = false;
     },
       (error: HttpErrorResponse) => {
@@ -173,11 +334,14 @@ export class PurchaseOrderComponent implements OnInit {
 
     this.arrayDirections = this.arrayParametros.filter((x: any) => x.tabCabId === AppConstants.ParameterCode.DIRECCIONES_ENTREGA)
       .map((x: any) => ({
-        menuUrl: x.tabDet003,
-        menuImage: x.tabDet007,
-        menuName: x.tabDet001
+        ssiscod: x.tabDet001,
+        scodalm: x.tabDet002,
+        facturarA: x.tabDet003,
+        direccionEntrega: x.tabDet007,
+        distrito: x.tabDet008,
+        direccionCompleta: x.tabDet007 + x.tabDet008,
       }));
-      console.log(this.arrayDirections);
+    this.directionSelect = this.arrayDirections[0]
   }
 
   // click derecho
@@ -449,7 +613,6 @@ export class PurchaseOrderComponent implements OnInit {
     // valida que los valores no este vacio
 
     if (this.dataRows[index].cantE == null || this.dataRows[index].cantE == undefined) {
-      console.log(this.valorAnterior);
       this.dataRows[this.isRowSelectedGOC].cantE = this.valorAnterior;
     }
 
@@ -521,9 +684,6 @@ export class PurchaseOrderComponent implements OnInit {
             console.log(response.detalleProductos[0].prom_ult3Meses);
             nProm_Ultimos3Meses = Number(response.detalleProductos[0].prom_ult3Meses);
 
-            console.log(response.detalleProductos);
-            console.log(response.detalleProductos[0].total);
-            console.log(this.dataRows[this.isRowSelectedGOC].cantE);
             nCanMaxCompra = (((Number(response.detalleProductos[0].promMes)) / (nProm_Ultimos3Meses / 3)) * 120) - ((Number(response.detalleProductos[0].total)) + Number(this.dataRows[this.isRowSelectedGOC].cantE)) + Number(this.dataRows[this.isRowSelectedGOC].cantE);
 
             if (nCanMaxCompra < 0) {
@@ -568,14 +728,18 @@ export class PurchaseOrderComponent implements OnInit {
                             this.AlertToast(`Warning: Solo puede cambiar cantidades de Productos Preferidos.`, 'warning');
 
                             if (Number(this.dataRows[this.isRowSelectedGOC].cantE) != 0) {
+                              this.calculateCompraFinal2();
                               this.calculateDesc(this.isRowSelectedGOC);
                               this.calculateTotal();
 
                             } else {
+                              this.calculateCompraFinal2();
                               this.calculateDesc(this.isRowSelectedGOC);
                               this.calculateTotal();
                             }
 
+                          } else {
+                            return;
                           }
 
                         }
@@ -587,6 +751,24 @@ export class PurchaseOrderComponent implements OnInit {
                     this.calculateTotal();
                   }
                 });
+
+                if (((Number(response.detalleProductos[0].total) + Number(this.dataRows[this.isRowSelectedGOC].cantE)) / response.detalleProductos[0].prom_Mes * (nProm_Ultimos3Meses / 3)) > 120 && Number(this.dataRows[this.isRowSelectedGOC].cantE) > nCompra_Final) {
+                  let modelConfirm4Mese = this.modalService.open(ConfirmacionModalComponent, {
+                    windowClass: "modal-confirmacion",
+                    backdrop: true,
+                    scrollable: true
+                  });
+                   modelConfirm4Mese.componentInstance.message = 'La compra no puede ser mayor a 4 meses de inventario.';
+
+                   modelConfirm4Mese.closed.subscribe((confirm:any) => {
+                    if(confirm){
+
+                    }else{
+
+                    }
+                   });
+
+                }
 
               }
 
@@ -626,6 +808,48 @@ export class PurchaseOrderComponent implements OnInit {
     }
 
 
+  }
+
+  calculateCompraFinal2() {
+    let dataRequest: ICompraFinalReq = {
+      codPro: this.dataRows[this.isRowSelectedGOC].codProd,
+      codLab: this.dataRows[this.isRowSelectedGOC].codLab,
+      cant_Unid_Empa: Number(this.dataRows[this.isRowSelectedGOC].cant_Unid_empa),
+      pre_Compra: Number(this.dataRows[this.isRowSelectedGOC].cantE),
+      asociado: this.dataRows[this.isRowSelectedGOC].asociado,
+    }
+
+    let nCompra_Final: number = 0;
+    this.orderCompraService.getCompraFinal(dataRequest).subscribe(response => {
+      nCompra_Final = response.Compra_Final;
+
+      this.dataRows[this.isRowSelectedGOC].cantE = nCompra_Final.toString();
+      if (this.dataRows[this.isRowSelectedGOC].asociado.length == 5 && this.dataRows[this.isRowSelectedGOC].asociado != this.dataRows[this.isRowSelectedGOC].codProd) {
+
+        this.dataRows.forEach(dataRow => {
+          if (dataRow.codProd == this.dataRows[this.isRowSelectedGOC].asociado) {
+            dataRow.asociado = this.dataRows[this.isRowSelectedGOC].codProd;
+            dataRow.cantE = nCompra_Final.toString();
+          }
+        });
+
+      } else {
+        if (this.dataRows[this.isRowSelectedGOC].asociado.length > 5 && this.dataRows[this.isRowSelectedGOC].asociado != this.dataRows[this.isRowSelectedGOC].codProd) {
+
+          this.dataRows.forEach(dataRow => {
+            if (dataRow.codProd == this.dataRows[this.isRowSelectedGOC].asociado) {
+              dataRequest.asociado = this.dataRows[this.isRowSelectedGOC].codProd;
+              dataRow.cantE = nCompra_Final.toString();
+            }
+            if (dataRow.codProd == this.dataRows[this.isRowSelectedGOC].asociado.substring(6, 11) && dataRow.asociado == this.dataRows[this.isRowSelectedGOC].codProd) {
+              dataRow.cantE = nCompra_Final.toString();
+            }
+          });
+
+        }
+      }
+
+    });
   }
 
   calculateDesc(index: number) {
