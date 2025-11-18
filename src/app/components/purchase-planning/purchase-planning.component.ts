@@ -731,7 +731,6 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
           this.AlertToast(response.message, 'warning');
         } else {
           if (response.detalleProductos != null && response.detalleProductos.length > 0) {
-            console.log(response);
             newData.relacionado = response.detalleProductos[0].relacionado;
             newData.incentivo = response.detalleProductos[0].incentivo;
             newData.codProducto = response.detalleProductos[0].codProducto;
@@ -739,22 +738,22 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
             newData.codLaboratorio = response.detalleProductos[0].codLaboratorio;
             newData.nombreLaboratorio = response.detalleProductos[0].nombreLaboratorio;
             newData.fracUnidad = response.detalleProductos[0].fracUnidad;
-            newData.unidadEmpaque = response.detalleProductos[0].unidadEmpaque;
+            newData.unidadEmpaque = Number(response.detalleProductos[0].unidadEmpaque).toString();
             newData.condicion = response.detalleProductos[0].condicion;
             newData.clasificacion = response.detalleProductos[0].clasificacion;
             newData.ABC = response.detalleProductos[0].ABC;
-            newData.plazoPago = response.detalleProductos[0].plazoPago;
-            newData.mesQuinto = response.detalleProductos[0].mesQuinto;
-            newData.mesCuarto = response.detalleProductos[0].mesCuarto;
-            newData.mesTercero = response.detalleProductos[0].mesTercero;
-            newData.mesSegundo = response.detalleProductos[0].mesSegundo;
-            newData.mesPrimero = response.detalleProductos[0].mesPrimero;
-            newData.mesActual = response.detalleProductos[0].mesActual;
+            newData.plazoPago = Number(response.detalleProductos[0].plazoPago).toString();
+            newData.mesQuinto = Number(response.detalleProductos[0].mesQuinto).toString();
+            newData.mesCuarto = Number(response.detalleProductos[0].mesCuarto).toString();
+            newData.mesTercero = Number(response.detalleProductos[0].mesTercero).toString();
+            newData.mesSegundo = Number(response.detalleProductos[0].mesSegundo).toString();
+            newData.mesPrimero = Number(response.detalleProductos[0].mesPrimero).toString();
+            newData.mesActual = Number(response.detalleProductos[0].mesActual).toString();
             newData.mesActualProyeccion = response.detalleProductos[0].mesActualProyeccion;
-            newData.promMes = response.detalleProductos[0].promMes;
-            newData.preCompra = response.detalleProductos[0].preCompra;
-            newData.compraFinal = response.detalleProductos[0].compraFinal;
-            newData.bonificacion = response.detalleProductos[0].bonificacion;
+            newData.promMes = Number(response.detalleProductos[0].promMes).toString();
+            newData.preCompra = Number(response.detalleProductos[0].preCompra).toString();
+            newData.compraFinal = Number(response.detalleProductos[0].compraFinal).toString();
+            newData.bonificacion = Number(response.detalleProductos[0].bonificacion).toString();
             newData.botica = response.detalleProductos[0].botica;
             newData.almacen = response.detalleProductos[0].almacen;
             newData.org = response.detalleProductos[0].org;
@@ -763,7 +762,7 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
             newData.ocVigente = response.detalleProductos[0].ocVigente;
             newData.ocVencido = response.detalleProductos[0].ocVencido;
             newData.oc = response.detalleProductos[0].oc;
-            newData.total = response.detalleProductos[0].total;
+            newData.total = Number(response.detalleProductos[0].total).toString();
             newData.cobOrgAct = response.detalleProductos[0].cobOrgAct;
             newData.maxBot = response.detalleProductos[0].maxBot;
             newData.maxInfraStock = response.detalleProductos[0].maxInfraStock;
@@ -1117,9 +1116,9 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
       codLab: dataRowAC.codLaboratorio,
       laboratorio: dataRowAC.nombreLaboratorio,
       EAN: '',
-      cantE: dataRowAC.compraFinal,
+      cantE: Number(dataRowAC.compraFinal).toString(),
       cantF: "0",
-      boni: dataRowAC.bonificacion,
+      boni: Number(dataRowAC.bonificacion).toString(),
       vvf1: dataRowAC.VVF1,
       vvf2: dataRowAC.VVF2,
       desct1: dataRowAC.descuento1,

@@ -2,7 +2,7 @@ import { Component, ElementRef, HostListener, Input, input, OnInit, ViewChild, V
 import { AgentOutlook } from '../../shared/models/agentOutlook';
 import { AlertMail } from '../../shared/services/alert-mail';
 import { NgbActiveModal, NgbCalendar, NgbDateAdapter, NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { dataDirectionOC, IAdicionarProductoCalculo2Req, IAdicionarProductoCalculoReq, ICompraFinalReq, ICondicionesPago, ICondicionesPagoResp, IDataPorduct, IGenerarOrdenCompra, PurchaseOrder_table_modal } from '../../models/ordenCompra';
+import { dataDirectionOC, IAdicionarProductoCalculo2Req, IAdicionarProductoCalculoReq, ICompraFinalReq, ICondicionesPago, ICondicionesPagoResp, IDataPorduct, IGenerarOrdenCompra, IGetPDFZip, IKeyValue, PurchaseOrder_table_modal } from '../../models/ordenCompra';
 import { OrdenCompraService } from '../../services/PurchasePlanning/ordenCompra.service';
 import { AppConstants } from '../../shared/constants/app.constants';
 import { GlobalService } from '../../shared/services/global.service';
@@ -46,10 +46,10 @@ export class PurchaseOrderComponent implements OnInit {
     distrito: '',
     direccionCompleta: '',
   };
-
   condicionesPagoSelect: ICondicionesPagoResp;
   condicionesPaog: ICondicionesPagoResp[] = [];
-  obs: "";
+  obs: string = "Generar Orden";
+  nrOrderCompra: string = '';
   // parametros
   arrayDirections: dataDirectionOC[] = [];
   arrayParametros: any;
@@ -193,6 +193,11 @@ export class PurchaseOrderComponent implements OnInit {
 
   saveOrdenCompra() {
 
+    if (this.isGenerationOC) {
+      this.AlertToast(`INFO: Orden de compra ya se encuentra generada.`, 'info');
+      return;
+    }
+
     if (this.conditionOC()) {
       return;
     }
@@ -232,22 +237,22 @@ export class PurchaseOrderComponent implements OnInit {
             codLab: data.codLab,
             laboratorio: data.laboratorio,
             ean: data.EAN,
-            cantE: data.cantE,
-            cantF: data.cantF,
-            boni: data.boni,
-            vvF1: data.vvf1,
-            vvF2: data.vvf2,
+            cantE: Number(data.cantE).toString(),
+            cantF: Number(data.cantF).toString(),
+            boni: Number(data.boni).toString(),
+            vvF1: Number(data.vvf1).toString(),
+            vvF2: Number(data.vvf2).toString(),
             dscto1: data.desct1,
             dscto2: data.desct2,
             dscto3: data.desct3,
             dscto4: data.desct4,
             cosCom: data.coscom,
             igvpro: data.igvpro,
-            parcial: data.parcial,
-            igv: data.igv,
-            total: data.total,
-            prom_Mes: data.pro_mes,
-            total_Stock: data.total_stock,
+            parcial: Number(data.parcial).toString(),
+            igv: Number(data.igv).toString(),
+            total: Number(data.total).toString(),
+            prom_Mes: Number(data.pro_mes).toString(),
+            total_Stock: Number(data.total_stock).toString(),
             asociado: data.asociado,
             observacion: data.Observacion,
             vvF_Temp: data.VVF_Temp,
@@ -263,8 +268,16 @@ export class PurchaseOrderComponent implements OnInit {
 
         this.orderCompraService.postGenerarOrdenCompra(dataRequest).subscribe(response => {
           this.loading = false;
-          console.log(response);
-
+          if (response.length > 0) {
+            this.AlertToast(`SUCCESS: Se genero la orden de compra.`, 'success');
+            response.forEach((data: any) => {
+              this.nrOrderCompra += data.value + ',';
+            });
+            this.nrOrderCompra = this.nrOrderCompra.slice(0, -1);
+            this.isGenerationOC = !this.isGenerationOC;
+          } else {
+            this.AlertToast(`ERROR: No se puedo generar la orden de compra.`, 'error2');
+          }
         });
 
       } else {
@@ -278,17 +291,17 @@ export class PurchaseOrderComponent implements OnInit {
 
   conditionOC(): Boolean {
     if (this.dataRows.length == 0) {
-      this.AlertToast(`Warning: No tiene productos seleccionados.`, 'warning');
+      this.AlertToast(`WARNING: No tiene productos seleccionados.`, 'warning');
       return true;
     }
 
     if (this.directionSelect == null || this.directionSelect == undefined) {
-      this.AlertToast(`Warning: Debe de seleccionar una dirección.`, 'warning');
+      this.AlertToast(`WARNING: Debe de seleccionar una dirección.`, 'warning');
       return true;
     }
 
     if (this.condicionesPagoSelect == null || this.condicionesPagoSelect == undefined) {
-      this.AlertToast(`Warning: Debe de seleccionar una condición de pago.`, 'warning');
+      this.AlertToast(`WARNING: Debe de seleccionar una condición de pago.`, 'warning');
       return true;
     }
 
@@ -297,17 +310,17 @@ export class PurchaseOrderComponent implements OnInit {
     let today = new Date();
 
     if (diaEntrega.getDay() == 0) {
-      this.AlertToast(`Warning: La fecha de pago no debe de ser Domingo.`, 'warning');
+      this.AlertToast(`WARNING: La fecha de pago no debe de ser Domingo.`, 'warning');
       return true;
     }
 
     if (diaEntrega < today) {
-      this.AlertToast(`Warning: La fecha de Entrega deben de ser mayor a hoy.`, 'warning');
+      this.AlertToast(`WARNING: La fecha de Entrega deben de ser mayor a hoy.`, 'warning');
       return true;
     }
 
     if (diaGenerarOC < today) {
-      this.AlertToast(`Warning: La fecha de creación deben de ser mayor a hoy.`, 'warning');
+      this.AlertToast(`WARNING: La fecha de creación deben de ser mayor a hoy.`, 'warning');
       return true;
     }
 
@@ -720,10 +733,10 @@ export class PurchaseOrderComponent implements OnInit {
                   if (confirn) {
                     let proIncentivo = '';
                     this.orderCompraService.getProductoIncentivo(this.dataRows[this.isRowSelectedGOC].codProd).subscribe(responseProIn => {
-                      if (response.codStatus == 1) {
-                        if (response.message = 'OK') {
+                      if (responseProIn.codStatus == 1) {
+                        if (responseProIn.message = 'OK') {
 
-                          proIncentivo = response.compro;
+                          proIncentivo = responseProIn.compro;
                           if (this.dataUsuario.codigoUsuario == 'VPAUCAR' && Number(proIncentivo) == 0) {
                             this.AlertToast(`Warning: Solo puede cambiar cantidades de Productos Preferidos.`, 'warning');
 
@@ -758,16 +771,68 @@ export class PurchaseOrderComponent implements OnInit {
                     backdrop: true,
                     scrollable: true
                   });
-                   modelConfirm4Mese.componentInstance.message = 'La compra no puede ser mayor a 4 meses de inventario.';
+                  modelConfirm4Mese.componentInstance.message = 'La compra no puede ser mayor a 4 meses de inventario.';
 
-                   modelConfirm4Mese.closed.subscribe((confirm:any) => {
-                    if(confirm){
+                  modelConfirm4Mese.closed.subscribe((confirm: any) => {
+                    let proIncentivo: string = '';
+                    if (confirm) {
+                      this.orderCompraService.getProductoIncentivo(this.dataRows[this.isRowSelectedGOC].codProd).subscribe(responseInc => {
+                        if (responseInc.codStatus == 1) {
+                          if (responseInc.message = 'OK') {
+                            proIncentivo = responseInc.compro;
+                            if (this.dataUsuario.codigoUsuario == 'VPAUCAR' && Number(proIncentivo) == 0) {
+                              this.AlertToast(`Warning: Solo puede cambiar cantidades de Productos Preferidos.`, 'warning');
 
-                    }else{
+                              if (Number(this.dataRows[this.isRowSelectedGOC].cantE) != 0) {
+                                this.calculateCompraFinal2();
+                                this.calculateDesc(this.isRowSelectedGOC);
+                                this.calculateTotal();
+
+                              } else {
+                                this.calculateCompraFinal2();
+                                this.calculateDesc(this.isRowSelectedGOC);
+                                this.calculateTotal();
+                              }
+
+                            } else {
+                              return;
+                            }
+                          }
+                        }
+                      });
+                    } else {
 
                     }
-                   });
+                  });
 
+                } else {
+                  let proIncentivo: string = '';
+                  this.orderCompraService.getProductoIncentivo(this.dataRows[this.isRowSelectedGOC].codProd).subscribe(responseProIn => {
+                    if (responseProIn.codStatus == 1) {
+                      if (responseProIn.message = 'OK') {
+
+                        proIncentivo = responseProIn.compro;
+                        if (this.dataUsuario.codigoUsuario == 'VPAUCAR' && Number(proIncentivo) == 0) {
+                          this.AlertToast(`Warning: Solo puede cambiar cantidades de Productos Preferidos.`, 'warning');
+
+                          if (Number(this.dataRows[this.isRowSelectedGOC].cantE) != 0) {
+                            this.calculateCompraFinal2();
+                            this.calculateDesc(this.isRowSelectedGOC);
+                            this.calculateTotal();
+
+                          } else {
+                            this.calculateCompraFinal2();
+                            this.calculateDesc(this.isRowSelectedGOC);
+                            this.calculateTotal();
+                          }
+
+                        } else {
+                          return;
+                        }
+
+                      }
+                    }
+                  });
                 }
 
               }
@@ -775,15 +840,15 @@ export class PurchaseOrderComponent implements OnInit {
             });
 
           } else {
-
+            this.calculateCompraFinal2();
+            this.calculateDesc(this.isRowSelectedGOC);
+            this.calculateTotal();
           }
         }
-
 
       });
 
     }
-
 
     if (nameColumn == this.headtable.CANT) {
       this.calculateDesc(index);
@@ -806,7 +871,6 @@ export class PurchaseOrderComponent implements OnInit {
       this.calculateDesc(index);
       this.calculateTotal();
     }
-
 
   }
 
@@ -984,42 +1048,73 @@ export class PurchaseOrderComponent implements OnInit {
   }
   // End Hover
   // -----
-  openOutlook() {
+  async openOutlook() {
+
+    this.loading = true;
     let todayFormat = this.today.getDate() + '-' + (this.today.getMonth() + 1) + '-' + this.today.getFullYear();
 
-    this.orderCompraService.getCuerpoCorreo().subscribe(response => {
+    setTimeout(() => {
+      this.loading = false;
+      this.orderCompraService.getCuerpoCorreo().subscribe(response => {
 
-      let massageAsunto = response.CorreoAsunto.replace('{1}', todayFormat);
-      let massageFooter = 'Gracias por su gentil atención.' + "\n\n" + "Atentamente" + "\n" + this.dataUsuario.NombreUsuario;
-      let massageBody = response.CorreoMensaje1 + "\n\n" + response.CorreoMensaje2 + "\n" + response.CorreoMensaje3 + "\n" + response.CorreoMensaje4 + "\n" + response.CorreoMensaje5 + "\n\n" + massageFooter
-      massageBody = massageBody.replace(/<br\s*\/?>/gi, "").trim();
+        let massageAsunto = response.CorreoAsunto.replace('{1}', todayFormat);
+        massageAsunto = massageAsunto.replace('{0}', this.nrOrderCompra);
+        let massageFooter = 'Gracias por su gentil atención.' + "\n\n" + "Atentamente" + "\n" + this.dataUsuario.NombreUsuario;
+        let massageBody = response.CorreoMensaje1 + "\n\n" + response.CorreoMensaje2 + "\n" + response.CorreoMensaje3 + "\n" + response.CorreoMensaje4 + "\n" + response.CorreoMensaje5 + "\n\n" + massageFooter
+        massageBody = massageBody.replace(/<br\s*\/?>/gi, "").trim();
 
-      let body: AgentOutlook = {
-        subject: massageAsunto,
-        body: massageBody,
-        isBodyHtml: 'true',
-        recipients: [
-          "tu@correo.com",
-          "tu2@correo.com"
-        ],
-        attachments: [{
-          filename: "hola.zip",
-          dataBase64: ""
-        }]
-      }
+        let dataRequestPDF: IGetPDFZip = {
+          username: this.dataUsuario.usuario,
+          proveedor: this.scodPorv,
+          numeroOCs: []
+        }
 
-      this.alertMail.openMail(body).subscribe(response => {
-        console.log('entro');
-        console.log(response);
-      }, error => {
-        console.log('error');
+        let dataNrOC: IKeyValue[] = [];
+        let OCs = this.nrOrderCompra.split(',');
+        OCs.forEach(dataOC => {
+          dataNrOC.push({
+            key: dataOC,
+            value: ''
+          });
+        });
+        dataRequestPDF.numeroOCs = dataNrOC;
+
+        this.orderCompraService.getPDFsZip(dataRequestPDF).subscribe(async responsePDF => {
+          let base64 = await this.blobToBase64(responsePDF);
+          let body: AgentOutlook = {
+            subject: massageAsunto,
+            body: massageBody,
+            isBodyHtml: 'true',
+            recipients: [
+              // "tu@correo.com",
+              // "tu2@correo.com"
+            ],
+            attachments: [{
+              filename: "ordenComra.zip",
+              dataBase64: base64
+            }]
+          }
+
+          this.alertMail.openMail(body).subscribe(response => {
+          }, error => {
+            console.log('error');
+          });
+
+        });
+
       });
 
+    }, 3000);
+  }
+
+  blobToBase64(blob: Blob): Promise<string> {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onloadend = () =>
+        resolve((reader.result as string).split(',')[1]);
+      reader.onerror = reject;
+      reader.readAsDataURL(blob);
     });
-
-
-
-
   }
 
   closeModal() {

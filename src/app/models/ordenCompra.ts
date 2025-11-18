@@ -32,6 +32,17 @@ export interface IAdicionarProductoCalculoReq {
     codProducto: string;
 }
 
+export interface IGetPDFZip{
+    username: string;
+    proveedor: string;
+    numeroOCs: IKeyValue[]
+}
+
+export interface IKeyValue{
+    key:string;
+    value:string;
+}
+
 export interface IGenerarOrdenCompra {
     secuencia: string,
     codAlmacen: string,
@@ -93,9 +104,9 @@ export interface ICondicionesPago {
     codigoProducto: string;
 }
 
-export interface ICondicionesPagoResp{
+export interface ICondicionesPagoResp {
     codCondicion: string;
-    descripcion:string;
+    descripcion: string;
 }
 
 export interface IUPdateCondicionProduct {
@@ -180,6 +191,57 @@ export class PurchaseOrder {
     unidadEmpaque: string;
     usuarioAutoriza: string;
     ventaSubDist: string;
+    isNewRow: boolean;
+}
+export class PurchaseOrderAbadi {
+    relacionado: string;
+    incentivo: string;
+    codProducto: string;
+    nombreProducto: string;
+    codLaboratorio: string;
+    nombreLaboratorio: string;
+    codigoAlmacen: string;
+    establecimiento: string;
+    fracUnidad: string;
+    unidadEmpaque: string;
+    condicion: string;
+    clasificacion: string;
+    ABC: string;
+    plazoPago: string;
+    mesQuinto: string;
+    mesCuarto: string;
+    mesTercero: string;
+    mesSegundo: string;
+    mesPrimero: string;
+    mesActual: string;
+    mesActualProyeccion: string;
+    promMes: string;
+    preCompra: string;
+    compraFinal: string;
+    bonificacion: string;
+    botica: string;
+    almacen: string;
+    org: string;
+    canje: string;
+    ocVigente: string;
+    ocVencido: string;
+    oc: string;
+    total: string;
+    cobOrgAct: string;
+    maxBot: string;
+    maxInfraStock: string;
+    asociado: string;
+    nroOC: string;
+    secRelacion: string;
+    usuarioAutoriza: string;
+    ObservacionAutoriza: string;
+    ventaSubDist: string;
+    orgNoBotica: string;
+    totalNoBotica: string;
+    cobOrgActNoBotica: string;
+    cobOrgActCalcNoBotica: string;
+    observaciones: string;
+    observacionesAbadi: string;
     isNewRow: boolean;
 }
 

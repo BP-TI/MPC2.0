@@ -1,8 +1,6 @@
 <div class="modal-body">
-  <div
-    class="header-modal mb-0 p-2 d-flex align-items-baseline justify-content-between"
-    (mousedown)="startDrag($event)"
-  >
+  <div class="header-modal mb-0 p-2 d-flex align-items-baseline justify-content-between"
+    (mousedown)="startDrag($event)">
     <p class="title-modal m-0 p-0">Generar Orden de compra</p>
     <button type="button" class="button-cancel" (click)="closeModal()">
       <span aria-hidden="true">&times;</span>
@@ -11,9 +9,7 @@
 
   <div class="m-0 p-2">
     <!-- botones  -->
-    <div
-      class="m-0 pl-3 pr-3 pt-0 pb-3 col-md-12 d-flex align-items-baseline justify-content-between"
-    >
+    <div class="m-0 pl-3 pr-3 pt-0 pb-3 col-md-12 d-flex align-items-baseline justify-content-between">
       <div class="m-0 p-0">
         <img src="{{ logoHeader }}" class="logo-cabecera" />
       </div>
@@ -47,19 +43,9 @@
           <label class="label_title" for="fechacreacion">Fecha Creación</label>
           <div class="m-0 p-0">
             <div class="input-group">
-              <input
-                class="form-control"
-                name="input_fecha_creacion"
-                ngbDatepicker
-                [(ngModel)]="creationDate"
-                #d="ngbDatepicker"
-                readonly
-              />
-              <button
-                class="btn btn-outline-secondary bi bi-calendar3"
-                (click)="d.toggle()"
-                type="button"
-              >
+              <input class="form-control" name="input_fecha_creacion" ngbDatepicker [(ngModel)]="creationDate"
+                #d="ngbDatepicker" readonly />
+              <button class="btn btn-outline-secondary bi bi-calendar3" (click)="d.toggle()" type="button">
                 <i class="fa-solid fa-calendar-days ico_goc"></i>
               </button>
             </div>
@@ -68,7 +54,8 @@
         <div class="">
           <label class="label_title" for="ordecompra">Orden Compra</label>
           <div class="m-0 p-0">
-            <input type="text" placeholder="Número de Orden" />
+            <!-- <input type="text" placeholder="Número de Orden" [(ngModel)]="nrOrderCompra" readonly /> -->
+            <label class="label_title" for="nroOrdenCompra">{{ nrOrderCompra }}</label>
           </div>
         </div>
       </div>
@@ -84,16 +71,16 @@
           <label class="label_title" for="proveedor">Proveedor:</label>
           <input type="text" placeholder="Porveedor" [(ngModel)]="sdesProv" readonly />
         </div>
-        <div class="m-0 p-0 pb-2">
-          <label class="label_title" for="ruc">Ruc</label>
+
         <div class="m-0 p-0 pb-2">
           <label class="label_title" for="ruc">Ruc</label>
           <input type="text" placeholder="Ruc" [(ngModel)]="rucProv" readonly />
         </div>
         <div class="m-0 p-0">
           <label class="label_title" for="Factura">Factura a:</label>
-          <input type="text" [value]="directionSelect.facturarA" readonly/>
+          <input type="text" [value]="directionSelect.facturarA" readonly />
         </div>
+
       </div>
       <!-- Columna 2 -->
       <div class="col-4 m-0 p-0">
@@ -101,24 +88,15 @@
           <label class="label_title" for="fechacreacion">Fecha entrega:</label>
           <div class="container_input_fecha_entrega m-0 p-0">
             <div class="input-group">
-              <input
-                class="form-control"
-                name="input_fecha_entrega"
-                ngbDatepicker
-                [(ngModel)]="deliveryDate"
-                #e="ngbDatepicker"
-                readonly
-              />
-              <button
-                class="btn btn-outline-secondary bi bi-calendar3"
-                (click)="e.toggle()"
-                type="button"
-              >
+              <input class="form-control" name="input_fecha_entrega" ngbDatepicker [(ngModel)]="deliveryDate"
+                #e="ngbDatepicker" readonly />
+              <button class="btn btn-outline-secondary bi bi-calendar3" (click)="e.toggle()" type="button">
                 <i class="fa-solid fa-calendar-days ico_goc"></i>
               </button>
             </div>
           </div>
         </div>
+
         <div class="m-0 p-0">
           <label class="label_title" for="direccionentrega">Dirección entrega:</label>
           <select class="m-0 input-select" [(ngModel)]="directionSelect">
@@ -136,243 +114,111 @@
         </select>
       </div>
     </div>
-    <div class="col-12 m-0 pl-3 pr-3 pt-0 pb-2">
-      <label class="label_title" for="observación">Observación:</label>
-      <textarea class="col-12 textarea_input" name="observacion" rows="1" [(ngModel)]="obs"></textarea>
+  </div>
+
+  <div class="col-12 m-0 pl-3 pr-3 pt-0 pb-2">
+    <label class="label_title" for="observación">Observación:</label>
+    <textarea class="col-12 textarea_input" name="observacion" rows="1" [(ngModel)]="obs"></textarea>
+  </div>
+
+  <hr size="10px" width="100%" color="134B97" />
+  <!-- end formulario -->
+
+  <!-- tabla -->
+  <div class="table-scroll-PO col-12 m-0 pr-3 pl-3 pt-2 pb-2" (contextmenu)="openContextMenu($event, 5)">
+    <table id="tablaAnalisiCompra" class="table-style-PO">
+      <thead>
+        <tr>
+          <th *ngFor="let dataHead of tableHead">
+            {{ dataHead }}
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let item of dataRows; let i = index" (mouseenter)="isHoveringGOC = true"
+          (mouseleave)="isNotRowHover()" (mouseover)="onRowHover(i)" (click)="isRowSelectedGOC = i"
+          [class.selected]="isRowSelectedGOC === i">
+          <td [ngClass]="siRowSelectedHover(i)">{{ item.item }}</td>
+          <td [ngClass]="siRowSelectedHover(i)">{{ item.codProd }}</td>
+          <td [ngClass]="siRowSelectedHover(i)">{{ item.producto }}</td>
+          <td [ngClass]="siRowSelectedHover(i)">{{ item.laboratorio }}</td>
+          @if(isRowSelectedGOC === i){
+          <td [ngClass]="siRowSelectedHover(i)">
+            <input type="number" class="input-table-AC" [(ngModel)]="item.cantE" (focus)="getlastValue($event)"
+              (change)="calcularValoresInputGOC(headtable.CANT, i)" />
+          </td>
+          } @else {
+          <td [ngClass]="siRowSelectedHover(i)">{{ item.cantE | number : '1.2-2' }}</td>
+          } @if(isRowSelectedGOC === i){
+          <td [ngClass]="siRowSelectedHover(i)">
+            <input type="number" class="input-table-AC" (focus)="getlastValue($event)" [(ngModel)]="item.boni" />
+          </td>
+          } @else{
+          <td [ngClass]="siRowSelectedHover(i)">{{ item.boni | number : '1.2-2' }}</td>
+          }
+          <td [ngClass]="siRowSelectedHover(i)">{{ item.vvf1 | number : '1.2-2' }}</td>
+
+          @if(isRowSelectedGOC === i){
+          <td [ngClass]="siRowSelectedHover(i)">
+            <input type="number" class="input-table-AC" (focus)="getlastValue($event)" [(ngModel)]="item.vvf2" />
+          </td>
+          } @else{
+          <td [ngClass]="siRowSelectedHover(i)">{{ item.vvf2 | number : '1.2-2' }}</td>
+          } @if(isRowSelectedGOC === i){
+          <td [ngClass]="siRowSelectedHover(i)">
+            <input type="number" class="input-table-AC" [(ngModel)]="item.desct1" (focus)="getlastValue($event)"
+              (change)="calcularValoresInputGOC(headtable.DESCT1, i)" />
+          </td>
+          }@else{
+          <td [ngClass]="siRowSelectedHover(i)">{{ item.desct1 | number : '1.2-2' }}</td>
+          } @if(isRowSelectedGOC === i){
+          <td [ngClass]="siRowSelectedHover(i)">
+            <input type="number" class="input-table-AC" [(ngModel)]="item.desct2" (focus)="getlastValue($event)"
+              (change)="calcularValoresInputGOC(headtable.DESCT2, i)" />
+          </td>
+          }@else{
+          <td [ngClass]="siRowSelectedHover(i)">{{ item.desct2 | number : '1.2-2' }}</td>
+          } @if(isRowSelectedGOC === i){
+          <td [ngClass]="siRowSelectedHover(i)">
+            <input type="number" class="input-table-AC" [(ngModel)]="item.desct3" (focus)="getlastValue($event)"
+              (change)="calcularValoresInputGOC(headtable.DESCT3, i)" />
+          </td>
+          } @else{
+          <td [ngClass]="siRowSelectedHover(i)">{{ item.desct3 | number : '1.2-2' }}</td>
+          } @if(isRowSelectedGOC === i){
+          <td [ngClass]="siRowSelectedHover(i)">
+            <input type="number" class="input-table-AC" [(ngModel)]="item.desct4" (focus)="getlastValue($event)"
+              (change)="calcularValoresInputGOC(headtable.DESCT4, i)" />
+          </td>
+          } @else {
+          <td [ngClass]="siRowSelectedHover(i)">{{ item.desct4 | number : '1.2-2' }}</td>
+          } @if(isRowSelectedGOC === i){
+          <td [ngClass]="siRowSelectedHover(i)">
+            <input type="number" class="input-table-AC" (focus)="getlastValue($event)" [(ngModel)]="item.coscom" />
+          </td>
+          }@else{
+          <td [ngClass]="siRowSelectedHover(i)">{{ item.coscom | number : '1.2-2' }}</td>
+          }
+          <td [ngClass]="siRowSelectedHover(i)">{{ item.parcial | number : '1.2-2' }}</td>
+          <td [ngClass]="siRowSelectedHover(i)">{{ item.igv | number : '1.2-2' }}</td>
+          <td [ngClass]="siRowSelectedHover(i)">{{ item.total | number : '1.2-2' }}</td>
+      </tbody>
+    </table>
+  </div>
+  <!-- end tabla -->
+
+  <div class="col-12 d-flex align-items-baseline justify-content-between  gap-3 m-0 pr-3 pl-3 pt-2 pb-2">
+    <div>
+      <p class="text-total-value">ELABORADO POR : {{ dataUsuario.NombreUsuario }}</p>
     </div>
-    <hr size="10px" width="100%" color="134B97" />
-    <!-- end formulario -->
-
-    <!-- tabla -->
-    <div class="table-scroll-PO col-12" (contextmenu)="openContextMenu($event, 5)">
-      <table id="tablaAnalisiCompra" class="table-style-PO">
-        <thead>
-          <tr>
-            <th *ngFor="let dataHead of tableHead">
-              {{ dataHead }}
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr
-            *ngFor="let item of dataRows; let i = index"
-            (mouseenter)="isHoveringGOC = true"
-            (mouseleave)="isNotRowHover()"
-            (mouseover)="onRowHover(i)"
-            (click)="isRowSelectedGOC = i"
-            [class.selected]="isRowSelectedGOC === i"
-          >
-            <td [ngClass]="siRowSelectedHover(i)">{{ item.item }}</td>
-            <td [ngClass]="siRowSelectedHover(i)">{{ item.codProd }}</td>
-            <td [ngClass]="siRowSelectedHover(i)">{{ item.producto }}</td>
-            <td [ngClass]="siRowSelectedHover(i)">{{ item.laboratorio }}</td>
-            @if(isRowSelectedGOC === i){
-            <td [ngClass]="siRowSelectedHover(i)">
-              <input
-                type="number"
-                class="input-table-AC"
-                [(ngModel)]="item.cantE"
-                (focus)="getlastValue($event)"
-                (change)="calcularValoresInputGOC(headtable.CANT, i)"
-              />
-            </td>
-            } @else {
-            <td [ngClass]="siRowSelectedHover(i)">{{ item.cantE | number : '1.2-2' }}</td>
-            } @if(isRowSelectedGOC === i){
-            <td [ngClass]="siRowSelectedHover(i)">
-              <input type="number" class="input-table-AC" (focus)="getlastValue($event)" [(ngModel)]="item.boni" />
-            </td>
-            } @else{
-            <td [ngClass]="siRowSelectedHover(i)">{{ item.boni | number : '1.2-2' }}</td>
-            }
-            <td [ngClass]="siRowSelectedHover(i)">{{ item.vvf1 | number : '1.2-2' }}</td>
-
-            @if(isRowSelectedGOC === i){
-            <td [ngClass]="siRowSelectedHover(i)">
-              <input type="number" class="input-table-AC" (focus)="getlastValue($event)" [(ngModel)]="item.vvf2" />
-            </td>
-            } @else{
-            <td [ngClass]="siRowSelectedHover(i)">{{ item.vvf2 | number : '1.2-2' }}</td>
-            } @if(isRowSelectedGOC === i){
-            <td [ngClass]="siRowSelectedHover(i)">
-              <input
-                type="number"
-                class="input-table-AC"
-                [(ngModel)]="item.desct1"
-                (focus)="getlastValue($event)"
-                (change)="calcularValoresInputGOC(headtable.DESCT1, i)"
-              />
-            </td>
-            }@else{
-            <td [ngClass]="siRowSelectedHover(i)">{{ item.desct1 | number : '1.2-2' }}</td>
-            } @if(isRowSelectedGOC === i){
-            <td [ngClass]="siRowSelectedHover(i)">
-              <input
-                type="number"
-                class="input-table-AC"
-                [(ngModel)]="item.desct2"
-                (focus)="getlastValue($event)"
-                (change)="calcularValoresInputGOC(headtable.DESCT2, i)"
-              />
-            </td>
-            }@else{
-            <td [ngClass]="siRowSelectedHover(i)">{{ item.desct2 | number : '1.2-2' }}</td>
-            } @if(isRowSelectedGOC === i){
-            <td [ngClass]="siRowSelectedHover(i)">
-              <input
-                type="number"
-                class="input-table-AC"
-                [(ngModel)]="item.desct3"
-                (focus)="getlastValue($event)"
-                (change)="calcularValoresInputGOC(headtable.DESCT3, i)"
-              />
-            </td>
-            } @else{
-            <td [ngClass]="siRowSelectedHover(i)">{{ item.desct3 | number : '1.2-2' }}</td>
-            } @if(isRowSelectedGOC === i){
-            <td [ngClass]="siRowSelectedHover(i)">
-              <input
-                type="number"
-                class="input-table-AC"
-                [(ngModel)]="item.desct4"
-                (focus)="getlastValue($event)"
-                (change)="calcularValoresInputGOC(headtable.DESCT4, i)"
-              />
-            </td>
-            } @else {
-            <td [ngClass]="siRowSelectedHover(i)">{{ item.desct4 | number : '1.2-2' }}</td>
-            } @if(isRowSelectedGOC === i){
-            <td [ngClass]="siRowSelectedHover(i)">
-              <input type="number" class="input-table-AC" (focus)="getlastValue($event)" [(ngModel)]="item.coscom" />
-            </td>
-            }@else{
-            <td [ngClass]="siRowSelectedHover(i)">{{ item.coscom | number : '1.2-2' }}</td>
-            }
-            <td [ngClass]="siRowSelectedHover(i)">{{ item.parcial | number : '1.2-2' }}</td>
-            <td [ngClass]="siRowSelectedHover(i)">{{ item.igv | number : '1.2-2' }}</td>
-            <td [ngClass]="siRowSelectedHover(i)">{{ item.total | number : '1.2-2' }}</td>
-          <tr
-            *ngFor="let item of dataRows; let i = index"
-            (mouseenter)="isHoveringGOC = true"
-            (mouseleave)="isNotRowHover()"
-            (mouseover)="onRowHover(i)"
-            (click)="isRowSelectedGOC = i"
-            [class.selected]="isRowSelectedGOC === i"
-          >
-            <td [ngClass]="siRowSelectedHover(i)">{{ item.item }}</td>
-            <td [ngClass]="siRowSelectedHover(i)">{{ item.codProd }}</td>
-            <td [ngClass]="siRowSelectedHover(i)">{{ item.producto }}</td>
-            <td [ngClass]="siRowSelectedHover(i)">{{ item.laboratorio }}</td>
-            @if(isRowSelectedGOC === i){
-            <td [ngClass]="siRowSelectedHover(i)">
-              <input
-                type="number"
-                class="input-table-AC"
-                [(ngModel)]="item.cantE"
-                (focus)="getlastValue($event)"
-                (change)="calcularValoresInputGOC(headtable.CANT, i)"
-              />
-            </td>
-            } @else {
-            <td [ngClass]="siRowSelectedHover(i)">{{ item.cantE | number : '1.2-2' }}</td>
-            } @if(isRowSelectedGOC === i){
-            <td [ngClass]="siRowSelectedHover(i)">
-              <input type="number" class="input-table-AC" (focus)="getlastValue($event)" [(ngModel)]="item.boni" />
-            </td>
-            } @else{
-            <td [ngClass]="siRowSelectedHover(i)">{{ item.boni | number : '1.2-2' }}</td>
-            }
-            <td [ngClass]="siRowSelectedHover(i)">{{ item.vvf1 | number : '1.2-2' }}</td>
-
-            @if(isRowSelectedGOC === i){
-            <td [ngClass]="siRowSelectedHover(i)">
-              <input type="number" class="input-table-AC" (focus)="getlastValue($event)" [(ngModel)]="item.vvf2" />
-            </td>
-            } @else{
-            <td [ngClass]="siRowSelectedHover(i)">{{ item.vvf2 | number : '1.2-2' }}</td>
-            } @if(isRowSelectedGOC === i){
-            <td [ngClass]="siRowSelectedHover(i)">
-              <input
-                type="number"
-                class="input-table-AC"
-                [(ngModel)]="item.desct1"
-                (focus)="getlastValue($event)"
-                (change)="calcularValoresInputGOC(headtable.DESCT1, i)"
-              />
-            </td>
-            }@else{
-            <td [ngClass]="siRowSelectedHover(i)">{{ item.desct1 | number : '1.2-2' }}</td>
-            } @if(isRowSelectedGOC === i){
-            <td [ngClass]="siRowSelectedHover(i)">
-              <input
-                type="number"
-                class="input-table-AC"
-                [(ngModel)]="item.desct2"
-                (focus)="getlastValue($event)"
-                (change)="calcularValoresInputGOC(headtable.DESCT2, i)"
-              />
-            </td>
-            }@else{
-            <td [ngClass]="siRowSelectedHover(i)">{{ item.desct2 | number : '1.2-2' }}</td>
-            } @if(isRowSelectedGOC === i){
-            <td [ngClass]="siRowSelectedHover(i)">
-              <input
-                type="number"
-                class="input-table-AC"
-                [(ngModel)]="item.desct3"
-                (focus)="getlastValue($event)"
-                (change)="calcularValoresInputGOC(headtable.DESCT3, i)"
-              />
-            </td>
-            } @else{
-            <td [ngClass]="siRowSelectedHover(i)">{{ item.desct3 | number : '1.2-2' }}</td>
-            } @if(isRowSelectedGOC === i){
-            <td [ngClass]="siRowSelectedHover(i)">
-              <input
-                type="number"
-                class="input-table-AC"
-                [(ngModel)]="item.desct4"
-                (focus)="getlastValue($event)"
-                (change)="calcularValoresInputGOC(headtable.DESCT4, i)"
-              />
-            </td>
-            } @else {
-            <td [ngClass]="siRowSelectedHover(i)">{{ item.desct4 | number : '1.2-2' }}</td>
-            } @if(isRowSelectedGOC === i){
-            <td [ngClass]="siRowSelectedHover(i)">
-              <input type="number" class="input-table-AC" (focus)="getlastValue($event)" [(ngModel)]="item.coscom" />
-            </td>
-            }@else{
-            <td [ngClass]="siRowSelectedHover(i)">{{ item.coscom | number : '1.2-2' }}</td>
-            }
-            <td [ngClass]="siRowSelectedHover(i)">{{ item.parcial | number : '1.2-2' }}</td>
-            <td [ngClass]="siRowSelectedHover(i)">{{ item.igv | number : '1.2-2' }}</td>
-            <td [ngClass]="siRowSelectedHover(i)">{{ item.total | number : '1.2-2' }}</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-    <!-- end tabla -->
-
-    <div class="col-12 d-flex align-items-baseline justify-content-end gap-3 m-0">
+    <div class="d-flex align-items-baseline justify-content-end">
       <p class="text-total-value">Total Parcial: {{ totalParcial | number : '1.2-2' }}</p>
       <p class="text-total-value">Total IGV (18%): {{ totaligv | number : '1.2-2' }}</p>
       <p class="text-total-value">Total Pagar: {{ totalPagar | number : '1.2-2' }}</p>
     </div>
-    <div>
-      <p class="text-total-value">ELABORADO POR : {{ dataUsuario.NombreUsuario }}</p>
-    </div>
   </div>
 </div>
 
-<app-option-click
-  (action)="handleMenuAction($event)"
-  (filter)="filterData($event)"
-></app-option-click>
-<app-alertToast
-  *ngIf="showToast"
-  [message]="toastMessage"
-  [type]="toastType"
-  [duration]="5000"
-></app-alertToast>
+<app-option-click (action)="handleMenuAction($event)" (filter)="filterData($event)"></app-option-click>
+<app-alertToast *ngIf="showToast" [message]="toastMessage" [type]="toastType" [duration]="5000"></app-alertToast>
 <loading *ngIf="loading"></loading>
