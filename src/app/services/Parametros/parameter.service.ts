@@ -4,21 +4,25 @@ import { HelperService } from '../../shared/services/helper.service';
 import { environment } from '../../../environments/environment';
 import { Observable } from 'rxjs';
 import { Parameter } from '../../models/parametros';
+import { ICondicionesPago } from '../../models/ordenCompra';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ParameterService {
 
-constructor(private httpClient: HttpClient) { }
+  constructor(private httpClient: HttpClient) { }
 
   private POST_ENDPOINT: string = 'Parameter';
   private BASE_URL: string = HelperService.buildRequestURL(environment.apiUrl);
   private REQUEST_URL: string = `${this.BASE_URL}/${this.POST_ENDPOINT}`;
 
-    getParametersList(request : any): Observable<Parameter[]> {
+  getParametersList(request: any): Observable<Parameter[]> {
     return this.httpClient.post<Parameter[]>(`${this.REQUEST_URL}/GetParametros`, request);
   }
 
+  getCondicionesPago(reques: ICondicionesPago) {
+    return this.httpClient.post<any>(`${this.REQUEST_URL}/GetCondicionesPago`, reques);
+  }
 
 }
