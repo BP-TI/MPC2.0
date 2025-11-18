@@ -1,6 +1,7 @@
 .modal-Substitutes .modal-dialog {
     /* max-width: 1000px !important;
     width: 600px !important; */
+    height: 400px;
     position: absolute !important;
     z-index: 1060;
     top: 8%;

@@ -134,7 +134,6 @@
   line-height: 15px;
   color: #3C3C3C;
   margin: 1px;
-  height: 15px;
 }
 
 .textarea_input {
@@ -193,7 +192,7 @@ input {
   align-self: stretch;
   flex-grow: 0;
   color: #7A7A7A;
-  padding: 0px;
+  padding: 1px;
   font-size: 10px;
 }
 
@@ -300,4 +299,7 @@ td {
 hr {
   margin-top: 5px;
   margin-bottom: 10px;
+}
+.order-section {
+  border-left: 1px solid #cec6c6; /* Línea ploma */
 }

@@ -24,6 +24,9 @@ import { HttpErrorResponse } from '@angular/common/http';
 })
 export class PurchaseOrderComponent implements OnInit {
   logoHeader = 'assets/images/logo-color.svg';
+  private isDragging = false;
+  private offsetX = 0;
+  private offsetY = 0;
 
   @Input() dataRows!: PurchaseOrder_table_modal[];
   @Input() scodPorv!: string;
@@ -32,7 +35,7 @@ export class PurchaseOrderComponent implements OnInit {
   // -----------------
 
   rucProv: string;
-  today: Date = new Date();
+   today: Date = new Date();
   creationDate: any;
   deliveryDate: any;
   valorAnterior: any;
@@ -59,10 +62,8 @@ export class PurchaseOrderComponent implements OnInit {
   toastType: 'success' | 'error2' | 'info' | 'warning' = 'info';
   showToast = false;
 
-  // -----------------
-  private isDragging = false;
-  private offsetX = 0;
-  private offsetY = 0;
+
+  
 
   constructor(
     private alertMail: AlertMail,
@@ -90,37 +91,6 @@ export class PurchaseOrderComponent implements OnInit {
     this.dataUsuario = this.globalService.getDataUserLogin();
   }
 
-  startDrag(event: MouseEvent) {
-    this.isDragging = true;
-    const dialog = this.el.nativeElement.closest('.modal-dialog');
-    const rect = dialog.getBoundingClientRect();
-    this.offsetX = event.clientX - rect.left;
-    this.offsetY = event.clientY - rect.top;
-  }
-
-  @HostListener('document:mousemove', ['$event'])
-  onMouseMove(event: MouseEvent) {
-    if (!this.isDragging) return;
-    const dialog = this.el.nativeElement.closest('.modal-dialog');
-
-    const newLeft = event.clientX - this.offsetX;
-    const newTop = event.clientY - this.offsetY;
-
-    const maxLeft = window.innerWidth - dialog.offsetWidth;
-    const maxTop = window.innerHeight - dialog.offsetHeight;
-
-    const limitedLeft = Math.max(0, Math.min(newLeft, maxLeft));
-    const limitedTop = Math.max(0, Math.min(newTop, maxTop));
-
-    dialog.style.left = `${limitedLeft}px`;
-    dialog.style.top = `${limitedTop}px`;
-  }
-
-  @HostListener('document:mouseup')
-  onMouseUp() {
-    this.isDragging = false;
-  }
-  // -----
   getRuctProv() {
     this.orderCompraService.getRucProveedor(this.scodPorv).subscribe(response => {
       if (response.codStatus == 1) {
@@ -809,6 +779,38 @@ export class PurchaseOrderComponent implements OnInit {
 
     setTimeout(() => this.showToast = false, 5000);
   }
+
+  startDrag(event: MouseEvent) {
+    this.isDragging = true;
+    const dialog = this.el.nativeElement.closest('.modal-dialog');
+    const rect = dialog.getBoundingClientRect();
+    this.offsetX = event.clientX - rect.left;
+    this.offsetY = event.clientY - rect.top;
+  }
+
+  @HostListener('document:mousemove', ['$event'])
+  onMouseMove(event: MouseEvent) {
+    if (!this.isDragging) return;
+    const dialog = this.el.nativeElement.closest('.modal-dialog');
+
+    const newLeft = event.clientX - this.offsetX;
+    const newTop = event.clientY - this.offsetY;
+
+    const maxLeft = window.innerWidth - dialog.offsetWidth;
+    const maxTop = window.innerHeight - dialog.offsetHeight;
+
+    const limitedLeft = Math.max(0, Math.min(newLeft, maxLeft));
+    const limitedTop = Math.max(0, Math.min(newTop, maxTop));
+
+    dialog.style.left = `${limitedLeft}px`;
+    dialog.style.top = `${limitedTop}px`;
+  }
+
+  @HostListener('document:mouseup')
+  onMouseUp() {
+    this.isDragging = false;
+  }
+
 
 
 }

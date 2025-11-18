@@ -78,10 +78,7 @@ import { NgbDatepickerModule, NgbModule } from '@ng-bootstrap/ng-bootstrap';
     ToastaModule.forRoot(),
     NgbDatepickerModule,
   ],
-  providers: [
-    provideBrowserGlobalErrorListeners(),
-    ToastaService
-  ],
+  providers: [provideBrowserGlobalErrorListeners(), ToastaService],
   exports: [
     LayoutComponent,
     OptionClickComponent,
@@ -97,6 +94,6 @@ import { NgbDatepickerModule, NgbModule } from '@ng-bootstrap/ng-bootstrap';
     AutorizacionModalComponent,
 
   ],
-  bootstrap: [App]
+  bootstrap: [App],
 })
-export class AppModule { }
+export class AppModule {}
