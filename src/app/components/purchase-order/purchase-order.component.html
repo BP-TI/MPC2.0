@@ -86,6 +86,8 @@
         </div>
         <div class="m-0 p-0 pb-2">
           <label class="label_title" for="ruc">Ruc</label>
+        <div class="m-0 p-0 pb-2">
+          <label class="label_title" for="ruc">Ruc</label>
           <input type="text" placeholder="Ruc" [(ngModel)]="rucProv" readonly />
         </div>
         <div class="m-0 p-0">
@@ -249,6 +251,103 @@
             <td [ngClass]="siRowSelectedHover(i)">{{ item.parcial | number : '1.2-2' }}</td>
             <td [ngClass]="siRowSelectedHover(i)">{{ item.igv | number : '1.2-2' }}</td>
             <td [ngClass]="siRowSelectedHover(i)">{{ item.total | number : '1.2-2' }}</td>
+          <tr
+            *ngFor="let item of dataRows; let i = index"
+            (mouseenter)="isHoveringGOC = true"
+            (mouseleave)="isNotRowHover()"
+            (mouseover)="onRowHover(i)"
+            (click)="isRowSelectedGOC = i"
+            [class.selected]="isRowSelectedGOC === i"
+          >
+            <td [ngClass]="siRowSelectedHover(i)">{{ item.item }}</td>
+            <td [ngClass]="siRowSelectedHover(i)">{{ item.codProd }}</td>
+            <td [ngClass]="siRowSelectedHover(i)">{{ item.producto }}</td>
+            <td [ngClass]="siRowSelectedHover(i)">{{ item.laboratorio }}</td>
+            @if(isRowSelectedGOC === i){
+            <td [ngClass]="siRowSelectedHover(i)">
+              <input
+                type="number"
+                class="input-table-AC"
+                [(ngModel)]="item.cantE"
+                (focus)="getlastValue($event)"
+                (change)="calcularValoresInputGOC(headtable.CANT, i)"
+              />
+            </td>
+            } @else {
+            <td [ngClass]="siRowSelectedHover(i)">{{ item.cantE | number : '1.2-2' }}</td>
+            } @if(isRowSelectedGOC === i){
+            <td [ngClass]="siRowSelectedHover(i)">
+              <input type="number" class="input-table-AC" (focus)="getlastValue($event)" [(ngModel)]="item.boni" />
+            </td>
+            } @else{
+            <td [ngClass]="siRowSelectedHover(i)">{{ item.boni | number : '1.2-2' }}</td>
+            }
+            <td [ngClass]="siRowSelectedHover(i)">{{ item.vvf1 | number : '1.2-2' }}</td>
+
+            @if(isRowSelectedGOC === i){
+            <td [ngClass]="siRowSelectedHover(i)">
+              <input type="number" class="input-table-AC" (focus)="getlastValue($event)" [(ngModel)]="item.vvf2" />
+            </td>
+            } @else{
+            <td [ngClass]="siRowSelectedHover(i)">{{ item.vvf2 | number : '1.2-2' }}</td>
+            } @if(isRowSelectedGOC === i){
+            <td [ngClass]="siRowSelectedHover(i)">
+              <input
+                type="number"
+                class="input-table-AC"
+                [(ngModel)]="item.desct1"
+                (focus)="getlastValue($event)"
+                (change)="calcularValoresInputGOC(headtable.DESCT1, i)"
+              />
+            </td>
+            }@else{
+            <td [ngClass]="siRowSelectedHover(i)">{{ item.desct1 | number : '1.2-2' }}</td>
+            } @if(isRowSelectedGOC === i){
+            <td [ngClass]="siRowSelectedHover(i)">
+              <input
+                type="number"
+                class="input-table-AC"
+                [(ngModel)]="item.desct2"
+                (focus)="getlastValue($event)"
+                (change)="calcularValoresInputGOC(headtable.DESCT2, i)"
+              />
+            </td>
+            }@else{
+            <td [ngClass]="siRowSelectedHover(i)">{{ item.desct2 | number : '1.2-2' }}</td>
+            } @if(isRowSelectedGOC === i){
+            <td [ngClass]="siRowSelectedHover(i)">
+              <input
+                type="number"
+                class="input-table-AC"
+                [(ngModel)]="item.desct3"
+                (focus)="getlastValue($event)"
+                (change)="calcularValoresInputGOC(headtable.DESCT3, i)"
+              />
+            </td>
+            } @else{
+            <td [ngClass]="siRowSelectedHover(i)">{{ item.desct3 | number : '1.2-2' }}</td>
+            } @if(isRowSelectedGOC === i){
+            <td [ngClass]="siRowSelectedHover(i)">
+              <input
+                type="number"
+                class="input-table-AC"
+                [(ngModel)]="item.desct4"
+                (focus)="getlastValue($event)"
+                (change)="calcularValoresInputGOC(headtable.DESCT4, i)"
+              />
+            </td>
+            } @else {
+            <td [ngClass]="siRowSelectedHover(i)">{{ item.desct4 | number : '1.2-2' }}</td>
+            } @if(isRowSelectedGOC === i){
+            <td [ngClass]="siRowSelectedHover(i)">
+              <input type="number" class="input-table-AC" (focus)="getlastValue($event)" [(ngModel)]="item.coscom" />
+            </td>
+            }@else{
+            <td [ngClass]="siRowSelectedHover(i)">{{ item.coscom | number : '1.2-2' }}</td>
+            }
+            <td [ngClass]="siRowSelectedHover(i)">{{ item.parcial | number : '1.2-2' }}</td>
+            <td [ngClass]="siRowSelectedHover(i)">{{ item.igv | number : '1.2-2' }}</td>
+            <td [ngClass]="siRowSelectedHover(i)">{{ item.total | number : '1.2-2' }}</td>
           </tr>
         </tbody>
       </table>
@@ -265,7 +364,6 @@
     </div>
   </div>
 </div>
-
 
 <app-option-click
   (action)="handleMenuAction($event)"
