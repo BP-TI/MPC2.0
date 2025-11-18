@@ -35,6 +35,8 @@ import { AddProductAbadiComponent } from './components/add-product-abadi/add-pro
 import { ShowSubstitutesAbadiComponent } from './components/show-substitutesAbadi/show-substitutesAbadi.component';
 import { DetalleStockBoticaComponent } from './modales/purchase-planning/detalle-stock-botica/detalle-stock-botica.component';
 import { AutorizacionModalComponent } from './modales/autorizacion-modal/autorizacion-modal.component';
+import { NgbDatepickerModule, NgbModule } from '@ng-bootstrap/ng-bootstrap';
+
 
 @NgModule({
   declarations: [
@@ -74,6 +76,7 @@ import { AutorizacionModalComponent } from './modales/autorizacion-modal/autoriz
     PdfViewerModule,
     HttpClientModule,
     ToastaModule.forRoot(),
+    NgbDatepickerModule,
   ],
   providers: [provideBrowserGlobalErrorListeners(), ToastaService],
   exports: [

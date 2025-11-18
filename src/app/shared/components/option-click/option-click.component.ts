@@ -33,6 +33,7 @@ export class OptionClickComponent implements OnInit {
   visible2 = false;
   visible3 = false;
   visible4 = false;
+  visible5 = false;
 
   x = 0;
   y = 0;
@@ -74,6 +75,13 @@ export class OptionClickComponent implements OnInit {
           this.visible4 = false
         }
         break;
+      case 5:
+        this.visible3 = false;
+        this.visible = false;
+        this.visible2 = false;
+        this.visible4 = false;
+        this.visible5 = true;
+        break;
     }
 
   }
@@ -82,6 +90,7 @@ export class OptionClickComponent implements OnInit {
     this.visible = false;
     this.visible2 = false;
     this.visible3 = false;
+    this.visible5 = false;
   }
 
   closeHeadTableAC() {

@@ -61,7 +61,6 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
   isRowHover: Number = -1;
   isRowSelected: Number = -1;
   idProductSelected: string = '';
-  deleteColumnAC: HeadTableAC[] = [];
   showFilterTable: boolean = false;
   tableSelectedExcel: string = '';
 
@@ -85,14 +84,16 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
     private modalService: NgbModal,
     public global: GlobalService,
     private el: ElementRef,
-    private alertMail: AlertMail) { }
+  ) { }
 
   ngOnInit() {
     this.addHeadeTable();
     this.cargarProveedores();
     this.getCondiciones();
     this.global.setGlobalVar('Módulo planificación de compra');
-
+    this.opcionesForm = this.fb.group({
+      todos: [false]
+    });
   }
 
   ngAfterViewInit() {
@@ -150,7 +151,7 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
   crearGrupoChecks() {
     this.opcionesForm = this.fb.group({
       todos: new FormControl({ value: false, disabled: true }),
-      unico: [false]
+      // unico: [false]
     });
   }
 
@@ -170,7 +171,6 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
   onCheckChange(opcion: string) {
     if (opcion === 'todos') {
       if (this.opcionesForm.value.todos) {
-        this.opcionesForm.patchValue({ unico: false });
         this.laboratorios.forEach(p => {
           p.selected = true;
         });
@@ -179,9 +179,6 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
           p.selected = false;
         });
       }
-    }
-    if (opcion === 'unico' && this.opcionesForm.value.unico) {
-      this.opcionesForm.patchValue({ todos: false });
     }
   }
 
@@ -330,7 +327,6 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
       case 'view':
         this.openModalSubstitutes();
         break;
-
       case 'filters':
         this.showFilterTable = !this.showFilterTable;
         break;
@@ -420,8 +416,6 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
 
     ];
 
-    this.deleteColumnAC = this.headTableAnalisisCompra;
-
     this.headTableUltimasCompras = [
       AppConstants.TitleTableHeadUC.PROVEEDOR,
       AppConstants.TitleTableHeadUC.S_ORDEN,
@@ -455,11 +449,6 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
 
   deleteColumn(headColumna: HeadTableAC) {
     headColumna.check = !headColumna.check;
-    if (headColumna.check) {
-      this.deleteColumnAC.push(headColumna);
-    } else {
-      this.deleteColumnAC = this.deleteColumnAC.filter(p => p.check);
-    }
   }
 
   showMonth(mesConsultado: string): string {
@@ -1516,7 +1505,6 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
       }
     }
 
-
     this.loading = true;
 
     this.ordenCompraService.getCompraFinal(dataRequest).subscribe(response => {
@@ -1629,23 +1617,6 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
       }
 
     });
-
-
-    // if (nameColumn == AppConstants.TitleTableHeadAC.VVFNUEVO
-    //   || nameColumn == AppConstants.TitleTableHeadAC.DESC1
-    //   || nameColumn == AppConstants.TitleTableHeadAC.DESC2
-    //   || nameColumn == AppConstants.TitleTableHeadAC.DESC3
-    //   || nameColumn == AppConstants.TitleTableHeadAC.DESC4
-    //   || nameColumn == AppConstants.TitleTableHeadAC.COMPRA_FINAL
-    //   || nameColumn == AppConstants.TitleTableHeadAC.BONIFICADO
-    // ) {
-    //   this.calcular_Desc();
-    // }
-
-    // if (nameColumn == AppConstants.TitleTableHeadAC.COSCON) {
-    //   this.calcular_CosCom();
-    // }
-
   }
 
   calculate_Compra_Final(ncompraFinal: any) {

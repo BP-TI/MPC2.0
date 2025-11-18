@@ -1,13 +1,14 @@
 .modal-PurchaseOrder .modal-dialog {
-    max-width: 2000px;
-    width: 1050px !important;
-    height: 1000px !important;
-    position: absolute !important;
-    z-index: 1060;
-    padding: 0px !important;
-    margin: 0px;;
-    top: 2%;
-    left: 5%;    
+  max-width: 2000px;
+  width: 1070px !important;
+  height: 1000px !important;
+  position: absolute !important;
+  z-index: 1060;
+  padding: 0px !important;
+  margin: 0px;
+  ;
+  top: 2%;
+  left: 5%;
 }
 
 .modal {
@@ -24,12 +25,14 @@
 }
 
 .header-modal {
+  position: sticky;
+  top: 0;
+  z-index: 2000;
   background: #134B97;
   color: white;
   width: 100%;
   cursor: move;
-  padding: 5px;
-  margin: 0px;
+  margin: 0px 0px 20px 0px !important;
 }
 
 .button-cancel {
@@ -127,36 +130,61 @@
 
 .company-data {
   font-family: 'Montserrat';
-  font-size: 10px;
+  font-size: 11.5px;
   line-height: 15px;
   color: #3C3C3C;
   margin: 1px;
 }
 
-label {
+.textarea_input {
+  height: 20px;
+  font-family: 'Montserrat' !important;
+  font-style: normal;
+  font-size: 10px !important;
+  line-height: 15px !important;
+  color: #3C3C3C !important;
+}
+
+.container_input_fecha_entrega {
+  width: 200px;
+}
+
+.label_title {
   height: 20px;
   font-family: 'Montserrat';
   font-style: normal;
-  font-size: 10px;
+  font-size: 11px;
   line-height: 15px;
   color: #3C3C3C;
   margin: 1px;
+  width: 100px;
 }
 
 input {
   box-sizing: border-box;
-  width: auto;
-  height: 20px;
+  width: 180px;
+  height: 30px;
   background: #FFFFFF;
   border: 1px solid rgba(175, 167, 167, 0.7);
   border-radius: 4px;
   font-size: 10px;
 }
 
+.form-control {
+  font-size: 10px;
+  height: 30px;
+
+}
+
+.btn {
+  padding: 0% 2%;
+  height: 30px;
+}
+
 .input-select {
   box-sizing: border-box;
-  width: auto;
-  height: 20px;
+  width: 200px;
+  height: 30px;
   background: #FFFFFF;
   border: 1px solid rgba(175, 167, 167, 0.7);
   border-radius: 4px;
@@ -168,11 +196,15 @@ input {
   font-size: 10px;
 }
 
+.selected {
+  background: #D7E3F3 !important;
+}
+
 /* Estilo de la tabla */
 .table-scroll-PO {
   padding: 0px;
   overflow-x: auto;
-  height: 250px;
+  height: 230px;
   border: #DCEBFF solid;
   scrollbar-color: #B0E0E6 white !important;
 }
@@ -221,9 +253,43 @@ td {
   padding: 0px;
 }
 
+.input-table-AC {
+  box-sizing: border-box;
+  width: 50px;
+  height: 20px;
 
+  background: #FFFFFF;
+  border: 0.5px solid rgba(175, 167, 167, 0.7);
+  border-radius: 4px;
+
+  flex: none;
+  order: 1;
+  align-self: stretch;
+  flex-grow: 0;
+  color: #7A7A7A;
+  padding: 1px;
+  margin: 0px;
+  font-size: 8px;
+  text-align: center;
+}
 
 /* End estilos de la tabla */
+
+/* hover table */
+.background-hover-fixed-column {
+  background-color: #B0E0E6 !important;
+}
+
+.background-white-fixed-column {
+  background-color: white !important;
+}
+
+.background-selected-column {
+  background-color: #D7E3F3 !important;
+}
+
+/* End hover table */
+
 .text-total-value {
   font-size: 10px;
   color: black;

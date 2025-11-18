@@ -1,5 +1,6 @@
 import { Component, signal } from '@angular/core';
 import { Router } from '@angular/router';
+import '@angular/localize/init';
 
 @Component({
   selector: 'app-root',
