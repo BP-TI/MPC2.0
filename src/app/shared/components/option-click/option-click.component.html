@@ -35,13 +35,12 @@
   <li (click)="onAction('excel')">📊 Exportar a Excel</li>
   <li (click)="onAction('addProduct')">➕ Adicionar Producto</li>
   <li (click)="onAction('delete')">➖ Eliminar Producto</li>
-  <li (click)="onAction('stockDetail')">🏥 Generar Consolidado O/C </li>
+  <li (click)="onAction('stockDetail')">🏥 Generar Consolidado O/C</li>
   <li (click)="onAction('infraStock')">📉 Eliminar Consolidado O/C</li>
   <li (click)="onAction('finalZero')">0️⃣ Compra Final 0</li>
-
 </ul>
 
-
+<!-- Filtro tabla de Analisis compra -->
 <ul
   class="custom-menu menu-filter lista-filtro"
   *ngIf="visible4"
@@ -59,47 +58,41 @@
       TODOS
     </div>
     @if(filterColumn == 'Descripción'){
-    <div  *ngFor="let item of menuListProducto" class="m-0 p-0 pl-4 item-list">
+    <div *ngFor="let item of menuListProducto" class="m-0 p-0 pl-4 item-list">
       <div *ngIf="item.visible" class="d-flex gap-2">
-        <input type="checkbox" [(ngModel)]="item.check" (change)="onChangecheckAll()"/>
+        <input type="checkbox" [(ngModel)]="item.check" (change)="onChangecheckAll()" />
         {{ item.description }}
       </div>
     </div>
-    } 
-    @if(filterColumn == 'Labora.') {
+    } @if(filterColumn == 'Labora.') {
     <div *ngFor="let item of menuListLabora" class="m-0 p-0 pl-4 item-list">
-     <div *ngIf="item.visible" class="d-flex gap-2">
-        <input type="checkbox" [(ngModel)]="item.check" (change)="onChangecheckAll()"/>
+      <div *ngIf="item.visible" class="d-flex gap-2">
+        <input type="checkbox" [(ngModel)]="item.check" (change)="onChangecheckAll()" />
         {{ item.description }}
       </div>
     </div>
-    }
-    @if(filterColumn == 'Tipo') {
+    } @if(filterColumn == 'Tipo') {
     <div *ngFor="let item of menuLisTipo" class="m-0 p-0 pl-4 item-list">
       <div *ngIf="item.visible" class="d-flex gap-2">
-        <input type="checkbox" [(ngModel)]="item.check" (change)="onChangecheckAll()"/>
+        <input type="checkbox" [(ngModel)]="item.check" (change)="onChangecheckAll()" />
         {{ item.description }}
       </div>
     </div>
-    }
-    @if(filterColumn == 'Compra final') {
+    } @if(filterColumn == 'Compra final') {
     <div *ngFor="let item of menuListCompraFinal" class="m-0 p-0 pl-4 item-list">
-     <div *ngIf="item.visible" class="d-flex gap-2">
-        <input type="checkbox" [(ngModel)]="item.check" (change)="onChangecheckAll()"/>
+      <div *ngIf="item.visible" class="d-flex gap-2">
+        <input type="checkbox" [(ngModel)]="item.check" (change)="onChangecheckAll()" />
         {{ item.description }}
       </div>
     </div>
-    }
-     @if(filterColumn == 'Condición') {
+    } @if(filterColumn == 'Condición') {
     <div *ngFor="let item of menuListCondiciones" class="m-0 p-0 pl-4 item-list">
-     <div *ngIf="item.visible" class="d-flex gap-2">
-        <input type="checkbox" [(ngModel)]="item.check" (change)="onChangecheckAll()"/>
+      <div *ngIf="item.visible" class="d-flex gap-2">
+        <input type="checkbox" [(ngModel)]="item.check" (change)="onChangecheckAll()" />
         {{ item.description }}
       </div>
     </div>
     }
-
-
   </li>
   <li>
     <div class="container-buttons-filter">
@@ -107,4 +100,18 @@
       <button (click)="closeHeadTableAC()">cancelar</button>
     </div>
   </li>
+</ul>
+<!--End Filtro tabla de Analisis compra -->
+
+<ul
+  class="custom-menu"
+  *ngIf="visible5"
+  [ngStyle]="{ top: y + 'px', left: x + 'px' }"
+  style="height: 140px"
+>
+  <li (click)="onAction('excel')">📊 Exportar a Excel</li>
+  <li (click)="onAction('addProduct')">➕ Adicionar Producto</li>
+  <li (click)="onAction('deleteProduct')">➖ Eliminar Producto</li>
+  <li (click)="onAction('consider')">📉 Considerar bonificacion cosCom</li>
+  <li (click)="onAction('noconsider')">🏥 No considerar bonificacion cosCom</li>
 </ul>
