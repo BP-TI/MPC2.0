@@ -75,8 +75,8 @@ import { NgbDatepickerModule, NgbModule } from '@ng-bootstrap/ng-bootstrap';
     NgSelectModule,
     PdfViewerModule,
     HttpClientModule,
-    ToastaModule.forRoot()
-       NgbDatepickerModule,
+    ToastaModule.forRoot(),
+    NgbDatepickerModule,
   ],
   providers: [
     provideBrowserGlobalErrorListeners(),

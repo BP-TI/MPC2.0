@@ -12,6 +12,8 @@ import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
 import { AddProductComponent } from '../add-product/add-product.component';
 import { ConfirmacionModalComponent } from '../../modales/confirmacionModal/confirmacionModal.component';
+import { ParameterService } from '../../services/Parametros/parameter.service';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-purchase-order',
@@ -20,7 +22,6 @@ import { ConfirmacionModalComponent } from '../../modales/confirmacionModal/conf
   styleUrl: './purchase-order.component.css',
   encapsulation: ViewEncapsulation.None,
 })
-export class PurchaseOrderComponent implements OnInit {
 export class PurchaseOrderComponent implements OnInit {
   logoHeader = 'assets/images/logo-color.svg';
 
@@ -35,6 +36,9 @@ export class PurchaseOrderComponent implements OnInit {
   creationDate: any;
   deliveryDate: any;
   valorAnterior: any;
+  // parametros
+  arrayDirections: any = [];
+  arrayParametros: any;
   // data usuaro
   dataUsuario: UserDataLogin;
   // poppup
@@ -69,9 +73,11 @@ export class PurchaseOrderComponent implements OnInit {
     private dateAdapter: NgbDateAdapter<string>,
     private globalService: GlobalService,
     private modalService: NgbModal,
+    private parameterService: ParameterService,
   ) { }
 
   ngOnInit(): void {
+    this.arrayMenuOrigen();
     this.getHeadTable();
     this.getRuctProv();
     this.loadData();
@@ -144,6 +150,34 @@ export class PurchaseOrderComponent implements OnInit {
       this.headtable.IGV,
       this.headtable.TOTAL,
     ];
+  }
+
+  //Direcciones
+  async GetParametersAsync(array: Array<number>) {
+    let modelRequest = { headerId: array };
+    this.loading = true;
+    await this.parameterService.getParametersList(modelRequest).toPromise().then((response) => {
+      this.arrayParametros = response;
+      console.log(response);
+      this.loading = false;
+    },
+      (error: HttpErrorResponse) => {
+        this.loading = false;
+      });
+  }
+
+  async arrayMenuOrigen() {
+    await this.GetParametersAsync([
+      AppConstants.ParameterCode.DIRECCIONES_ENTREGA
+    ]);
+
+    this.arrayDirections = this.arrayParametros.filter((x: any) => x.tabCabId === AppConstants.ParameterCode.DIRECCIONES_ENTREGA)
+      .map((x: any) => ({
+        menuUrl: x.tabDet003,
+        menuImage: x.tabDet007,
+        menuName: x.tabDet001
+      }));
+      console.log(this.arrayDirections);
   }
 
   // click derecho
@@ -354,8 +388,6 @@ export class PurchaseOrderComponent implements OnInit {
 
     this.calculateDesc(this.isRowSelectedGOC);
     this.calculateTotal();
-
-
   }
 
   // ExportarExcel
@@ -411,11 +443,24 @@ export class PurchaseOrderComponent implements OnInit {
   getlastValue(valueInput: any) {
     let dataLast = (valueInput.target as HTMLInputElement).value;
     this.valorAnterior = dataLast;
+    console.log(this.valorAnterior);
   }
   calcularValoresInputGOC(nameColumn: string, index: number) {
-
     // valida que los valores no este vacio
+
+    if (this.dataRows[index].cantE == null || this.dataRows[index].cantE == undefined) {
+      console.log(this.valorAnterior);
+      this.dataRows[this.isRowSelectedGOC].cantE = this.valorAnterior;
+    }
+
     if (
+      this.dataRows[index].cantE == null || this.dataRows[index].cantE == undefined ||
+      this.dataRows[index].boni == null || this.dataRows[index].boni == undefined ||
+      this.dataRows[index].vvf2 == null || this.dataRows[index].vvf2 == undefined ||
+      this.dataRows[index].desct1 == null || this.dataRows[index].desct1 == undefined ||
+      this.dataRows[index].desct2 == null || this.dataRows[index].desct2 == undefined ||
+      this.dataRows[index].desct3 == null || this.dataRows[index].desct3 == undefined ||
+      this.dataRows[index].desct4 == null || this.dataRows[index].desct4 == undefined ||
       this.dataRows[index].cantE.toString().length == 0 ||
       this.dataRows[index].boni.toString().length == 0 ||
       this.dataRows[index].vvf2.toString().length == 0 ||
@@ -473,13 +518,18 @@ export class PurchaseOrderComponent implements OnInit {
 
         if (response.codStatus == 1) {
           if (response.message == 'OK') {
-            nProm_Ultimos3Meses = Number(response.detalleProductos.prom_ult3Meses);
-            nCanMaxCompra = (((Number(response.detalleProductos.promMes)) / (nProm_Ultimos3Meses / 3)) * 120) - ((Number(response.detalleProductos.total)) + Number(this.dataRows[this.isRowSelectedGOC].cantE)) + Number(this.dataRows[this.isRowSelectedGOC].cantE);
+            console.log(response.detalleProductos[0].prom_ult3Meses);
+            nProm_Ultimos3Meses = Number(response.detalleProductos[0].prom_ult3Meses);
+
+            console.log(response.detalleProductos);
+            console.log(response.detalleProductos[0].total);
+            console.log(this.dataRows[this.isRowSelectedGOC].cantE);
+            nCanMaxCompra = (((Number(response.detalleProductos[0].promMes)) / (nProm_Ultimos3Meses / 3)) * 120) - ((Number(response.detalleProductos[0].total)) + Number(this.dataRows[this.isRowSelectedGOC].cantE)) + Number(this.dataRows[this.isRowSelectedGOC].cantE);
 
             if (nCanMaxCompra < 0) {
-              this.AlertToast(`Warning: Cantidad máxima a comprar: ${response.detalleProductos.preCompra}.`, 'warning');
+              this.AlertToast(`Warning: Cantidad máxima a comprar: ${response.detalleProductos[0].preCompra}.`, 'warning');
             } else {
-              this.AlertToast(`Warning: Cantidad máxima a comprar: ${nCanMaxCompra}.`, 'warning');
+              this.AlertToast(`Warning: Cantidad máxima a comprar: ${Math.round(nCanMaxCompra)}.`, 'warning');
             }
 
 
@@ -494,9 +544,9 @@ export class PurchaseOrderComponent implements OnInit {
             let nCompra_Final: number = 0;
             this.orderCompraService.getCompraFinal(dataCFReq).subscribe(responseCF => {
               this.loading = false;
-              nCompra_Final = response.Compra_Final;
+              nCompra_Final = responseCF.Compra_Final;
 
-              if (Number(this.dataRows[this.isRowSelectedGOC].pro_mes) == 0 && Number(response.detalleProductos.promMes) == 0) {
+              if (Number(this.dataRows[this.isRowSelectedGOC].pro_mes) == 0 && Number(response.detalleProductos[0].promMes) == 0) {
 
                 let modalConfirm = this.modalService.open(ConfirmacionModalComponent, {
                   windowClass: "modal-confirmacion",
@@ -505,6 +555,38 @@ export class PurchaseOrderComponent implements OnInit {
                 });
 
                 modalConfirm.componentInstance.message = 'El producto no tiene Venta en los últimos 3 meses.';
+
+                modalConfirm.closed.subscribe(confirn => {
+                  if (confirn) {
+                    let proIncentivo = '';
+                    this.orderCompraService.getProductoIncentivo(this.dataRows[this.isRowSelectedGOC].codProd).subscribe(responseProIn => {
+                      if (response.codStatus == 1) {
+                        if (response.message = 'OK') {
+
+                          proIncentivo = response.compro;
+                          if (this.dataUsuario.codigoUsuario == 'VPAUCAR' && Number(proIncentivo) == 0) {
+                            this.AlertToast(`Warning: Solo puede cambiar cantidades de Productos Preferidos.`, 'warning');
+
+                            if (Number(this.dataRows[this.isRowSelectedGOC].cantE) != 0) {
+                              this.calculateDesc(this.isRowSelectedGOC);
+                              this.calculateTotal();
+
+                            } else {
+                              this.calculateDesc(this.isRowSelectedGOC);
+                              this.calculateTotal();
+                            }
+
+                          }
+
+                        }
+                      }
+                    });
+
+                  } else {
+                    this.calculateDesc(this.isRowSelectedGOC);
+                    this.calculateTotal();
+                  }
+                });
 
               }
 

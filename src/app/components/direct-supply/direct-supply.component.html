@@ -324,66 +324,6 @@
 
 <!-- MODAL -->
 
-<!-- modal Generar Orden de compra -->
-<div
-  class="modal fade"
-  id="ordenCompra"
-  data-backdrop="static"
-  data-keyboard="false"
-  tabindex="10"
-  role="dialog"
-  aria-labelledby="staticBackdropLabel"
-  aria-hidden="true"
->
-  <div class="modal-dialog modal-dialog-centered modal-xl">
-    <div class="modal-content">
-      <div
-        class="modal-header p-2 m-0 d-flex align-items-baseline justify-content-between style-header-popup"
-      >
-        <p class="title-modal p-0 m-0">Nueva Orden de Compra</p>
-        <button type="button" class="button-cancel" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <app-purchase-order></app-purchase-order>
-      </div>
-    </div>
-  </div>
-</div>
-<!-- End modal Generar Orden de compra -->
-
-<div
-  class="modal fade"
-  id="generarbasadaoc"
-  data-backdrop="static"
-  data-keyboard="false"
-  tabindex="10"
-  role="dialog"
-  aria-labelledby="staticBackdropLabel"
-  aria-hidden="true"
->
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-      <div
-        class="modal-header d-flex align-items-baseline justify-content-between style-header-popup"
-      >
-        <p class="title-modal">Generar en base a una O/C</p>
-        <button type="button" class="button-cancel" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <div class="d-flex align-items-baseline gap-2">
-          <label for="fechacreacion">Número de O/C</label>
-          <input type="number" placeholder="Orden de compra"/>
-          <button class="button-style">Guardar</button>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
 <!-- end modal -->
 <app-option-click (action)="handleMenuAction($event)" 
 (filter)="filterData($event)"
