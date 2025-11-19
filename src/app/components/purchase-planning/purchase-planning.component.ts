@@ -40,20 +40,27 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
   headTableAnalisisCompra: HeadTableAC[] = []
   headTableUltimasCompras: string[] = []
   headTableUltimosIngresos: string[] = []
-  rows: PurchaseOrder[] = [];
+  datosPrincipales = sessionStorage.getItem(AppConstants.SessionOption.ROWS_PRINCIPAL);
+  rows: PurchaseOrder[] = this.datosPrincipales != null ? JSON.parse(this.datosPrincipales) : [];
   rowsLb: any[];
-  rowsUCompras: any[];
-  rowsUIngresos: any[];
+  ultimasComprasSession = sessionStorage.getItem(AppConstants.SessionOption.ULTIMAS_COMPRAS);
+  rowsUCompras: any[] = this.ultimasComprasSession != null ? JSON.parse(this.ultimasComprasSession) : [];
+  ultimosIngresosSession = sessionStorage.getItem(AppConstants.SessionOption.ULTIMOS_INGRESOS);
+  rowsUIngresos: any[] = this.ultimosIngresosSession != null ? JSON.parse(this.ultimosIngresosSession) : [];
   rowsDataTotal: any[];
-  conscom: any = undefined;
-  conscomImpto: any = undefined;
+  coscomSession = sessionStorage.getItem(AppConstants.SessionOption.COSCOM);
+  conscom: any = this.coscomSession != null ? JSON.parse(this.coscomSession).conscom : undefined;
+  conscomImpto: any = this.coscomSession != null ? JSON.parse(this.coscomSession).conscomImpto : undefined;
   loading: boolean = false;
   proveedores: Proveedores[];
   laboratorios: Laboratorios[];
   validaCorreo: boolean = false;
-  totalParcial: number = 0;
-  totalIGV: number = 0;
-  totalPagar: number = 0;
+
+  calculosTotalesSession = sessionStorage.getItem(AppConstants.SessionOption.CALCULOS_TOTALES);
+  totalParcial: number = this.calculosTotalesSession != null ? JSON.parse(this.calculosTotalesSession).totalParcial : 0;
+  totalIGV: number = this.calculosTotalesSession != null ? JSON.parse(this.calculosTotalesSession).totalIGV : 0;
+  totalPagar: number = this.calculosTotalesSession != null ? JSON.parse(this.calculosTotalesSession).totalPagar : 0;
+
   proveedor = "0";
   opcionesForm: FormGroup;
   condiciones: Condiciones[] = [];
@@ -161,6 +168,12 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
       (response) => {
         this.loading = false;
         this.proveedores = response;
+        const proveedorSession = sessionStorage.getItem(AppConstants.SessionOption.PROVEEDOR_PLANE);
+        this.proveedor = proveedorSession != null ? proveedorSession.toString() : "0";
+        if(this.proveedor != "0"){
+          const laboratorioSession = sessionStorage.getItem(AppConstants.SessionOption.LABORATORIO_PLANE);
+          this.laboratorios = laboratorioSession != null ?  JSON.parse(laboratorioSession) : [];
+        }
       },
       (error: HttpErrorResponse) => {
         this.loading = false;
@@ -180,19 +193,23 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
         });
       }
     }
+    sessionStorage.setItem(AppConstants.SessionOption.LABORATORIO_PLANE,'')
   }
 
   onChangeProveedor() {
     this.loading = true;
     this.rows = [];
+    sessionStorage.setItem(AppConstants.SessionOption.ROWS_PRINCIPAL,JSON.stringify(this.rows));
     this.rowsDataTotal = [];
     this.laboratorios = [];
     this.clearDataTablesSecond();
+    sessionStorage.setItem(AppConstants.SessionOption.PROVEEDOR_PLANE,this.proveedor);
 
     this.purchaseService.getLaboratorios(this.proveedor).subscribe(
       (response) => {
         this.loading = false;
         this.laboratorios = response;
+        sessionStorage.setItem(AppConstants.SessionOption.LABORATORIO_PLANE, JSON.stringify(this.laboratorios));
         if (this.laboratorios.length > 0) {
           this.opcionesForm?.get('todos')?.enable();
         }
@@ -214,6 +231,7 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
       this.AlertToast(`Warning: Debes seleccionar al menos un laboratorio para continuar.`, 'warning')
       return;
     }
+    sessionStorage.setItem(AppConstants.SessionOption.LABORATORIO_PLANE, JSON.stringify(this.laboratorios));
 
     let cadenaLab = labChecks.map(p => p.codigoLab).join(',');
 
@@ -291,6 +309,7 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
                 });
               });
               this.rows = response.detalleProductos;
+              sessionStorage.setItem(AppConstants.SessionOption.ROWS_PRINCIPAL,JSON.stringify(this.rows));
               this.rowsDataTotal = response.detalleProductos;
               this.createMenuListHeaderAC();
 
@@ -449,6 +468,7 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
 
   deleteColumn(headColumna: HeadTableAC) {
     headColumna.check = !headColumna.check;
+    this.headTableAnalisisCompra = this.headTableAnalisisCompra.map((p: any) => p.descripcion == headColumna.description ? { ...p, check: headColumna.check } : p);
   }
 
   showMonth(mesConsultado: string): string {
@@ -535,14 +555,21 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
         } else {
           if (response.ultimasCompras != null && response.ultimasCompras.length > 0) {
             this.rowsUCompras = response.ultimasCompras;
+            sessionStorage.setItem(AppConstants.SessionOption.ULTIMAS_COMPRAS,JSON.stringify(this.rowsUCompras));
           }
 
           if (response.ultimosIngresos != null && response.ultimosIngresos.length > 0) {
             this.rowsUIngresos = response.ultimosIngresos;
+            sessionStorage.setItem(AppConstants.SessionOption.ULTIMOS_INGRESOS,JSON.stringify(this.rowsUIngresos));
           }
 
           this.conscom = response.costoCompra;
           this.conscomImpto = response.costoCompraIGV;
+          const model = {
+            conscom:this.conscom,
+            conscomImpto:this.conscomImpto
+          }
+          sessionStorage.setItem(AppConstants.SessionOption.COSCOM,JSON.stringify(model));
         }
       }
       else {
@@ -588,17 +615,37 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
 
   clearField() {
     this.rowsUCompras = [];
+    sessionStorage.setItem(AppConstants.SessionOption.ULTIMAS_COMPRAS,JSON.stringify(this.rowsUCompras));
     this.rowsUIngresos = [];
+    sessionStorage.setItem(AppConstants.SessionOption.ULTIMOS_INGRESOS,JSON.stringify(this.rowsUIngresos));
     this.conscom = undefined;
     this.conscomImpto = undefined;
+
+    const model = {
+      conscom:this.conscom,
+      conscomImpto:this.conscomImpto
+    }
+    sessionStorage.setItem(AppConstants.SessionOption.COSCOM,JSON.stringify(model));
+
     this.laboratorios = [];
+    sessionStorage.setItem(AppConstants.SessionOption.LABORATORIO_PLANE, JSON.stringify(this.laboratorios));
     this.rows = [];
+    sessionStorage.setItem(AppConstants.SessionOption.ROWS_PRINCIPAL,JSON.stringify(this.rows));
     this.rowsDataTotal = [];
     this.opcionesForm.get('todos')?.disable();
     this.totalIGV = 0;
     this.totalPagar = 0;
     this.totalParcial = 0;
+
+    const modelTotales ={
+      totalIGV: this.totalIGV,
+      totalPagar: this.totalPagar,
+      totalParcial: this.totalParcial
+    }
+    sessionStorage.setItem(AppConstants.SessionOption.CALCULOS_TOTALES,JSON.stringify(modelTotales));
+
     this.proveedor = "0";
+    sessionStorage.setItem(AppConstants.SessionOption.PROVEEDOR_PLANE,this.proveedor);
     this.isRowSelected = -1;
     this.idProductSelected = '';
     this.idCondicionCbo = '';
@@ -609,9 +656,16 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
     this.isRowSelected = -1;
     this.idProductSelected = '';
     this.rowsUCompras = [];
+    sessionStorage.setItem(AppConstants.SessionOption.ULTIMAS_COMPRAS,JSON.stringify(this.rowsUCompras));
     this.rowsUIngresos = [];
+    sessionStorage.setItem(AppConstants.SessionOption.ULTIMOS_INGRESOS,JSON.stringify(this.rowsUIngresos));
     this.conscom = undefined;
     this.conscomImpto = undefined;
+    const model = {
+      conscom:this.conscom,
+      conscomImpto:this.conscomImpto
+    }
+    sessionStorage.setItem(AppConstants.SessionOption.COSCOM,JSON.stringify(model));
   }
 
   calculateTotal() {
@@ -630,6 +684,13 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
     this.totalParcial = sumaParcial;
     this.totalIGV = sumaIGV;
     this.totalPagar = sumaPagar;
+
+    const modelTotales ={
+      totalIGV: this.totalIGV,
+      totalPagar: this.totalPagar,
+      totalParcial: this.totalParcial
+    }
+    sessionStorage.setItem(AppConstants.SessionOption.CALCULOS_TOTALES,JSON.stringify(modelTotales));
   }
 
   getCondiciones() {
@@ -815,6 +876,7 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
     if (dataRowDelete.length > 0) {
       if (dataRowDelete[0].isNewRow) {
         this.rows = this.rows.filter((p: any) => p.codProducto != this.idProductSelected);
+        sessionStorage.setItem(AppConstants.SessionOption.ROWS_PRINCIPAL,JSON.stringify(this.rows));
       } else {
         this.AlertToast("Warning: Solo se puede eliminar los registros nuevos.", 'warning');
       }
@@ -924,12 +986,14 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
       this.rows = this.rows.sort((a: any, b: any) =>
         (a.nombreLaboratorio ?? "").toString().trim().localeCompare(b.nombreLaboratorio ?? "").toString().trim()
       );
+      sessionStorage.setItem(AppConstants.SessionOption.ROWS_PRINCIPAL,JSON.stringify(this.rows));
     }
 
     if (this.contextMenu.filterColumn == 'Compra final') {
       this.rows = this.rows.sort((a: any, b: any) =>
         (a.compraFinal ?? "").toString().trim().localeCompare(b.compraFinal ?? "").toString().trim()
       );
+      sessionStorage.setItem(AppConstants.SessionOption.ROWS_PRINCIPAL,JSON.stringify(this.rows));
     }
 
     this.isRowSelected = -1;
@@ -942,24 +1006,28 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
       this.rows = this.rows.sort((a: any, b: any) =>
         b.nombreProducto.toString().trim().localeCompare(a.nombreProducto).toString().trim()
       );
+      sessionStorage.setItem(AppConstants.SessionOption.ROWS_PRINCIPAL,JSON.stringify(this.rows));
     }
 
     if (this.contextMenu.filterColumn == 'Tipo') {
       this.rows = this.rows.sort((a: any, b: any) =>
         (b.ABC ?? "").toString().trim().localeCompare(a.ABC ?? "").toString().trim()
       );
+      sessionStorage.setItem(AppConstants.SessionOption.ROWS_PRINCIPAL,JSON.stringify(this.rows));
     }
 
     if (this.contextMenu.filterColumn == 'Labora.') {
       this.rows = this.rows.sort((a: any, b: any) =>
         (b.nombreLaboratorio ?? "").toString().trim().localeCompare(a.nombreLaboratorio ?? "").toString().trim()
       );
+      sessionStorage.setItem(AppConstants.SessionOption.ROWS_PRINCIPAL,JSON.stringify(this.rows));
     }
 
     if (this.contextMenu.filterColumn == 'Compra final') {
       this.rows = this.rows.sort((a: any, b: any) =>
         (b.compraFinal ?? "").toString().trim().localeCompare(a.compraFinal ?? "").toString().trim()
       );
+      sessionStorage.setItem(AppConstants.SessionOption.ROWS_PRINCIPAL,JSON.stringify(this.rows));
     }
 
     this.isRowSelected = -1;
@@ -977,6 +1045,7 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
       productFilter.includes(element.codProducto)
     );
     this.rows = dataFilter;
+    sessionStorage.setItem(AppConstants.SessionOption.ROWS_PRINCIPAL,JSON.stringify(this.rows));
     this.calculateTotal();
   }
 
@@ -997,6 +1066,7 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
         if (confirm) {
           this.idCondicionCbo = nuevoValor;
           this.rows = this.rows.map((p: any) => p.codProducto == codigo ? { ...p, condicion: this.idCondicionCbo } : p);
+          sessionStorage.setItem(AppConstants.SessionOption.ROWS_PRINCIPAL,JSON.stringify(this.rows));
 
           this.loading = true;
           let dataReq: IUPdateCondicionProduct = {
@@ -1016,6 +1086,7 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
           this.idCondicionCbo = "";
           this.idCondicionCbo = this.idCondicion;
           this.rows = this.rows.map((p: any) => p.codProducto == codigo ? { ...p, condicion: this.idCondicion } : p);
+          sessionStorage.setItem(AppConstants.SessionOption.ROWS_PRINCIPAL,JSON.stringify(this.rows));
         }
       });
 
@@ -1600,12 +1671,14 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
                   this.inputCompraFinal = '';
                   this.inputCompraFinal = this.valueCompraFinal;
                   this.rows = this.rows.map((p: any) => p.codProducto == this.idProductSelected ? { ...p, comprafinal: this.valueCompraFinal } : p);
+                  sessionStorage.setItem(AppConstants.SessionOption.ROWS_PRINCIPAL,JSON.stringify(this.rows));
                 }
               });
             } else {
               this.inputCompraFinal = '';
               this.inputCompraFinal = this.valueCompraFinal;
               this.rows = this.rows.map((p: any) => p.codProducto == this.idProductSelected ? { ...p, comprafinal: this.valueCompraFinal } : p);
+              sessionStorage.setItem(AppConstants.SessionOption.ROWS_PRINCIPAL,JSON.stringify(this.rows));
             }
 
           });
