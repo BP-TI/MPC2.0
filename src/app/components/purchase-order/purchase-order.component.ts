@@ -189,6 +189,144 @@ export class PurchaseOrderComponent implements OnInit {
     ];
   }
 
+  // Generar Orden de compra
+
+  saveOrdenCompra() {
+
+    if (this.isGenerationOC) {
+      this.AlertToast(`INFO: Orden de compra ya se encuentra generada.`, 'info');
+      return;
+    }
+
+    if (this.conditionOC()) {
+      return;
+    }
+
+    let modalConfirm = this.modalService.open(ConfirmacionModalComponent, {
+      windowClass: "modal-confirmacion",
+      backdrop: true,
+      scrollable: true
+    });
+
+    modalConfirm.componentInstance.message = '¿Está seguro que desea grabar la Orden de Compra?';
+
+    modalConfirm.closed.subscribe((confirn) => {
+      if (confirn) {
+
+        this.loading = true;
+        let dataRequest: IGenerarOrdenCompra = {
+          secuencia: "0",
+          codAlmacen: this.directionSelect.scodalm,
+          sisCod: this.directionSelect.ssiscod,
+          codProveedor: this.scodPorv,
+          fecha: this.creationDate.year + '-' + this.creationDate.month + '-' + this.creationDate.day,
+          obs: this.obs,
+          username: this.dataUsuario.usuario,
+          fechaEntrega: this.deliveryDate.year + '-' + this.deliveryDate.month + '-' + this.deliveryDate.day,
+          direccion: this.directionSelect.direccionEntrega,
+          detalleProducts: []
+        };
+
+        let dataRowsArray: IDataPorduct[] = []
+
+        this.dataRows.forEach(data => {
+          dataRowsArray.push({
+            item: data.item,
+            codPro: data.codProd,
+            producto: data.producto,
+            codLab: data.codLab,
+            laboratorio: data.laboratorio,
+            ean: data.EAN,
+            cantE: Number(data.cantE).toString(),
+            cantF: Number(data.cantF).toString(),
+            boni: Number(data.boni).toString(),
+            vvF1: Number(data.vvf1).toString(),
+            vvF2: Number(data.vvf2).toString(),
+            dscto1: data.desct1,
+            dscto2: data.desct2,
+            dscto3: data.desct3,
+            dscto4: data.desct4,
+            cosCom: data.coscom,
+            igvpro: data.igvpro,
+            parcial: Number(data.parcial).toString(),
+            igv: Number(data.igv).toString(),
+            total: Number(data.total).toString(),
+            prom_Mes: Number(data.pro_mes).toString(),
+            total_Stock: Number(data.total_stock).toString(),
+            asociado: data.asociado,
+            observacion: data.Observacion,
+            vvF_Temp: data.VVF_Temp,
+            secOrden: data.SecOrden,
+            observacion_autoriza: data.observacion_autoriza,
+            usuario_autoriza: data.usuario_autoriza,
+            cantE_Temp: data.cantE_temp,
+            cant_Unid_Empa: data.cant_Unid_empa
+          });
+        });
+
+        dataRequest.detalleProducts = dataRowsArray;
+
+        this.orderCompraService.postGenerarOrdenCompra(dataRequest).subscribe(response => {
+          this.loading = false;
+          if (response.length > 0) {
+            this.AlertToast(`SUCCESS: Se genero la orden de compra.`, 'success');
+            response.forEach((data: any) => {
+              this.nrOrderCompra += data.value + ',';
+            });
+            this.nrOrderCompra = this.nrOrderCompra.slice(0, -1);
+            this.isGenerationOC = !this.isGenerationOC;
+          } else {
+            this.AlertToast(`ERROR: No se puedo generar la orden de compra.`, 'error2');
+          }
+        });
+
+      } else {
+        return;
+      }
+    });
+
+
+
+  }
+
+  conditionOC(): Boolean {
+    if (this.dataRows.length == 0) {
+      this.AlertToast(`WARNING: No tiene productos seleccionados.`, 'warning');
+      return true;
+    }
+
+    if (this.directionSelect == null || this.directionSelect == undefined) {
+      this.AlertToast(`WARNING: Debe de seleccionar una dirección.`, 'warning');
+      return true;
+    }
+
+    if (this.condicionesPagoSelect == null || this.condicionesPagoSelect == undefined) {
+      this.AlertToast(`WARNING: Debe de seleccionar una condición de pago.`, 'warning');
+      return true;
+    }
+
+    let diaEntrega = new Date(this.deliveryDate.year, (this.deliveryDate.month - 1), this.deliveryDate.day);
+    let diaGenerarOC = new Date(this.creationDate.year, (this.creationDate.month - 1), this.creationDate.day);
+    let today = new Date();
+
+    if (diaEntrega.getDay() == 0) {
+      this.AlertToast(`WARNING: La fecha de pago no debe de ser Domingo.`, 'warning');
+      return true;
+    }
+
+    if (diaEntrega < today) {
+      this.AlertToast(`WARNING: La fecha de Entrega deben de ser mayor a hoy.`, 'warning');
+      return true;
+    }
+    today.setDate(today.getDate() - 1);
+    if (diaGenerarOC < today) {
+      this.AlertToast(`WARNING: La fecha de creación deben de ser mayor a hoy.`, 'warning');
+      return true;
+    }
+
+    return false;
+  }
+
   //Direcciones
   async GetParametersAsync(array: Array<number>) {
     let modelRequest = { headerId: array };
@@ -905,7 +1043,9 @@ export class PurchaseOrderComponent implements OnInit {
   }
   // End Hover
   // -----
-  openOutlook() {
+   openOutlook() {
+
+    this.loading = true;
     let todayFormat = this.today.getDate() + '-' + (this.today.getMonth() + 1) + '-' + this.today.getFullYear();
 
     setTimeout(() => {
@@ -918,32 +1058,45 @@ export class PurchaseOrderComponent implements OnInit {
         let massageBody = response.CorreoMensaje1 + "\n\n" + response.CorreoMensaje2 + "\n" + response.CorreoMensaje3 + "\n" + response.CorreoMensaje4 + "\n" + response.CorreoMensaje5 + "\n\n" + massageFooter
         massageBody = massageBody.replace(/<br\s*\/?>/gi, "").trim();
 
-      let body: AgentOutlook = {
-        subject: massageAsunto,
-        body: massageBody,
-        isBodyHtml: 'true',
-        recipients: [
-          "tu@correo.com",
-          "tu2@correo.com"
-        ],
-        attachments: [{
-          filename: "hola.zip",
-          dataBase64: ""
-        }]
-      }
+        let dataRequestPDF: IGetPDFZip = {
+          username: this.dataUsuario.usuario,
+          proveedor: this.scodPorv,
+          numeroOCs: []
+        }
 
-      this.alertMail.openMail(body).subscribe(response => {
-        console.log('entro');
-        console.log(response);
-      }, error => {
-        console.log('error');
+        let dataNrOC: IKeyValue[] = [];
+        let OCs = this.nrOrderCompra.split(',');
+        OCs.forEach(dataOC => {
+          dataNrOC.push({
+            key: dataOC,
+            value: ''
+          });
+        });
+        dataRequestPDF.numeroOCs = dataNrOC;
+
+        this.orderCompraService.getPDFsZip(dataRequestPDF).subscribe(responsePDF => {
+          let body: AgentOutlook = {
+            subject: massageAsunto,
+            body: massageBody,
+            isBodyHtml: 'true',
+            recipients: [
+            ],
+            attachments: [{
+              filename: "ordenComra.zip",
+              dataBase64: responsePDF.valorZipByte
+            }]
+          }
+
+          this.alertMail.openMail(body).subscribe(response => {
+          }, error => {
+            console.log('error');
+          });
+          this.closeModal();
+        });
+
       });
 
-    });
-
-
-
-
+    }, 3000);
   }
 
 

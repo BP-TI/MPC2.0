@@ -124,49 +124,39 @@
   <hr size="10px" width="100%" color="134B97" />
   <!-- end formulario -->
 
-    <!-- tabla -->
-    <div class="table-scroll-PO col-12" (contextmenu)="openContextMenu($event, 5)">
-      <table id="tablaAnalisiCompra" class="table-style-PO">
-        <thead>
-          <tr>
-            <th *ngFor="let dataHead of tableHead">
-              {{ dataHead }}
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr
-            *ngFor="let item of dataRows; let i = index"
-            (mouseenter)="isHoveringGOC = true"
-            (mouseleave)="isNotRowHover()"
-            (mouseover)="onRowHover(i)"
-            (click)="isRowSelectedGOC = i"
-            [class.selected]="isRowSelectedGOC === i"
-          >
-            <td [ngClass]="siRowSelectedHover(i)">{{ item.item }}</td>
-            <td [ngClass]="siRowSelectedHover(i)">{{ item.codProd }}</td>
-            <td [ngClass]="siRowSelectedHover(i)">{{ item.producto }}</td>
-            <td [ngClass]="siRowSelectedHover(i)">{{ item.laboratorio }}</td>
-            @if(isRowSelectedGOC === i){
-            <td [ngClass]="siRowSelectedHover(i)">
-              <input
-                type="number"
-                class="input-table-AC"
-                [(ngModel)]="item.cantE"
-                (focus)="getlastValue($event)"
-                (change)="calcularValoresInputGOC(headtable.CANT, i)"
-              />
-            </td>
-            } @else {
-            <td [ngClass]="siRowSelectedHover(i)">{{ item.cantE | number : '1.2-2' }}</td>
-            } @if(isRowSelectedGOC === i){
-            <td [ngClass]="siRowSelectedHover(i)">
-              <input type="number" class="input-table-AC" (focus)="getlastValue($event)" [(ngModel)]="item.boni" />
-            </td>
-            } @else{
-            <td [ngClass]="siRowSelectedHover(i)">{{ item.boni | number : '1.2-2' }}</td>
-            }
-            <td [ngClass]="siRowSelectedHover(i)">{{ item.vvf1 | number : '1.2-2' }}</td>
+  <!-- tabla -->
+  <div class="table-scroll-PO col-12 m-0 pr-3 pl-3 pt-2 pb-2" (contextmenu)="openContextMenuGOC($event, 5)">
+    <table id="tablaAnalisiCompra" class="table-style-PO">
+      <thead>
+        <tr>
+          <th *ngFor="let dataHead of tableHead">
+            {{ dataHead }}
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let item of dataRows; let i = index" (mouseenter)="isHoveringGOC = true"
+          (mouseleave)="isNotRowHover()" (mouseover)="onRowHover(i)" (click)="isRowSelectedGOC = i"
+          [class.selected]="isRowSelectedGOC === i">
+          <td [ngClass]="siRowSelectedHover(i)">{{ item.item }}</td>
+          <td [ngClass]="siRowSelectedHover(i)">{{ item.codProd }}</td>
+          <td [ngClass]="siRowSelectedHover(i)">{{ item.producto }}</td>
+          <td [ngClass]="siRowSelectedHover(i)">{{ item.laboratorio }}</td>
+          @if(isRowSelectedGOC === i){
+          <td [ngClass]="siRowSelectedHover(i)">
+            <input type="number" class="input-table-AC" [(ngModel)]="item.cantE" (focus)="getlastValue($event)"
+              (change)="calcularValoresInputGOC(headtable.CANT, i)" />
+          </td>
+          } @else {
+          <td [ngClass]="siRowSelectedHover(i)">{{ item.cantE | number : '1.2-2' }}</td>
+          } @if(isRowSelectedGOC === i){
+          <td [ngClass]="siRowSelectedHover(i)">
+            <input type="number" class="input-table-AC" (focus)="getlastValue($event)" [(ngModel)]="item.boni" />
+          </td>
+          } @else{
+          <td [ngClass]="siRowSelectedHover(i)">{{ item.boni | number : '1.2-2' }}</td>
+          }
+          <td [ngClass]="siRowSelectedHover(i)">{{ item.vvf1 | number : '1.2-2' }}</td>
 
           @if(isRowSelectedGOC === i){
           <td [ngClass]="siRowSelectedHover(i)">
@@ -229,15 +219,6 @@
   </div>
 </div>
 
-
-<app-option-click
-  (action)="handleMenuAction($event)"
-  (filter)="filterData($event)"
-></app-option-click>
-<app-alertToast
-  *ngIf="showToast"
-  [message]="toastMessage"
-  [type]="toastType"
-  [duration]="5000"
-></app-alertToast>
+<app-option-click (action)="handleMenuAction($event)" ></app-option-click>
+<app-alertToast *ngIf="showToast" [message]="toastMessage" [type]="toastType" [duration]="5000"></app-alertToast>
 <loading *ngIf="loading"></loading>
