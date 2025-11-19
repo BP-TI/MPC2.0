@@ -32,7 +32,6 @@ export interface ICompraFinalReq {
 export interface IAdicionarProductoCalculoReq {
     codProducto: string;
 }
-
 export interface IAdicionarProductoCalculo2Req {
     codProveedor: string;
     codLab: string;
@@ -58,6 +57,7 @@ export interface IKeyValue {
     key: string;
     value: string;
 }
+
 
 export interface IGenerarOrdenCompra {
     secuencia: string,
@@ -103,6 +103,24 @@ export interface IDataPorduct {
     usuario_autoriza: string,
     cantE_Temp: string,
     cant_Unid_Empa: string
+}
+export interface IAdicionarProductoCalculo2Req {
+    codProveedor: string;
+    codLab: string;
+    codProducto: string;
+    usuarioLogin: string;
+    codUusario: string;
+    flag: number;
+}
+export interface ICondicionesPago {
+    codigoProveedor: string;
+    codigoLaboratorio: string;
+    codigoProducto: string;
+}
+
+export interface ICondicionesPagoResp {
+    codCondicion: string;
+    descripcion: string;
 }
 
 export interface ICondicionesPago {
