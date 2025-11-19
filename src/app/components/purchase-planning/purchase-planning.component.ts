@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, ElementRef, OnInit, TemplateRef, ViewChild } from '@angular/core';
-import { Laboratorios, Proveedores, Condiciones } from '../../models/parametros';
-import { IAdicionarProductoCalculoReq, ICompraFinalReq, IUltimasComprasReq, IUPdateCondicionProduct, PurchaseOrder, PurchaseOrder_table_modal } from '../../models/ordenCompra';
+import { Laboratorios, Proveedores, Condiciones, AddHeaderTableReq, GetHeaderTableReq } from '../../models/parametros';
+import { IAdicionarProductoCalculoReq, ICompraFinalReq, IDetalleOCAnterior, IUltimasComprasReq, IUPdateCondicionProduct, PurchaseOrder, PurchaseOrder_table_modal } from '../../models/ordenCompra';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { PurchasePlanningService } from '../../services/PurchasePlanning/purchasePlanning.service';
 import { HttpErrorResponse } from '@angular/common/http';
@@ -10,7 +10,6 @@ import { OptionClickComponent } from '../../shared/components/option-click/optio
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { OptionsCLickHeadMenuAC, OptionsClickHeadMenuAC2 } from '../../shared/models/option-click';
 import { AppConstants } from '../../shared/constants/app.constants';
-import { AlertMail } from '../../shared/services/alert-mail';
 import { ShowSubstitutesComponent } from '../show-substitutes/show-substitutes.component';
 import { AddProductComponent } from '../add-product/add-product.component';
 import { InventoryPolicyComponent } from '../inventory-policy/inventory-policy.component';
@@ -22,6 +21,8 @@ import { saveAs } from 'file-saver';
 import { ConfirmacionClaveModalComponent } from '../../modales/confirmacion-clave-modal/confirmacion-clave-modal.component';
 import { AutorizacionModalComponent } from '../../modales/autorizacion-modal/autorizacion-modal.component';
 import { DetalleStockBoticaComponent } from '../../modales/purchase-planning/detalle-stock-botica/detalle-stock-botica.component';
+import { ParameterService } from '../../services/Parametros/parameter.service';
+import { UserDataLogin } from '../../models/persona';
 
 @Component({
   selector: 'app-purchase-planning',
@@ -63,6 +64,8 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
   idProductSelected: string = '';
   showFilterTable: boolean = false;
   tableSelectedExcel: string = '';
+  dataUsuario: UserDataLogin;
+
 
   showToast = false;
   toastMessage = '';
@@ -74,9 +77,17 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
   inputCompraFinal: string = '';
   valueCompraFinal: string = '';
   previousValueRow: PurchaseOrder;
+  isOpen = false;
+  ocAntrior: Number = 0;
+
+  isOCAnterior: boolean = false;
+
 
   @ViewChild("actionTemplate") actionTemplate: TemplateRef<any>;
   @ViewChild(OptionClickComponent) contextMenu!: OptionClickComponent;
+  @ViewChild('dropdownToggle') toggle!: ElementRef;
+  @ViewChild('menu') menu!: ElementRef;
+
 
   constructor(private fb: FormBuilder,
     private purchaseService: PurchasePlanningService,
@@ -84,16 +95,23 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
     private modalService: NgbModal,
     public global: GlobalService,
     private el: ElementRef,
+    private parameterService: ParameterService,
   ) { }
 
   ngOnInit() {
     this.addHeadeTable();
     this.cargarProveedores();
     this.getCondiciones();
+    this.loadData();
+    this.showColumn();
+  }
+
+  loadData() {
     this.global.setGlobalVar('Módulo planificación de compra');
     this.opcionesForm = this.fb.group({
       todos: [false]
     });
+    this.dataUsuario = this.global.getDataUserLogin();
   }
 
   ngAfterViewInit() {
@@ -144,6 +162,16 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
     const menus = this.el.nativeElement.querySelectorAll('.dropdown-menu');
     menus.forEach((menu: any) => {
       menu.addEventListener('click', (event: MouseEvent) => event.stopPropagation());
+    });
+
+    // verifiar que el toggle esta abiero o no
+    this.toggle.nativeElement.addEventListener('click', () => {
+      this.isOpen = !this.isOpen;
+    });
+
+    this.menu.nativeElement.addEventListener('click', () => {
+      this.isOpen = false;
+      this.saveColumn();
     });
 
   }
@@ -231,11 +259,11 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
                 this.rows.push({
                   ABC: data.ABC,
                   ObservacionAutoriza: data.ObservacionAutoriza,
-                  VVF1: data.VVF1,
-                  VVF2: data.VVF2,
+                  VVF1: Number(data.VVF1).toString(),
+                  VVF2: Number(data.VVF2).toString(),
                   almacen: data.almacen,
                   asociado: data.asociado,
-                  bonificacion: data.bonificacion,
+                  bonificacion: Number(data.bonificacion.fixed(2)).toString(),
                   botica: data.botica,
                   canje: data.canje,
                   clasificacion: data.clasificacion,
@@ -244,13 +272,13 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
                   cobOrgActNoBotica: data.cobOrgActNoBotica,
                   codLaboratorio: data.codLaboratorio,
                   codProducto: data.codProducto,
-                  compraFinal: data.compraFinal,
+                  compraFinal: Number(data.compraFinal).toString(),
                   condicion: data.condicion,
-                  cosCom: data.cosCom,
-                  descuento1: data.descuento1,
-                  descuento2: data.descuento2,
-                  descuento3: data.descuento3,
-                  descuento4: data.descuento4,
+                  cosCom: Number(data.cosCom).toString(),
+                  descuento1: Number(data.descuento1).toString(),
+                  descuento2: Number(data.descuento2).toString(),
+                  descuento3: Number(data.descuento3).toString(),
+                  descuento4: Number(data.descuento4).toString(),
                   fracUnidad: data.fracUnidad,
                   igv: data.igv,
                   igvProducto: data.igvProducto,
@@ -447,8 +475,55 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
     ];
   }
 
+  showColumn() {
+    let dataRequest: GetHeaderTableReq = {
+      useusr: this.dataUsuario.usuario,
+      idService: 'PLANE'
+    }
+    this.parameterService.getheaderTable(dataRequest).subscribe(response => {
+
+      if (response.estado == true) {
+
+        let listHead: string[] = JSON.parse(response.parametros)
+        this.headTableAnalisisCompra.forEach(data => {
+          let headExist = listHead.filter(p => p == data.description);
+          if (headExist.length == 0) {
+            data.check = false;
+          } else {
+            data.check = true;
+          }
+        });
+
+      } else {
+        this.AlertToast('WARNING: no se puedo cargar preferencias de las columnas', 'warning');
+      }
+    });
+  }
+
+  saveColumn() {
+    if (!this.isOpen) {
+      let filterColumnaSave = this.headTableAnalisisCompra.filter(p => p.check).map(x => x.description);
+
+      let dataRequest: AddHeaderTableReq = {
+        useusr: this.dataUsuario.usuario,
+        idService: 'PLANE',
+        estado: true,
+        parametros: JSON.stringify(filterColumnaSave),
+      }
+
+      this.parameterService.postAddHeaderTable(dataRequest).subscribe(response => { });
+    }
+  }
+
   deleteColumn(headColumna: HeadTableAC) {
     headColumna.check = !headColumna.check;
+  }
+
+  toggleFromDiv(event: MouseEvent, checkbox: HTMLInputElement) {
+    if (event.target === checkbox) {
+      return;
+    }
+    checkbox.click();
   }
 
   showMonth(mesConsultado: string): string {
@@ -517,14 +592,14 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
     this.conscom = undefined;
     this.conscomImpto = undefined;
 
-    let dataUsuario = this.global.getDataUserLogin();
+
 
     let dataRequets: IUltimasComprasReq = {
       codProveedor: this.proveedor,
       codLab: data.codLaboratorio,
       codProducto: data.codProducto,
-      usuarioLogin: dataUsuario.usuario,
-      codUsuario: Number(dataUsuario.codigoUsuario)
+      usuarioLogin: this.dataUsuario.usuario,
+      codUsuario: Number(this.dataUsuario.codigoUsuario)
     }
 
     this.ordenCompraService.getUltimasCompras(dataRequets).subscribe((response: any) => {
@@ -603,6 +678,7 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
     this.idProductSelected = '';
     this.idCondicionCbo = '';
     this.idCondicion = '';
+    this.isOCAnterior = false;
   }
 
   clearDataTablesSecond() {
@@ -1001,7 +1077,8 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
           this.loading = true;
           let dataReq: IUPdateCondicionProduct = {
             codProducto: this.rows[indexSelect].codProducto,
-            codUsuario: Number(this.global.getDataUserLogin().codigoUsuario),
+            // codUsuario: Number(this.global.getDataUserLogin().codigoUsuario),
+            codUsuario: Number(this.dataUsuario.codigoUsuario),
             codCondicion: this.idCondicionCbo,
             asociado: this.rows[indexSelect].asociado,
           }
@@ -1279,12 +1356,12 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
     modalPurchaseOrder.componentInstance.dataRows = dataRowPurchaseOrder;
     modalPurchaseOrder.componentInstance.scodPorv = dataPorv?.codigoProveedor;
     modalPurchaseOrder.componentInstance.sdesProv = dataPorv?.descripcion;
-    
+
     let dataFilter = this.laboratorios.filter(x => x.selected == true);
-    if( dataFilter.length == 1 ){
-      modalPurchaseOrder.componentInstance.sdesProv = dataFilter[0].codigoLab;     
+    if (dataFilter.length == 1) {
+      modalPurchaseOrder.componentInstance.sdesProv = dataFilter[0].codigoLab;
     } else {
-      modalPurchaseOrder.componentInstance.sdesProv = "";     
+      modalPurchaseOrder.componentInstance.sdesProv = "";
     }
 
   }
@@ -1439,8 +1516,7 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
     this.inputCompraFinal = input.value.trim();
     let indexSelected = this.rows.findIndex(a => a.codProducto == this.idProductSelected.toString());
     let averageMonth = this.averageThreeMonth();
-    let usuario = '';
-    usuario = this.global.getDataUserLogin().usuario;
+    let usuario = this.dataUsuario.usuario;
 
     let nCompra_Final = 0;
     let dataRequest: ICompraFinalReq = {
@@ -1773,8 +1849,111 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
     this.AlertToast("Success: Se actualizo los montos.", 'success');
   }
 
-  //click derecho
+  // Detalle OC Anterior
+  getDetalleOCAnterior() {
+    if (this.ocAntrior == 0) {
+      this.AlertToast("Warning: Debe de ingresar un numero de orden de compra.", 'warning');
+      return;
+    }
 
+    this.loading = true;
+    let dataRequest: IDetalleOCAnterior = {
+      username: this.dataUsuario.usuario,
+      proveedor: "prv",
+      numeroOCs: [{
+        key: this.ocAntrior.toString(),
+        value: ''
+      }]
+    }
+    this.ordenCompraService.getDetalleOXAnterior(dataRequest).subscribe(response => {
+      this.rows = [];
+      this.loading = false;
+
+      if (response.codStatus == 1) {
+        if (response.message == 'OK') {
+
+          response.detalleProductos.forEach((data: any) => {
+            this.rows.push({
+              ABC: data.ABC,
+              ObservacionAutoriza: data.ObservacionAutoriza,
+              VVF1: Number(data.VVF1).toString(),
+              VVF2: Number(data.VVF2).toString(),
+              almacen: data.almacen,
+              asociado: data.asociado,
+              bonificacion: Number(data.bonificacion).toString(),
+              botica: data.botica,
+              canje: data.canje,
+              clasificacion: data.clasificacion,
+              cobOrgAct: data.cobOrgAct,
+              cobOrgActCalcNoBotica: data.cobOrgActCalcNoBotica,
+              cobOrgActNoBotica: data.cobOrgActNoBotica,
+              codLaboratorio: data.codLaboratorio,
+              codProducto: data.codProducto,
+              compraFinal: Number(data.compraFinal).toString(),
+              condicion: data.condicion,
+              cosCom: Number(data.cosCom).toString(),
+              descuento1: Number(data.descuento1).toString(),
+              descuento2: Number(data.descuento2).toString(),
+              descuento3: Number(data.descuento3).toString(),
+              descuento4: Number(data.descuento4).toString(),
+              fracUnidad: data.fracUnidad,
+              igv: data.igv,
+              igvProducto: data.igvProducto,
+              incentivo: data.incentivo,
+              logisticaInversa: data.logisticaInversa,
+              maxBot: data.maxBot,
+              maxInfraStock: data.maxInfraStock,
+              mesActual: data.mesActual,
+              mesActualProyeccion: data.mesActualProyeccion,
+              mesCuarto: data.mesCuarto,
+              mesPrimero: data.mesPrimero,
+              mesQuinto: data.mesQuinto,
+              mesSegundo: data.mesSegundo,
+              mesTercero: data.mesTercero,
+              nombreLaboratorio: data.nombreLaboratorio,
+              nombreProducto: data.nombreProducto,
+              nroOC: data.nroOC,
+              observaciones: data.observaciones,
+              oc: data.oc,
+              ocVencido: data.ocVencido,
+              ocVigente: data.ocVigente,
+              org: data.org,
+              orgNoBotica: data.orgNoBotica,
+              parcial: data.parcial,
+              plazoPago: data.plazoPago,
+              preCompra: data.preCompra,
+              promMes: data.promMes,
+              relacionado: data.relacionado,
+              secRelacion: data.secRelacion,
+              total: data.total,
+              totalNoBotica: data.totalNoBotica,
+              totalParcial: data.totalParcial,
+              unidadEmpaque: data.unidadEmpaque,
+              usuarioAutoriza: data.usuarioAutoriza,
+              ventaSubDist: data.ventaSubDist,
+              isNewRow: false,
+            });
+
+            this.proveedor = response.observation;
+            this.laboratorios = [];
+            this.isOCAnterior = true;
+            this.ocAntrior = 0;
+          });
+          document.getElementById('ocAnteriorBtnClose')?.click();
+        } else {
+          this.AlertToast("Warning: No se encontro la orden.", 'warning');
+          return;
+        }
+      } else {
+        this.AlertToast("Warning: No se encontro la orden.", 'warning');
+        return;
+      }
+
+    });
+
+  }
+
+  //click derecho
   compraFinalcero() {
     this.rows.forEach(datarow => {
       datarow.compraFinal = "0";

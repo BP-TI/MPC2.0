@@ -9,18 +9,18 @@
       <i class="fa-solid fa-file-medical"></i>
       Generar O/C
     </button>
-    <button class="button-header">
+    <!-- <button class="button-header">
       <i class="fa-solid fa-file-lines"></i>
       Ver o/c
-    </button>
+    </button> -->
     <button class="button-header" data-toggle="modal" data-target="#generarbasadaoc">
       <i class="fa-solid fa-file-medical"></i>
       Generar en base O/C
     </button>
-    <button class="button-header">
+    <!-- <button class="button-header">
       <i class="fa-solid fa-file-import"></i>
       Inportar Excel
-    </button>
+    </button> -->
     <button class="button-header" (click)="clearField()">
       <i class="fa-solid fa-broom"></i>
       Limpiar
@@ -36,18 +36,10 @@
         <div>
           <label class="label-text" for="proveedor">Proveedores</label>
         </div>
-        <select
-          class="input-select"
-          id="proveedor"
-          [(ngModel)]="proveedor"
-          (change)="onChangeProveedor()"
-        >
+        <select class="input-select" id="proveedor" [(ngModel)]="proveedor" (change)="onChangeProveedor()" [disabled]="isOCAnterior">
           <option value="0" disabled>--Seleccione--</option>
-          <option
-            *ngFor="let item of proveedores"
-            [ngValue]="item.codigoProveedor"
-            [disabled]="proveedor == item.codigoProveedor"
-          >
+          <option *ngFor="let item of proveedores" [ngValue]="item.codigoProveedor"
+            [disabled]="proveedor == item.codigoProveedor">
             {{ item.descripcion }}
           </option>
         </select>
@@ -58,13 +50,8 @@
         <div class="">
           <form [formGroup]="opcionesForm">
             <div class="form-check">
-              <input
-                class="form-check-input"
-                type="checkbox"
-                id="checkTodos"
-                formControlName="todos"
-                (change)="onCheckChange('todos')"
-              />
+              <input class="form-check-input" type="checkbox" id="checkTodos" formControlName="todos"
+                (change)="onCheckChange('todos')" [disabled]="isOCAnterior"/>
               <label class="label-text" for="checkTodos">Todos los Laboratorios</label>
               <br />
             </div>
@@ -73,16 +60,8 @@
 
         <div ngbDropdown class="fondoSelect col-12 p-0 m-0 menu-laboratorio">
           <div ngbDropdownMenu class="dropdown-scroll pl-4 m-0">
-            <div
-              *ngFor="let item of laboratorios; let i = index"
-              class="form-check label-check-lab m-0 p-0 pl-5"
-            >
-              <input
-                class="form-check-input"
-                type="checkbox"
-                [(ngModel)]="item.selected"
-                id="{{ item.codigoLab }}"
-              />
+            <div *ngFor="let item of laboratorios; let i = index" class="form-check label-check-lab m-0 p-0 pl-5">
+              <input class="form-check-input" type="checkbox" [(ngModel)]="item.selected" id="{{ item.codigoLab }}" [disabled]="isOCAnterior"/>
               {{ item.descripcion }}
             </div>
           </div>
@@ -95,12 +74,7 @@
           <label class="label-text" for="checkTodos">Política de Inventario (Día)</label>
           <!-- icon -->
           <div>
-            <a
-              type="button"
-              class="dropdown-item m-0 p-0"
-              data-toggle="modal"
-              (click)="openModalInveventoryPolicy()"
-            >
+            <a type="button" class="dropdown-item m-0 p-0" data-toggle="modal" (click)="openModalInveventoryPolicy()">
               <i class="fa-solid fa-circle-info" title="Política de Inventario (Día)"> </i>
             </a>
           </div>
@@ -204,40 +178,32 @@
     <!-- head y filter -->
     <div class="d-flex align-items-baseline justify-content-between m-0 p-0">
       <div class="subtitle mb-3">Análisis Compras</div>
-
-      <!-- Filtro de la tabla de A.Compra -->
-      <a class="dropdown-toggle" id="userDropdown" role="button" data-toggle="dropdown">
-        <i class="fa-solid fa-filter .icon-filter-colunm-hidden"></i>
-      </a>
-      <div
-        class="dropdown-menu dropdown-menu-right shadow filter-table"
-        aria-labelledby="userDropdown"
-      >
-        <!-- Listado de columnas filtro -->
-        @for(data of headTableAnalisisCompra; track data; let index = $index){ @if(index > 2){
-        <div class="dropdown-item form-check" (click)="deleteColumn(data)">
-          <input
-            class="form-check-input"
-            type="checkbox"
-            id="{{ data.description }}"
-            (change)="deleteColumn(data)"
-            [checked]="data.check"
-          />
-          <label class="form-check-label" for="{{ data.description }}">
-            {{ data.description }}
-          </label>
+      <div class="dropdown" id="dropdownContainer">
+        <!-- Filtro de la tabla de A.Compra -->
+        <a class="dropdown-toggle" id="userDropdown" role="button" data-toggle="dropdown" #dropdownToggle>
+          <i class="fa-solid fa-filter .icon-filter-colunm-hidden"></i>
+        </a>
+        <div class="dropdown-menu dropdown-menu-right shadow filter-table" aria-labelledby="userDropdown" #menu>
+          <!-- Listado de columnas filtro -->
+          @for(data of headTableAnalisisCompra; track data; let index = $index){ @if(index > 2){
+          <div class="dropdown-item form-check" data-display="static" (click)="toggleFromDiv($event, checkbox)" >
+            <input #checkbox 
+                   class="form-check-input" 
+                   type="checkbox"                     
+                   (change)="deleteColumn(data)" 
+                   [checked]="data.check" />
+            <label class="form-check-label" for="{{ data.description }}">
+              {{ data.description }}
+            </label>
+          </div>
+          } }
+          <!-- End Listado de columnas filtro -->
         </div>
-        } }
-        <!-- End Listado de columnas filtro -->
       </div>
       <!-- End Filtro de la tabla de A.Compra -->
     </div>
     <!-- tabla -->
-    <div
-      id="container-table"
-      class="m-0 p-0 table-scroll-AC col-12"
-      (contextmenu)="openContextMenu($event, 1)"
-    >
+    <div id="container-table" class="m-0 p-0 table-scroll-AC col-12" (contextmenu)="openContextMenu($event, 1)">
       <table id="tablaAnalisiCompra" class="table-style table-fixed">
         <thead>
           <tr id="header-row">
@@ -247,303 +213,171 @@
               @if( data.description == 'Descripción' || data.description == 'Tipo' ||
               data.description == 'Compra final' || data.description == 'Labora.' ||
               data.description == 'Condición' ){
-              <i
-                *ngIf="showFilterTable"
-                class="fa-solid fa-filter text-light"
-                (click)="openContextMenu($event, 4, data.description)"
-              ></i>
+              <i *ngIf="showFilterTable" class="fa-solid fa-filter text-light"
+                (click)="openContextMenu($event, 4, data.description)"></i>
               }
             </th>
             } }
           </tr>
         </thead>
         <tbody id="body">
-          <tr
-            (click)="getTableUltimasCompras(data)"
-            *ngFor="let data of rows; let i = index"
-            (mouseenter)="isHovering = true"
-            (mouseleave)="isNotRowHover()"
-            (mouseover)="onRowHover(i)"
-            (click)="isRowSelected = i"
-            [class.selected]="isRowSelected === i"
-          >
-            <td
-              *ngIf="headTableAnalisisCompra[0].check"
-              [ngClass]="siRowSelectedHover(i, data.codProducto)"
-            >
+          <tr (click)="getTableUltimasCompras(data)" *ngFor="let data of rows; let i = index"
+            (mouseenter)="isHovering = true" (mouseleave)="isNotRowHover()" (mouseover)="onRowHover(i)"
+            (click)="isRowSelected = i" [class.selected]="isRowSelected === i">
+            <td *ngIf="headTableAnalisisCompra[0].check" [ngClass]="siRowSelectedHover(i, data.codProducto)">
               {{ data.codProducto }}
             </td>
-            <td
-              *ngIf="headTableAnalisisCompra[1].check"
-              [ngClass]="siRowSelectedHover(i, data.codProducto)"
-            >
+            <td *ngIf="headTableAnalisisCompra[1].check" [ngClass]="siRowSelectedHover(i, data.codProducto)">
               {{ data.nombreProducto }}
             </td>
-            <td
-              *ngIf="headTableAnalisisCompra[2].check"
-              [ngClass]="siRowSelectedHover(i, data.codProducto)"
-            >
+            <td *ngIf="headTableAnalisisCompra[2].check" [ngClass]="siRowSelectedHover(i, data.codProducto)">
               {{ data.nombreLaboratorio }}
             </td>
             @if(isRowSelected === i){
-            <td
-              *ngIf="headTableAnalisisCompra[3].check"
-              class="center-text"
-              [ngClass]="siRowSelectedHover(i, data.codProducto)"
-            >
-              <input
-                type="number"
-                placeholder=""
-                class="input-table-AC"
-                [(ngModel)]="data.unidadEmpaque"
-                id="inputuniEmp"
-                (focus)="savePreviousValue(data)"
-                (keyup.enter)="
+            <td *ngIf="headTableAnalisisCompra[3].check" class="center-text"
+              [ngClass]="siRowSelectedHover(i, data.codProducto)">
+              <input type="number" placeholder="" class="input-table-AC" [(ngModel)]="data.unidadEmpaque"
+                id="inputuniEmp" (focus)="savePreviousValue(data)" (keyup.enter)="
                   calcular_Valores_Input(headTableAnalisisCompra[3].description, $event)
-                "
-              />
+                " />
             </td>
 
             } @else{
-            <td
-              *ngIf="headTableAnalisisCompra[3].check"
-              class="center-text"
-              [ngClass]="siRowSelectedHover(i, data.codProducto)"
-            >
+            <td *ngIf="headTableAnalisisCompra[3].check" class="center-text"
+              [ngClass]="siRowSelectedHover(i, data.codProducto)">
               {{ data.unidadEmpaque }}
             </td>
             } @if(isRowSelected === i){
-            <td
-              *ngIf="headTableAnalisisCompra[4].check"
-              class="center-text"
-              [ngClass]="siRowSelectedHover(i, data.codProducto)"
-            >
-              <select
-                class="input-select-table-AC"
-                id="idCondicionCbo"
-                [(ngModel)]="idCondicionCbo"
-                (change)="updateFilterHeader($event, data.codProducto)"
-              >
+            <td *ngIf="headTableAnalisisCompra[4].check" class="center-text"
+              [ngClass]="siRowSelectedHover(i, data.codProducto)">
+              <select class="input-select-table-AC" id="idCondicionCbo" [(ngModel)]="idCondicionCbo"
+                (change)="updateFilterHeader($event, data.codProducto)">
                 <option value="0" disabled>--Seleccione--</option>
-                <option
-                  *ngFor="let dataOption of condiciones"
-                  [ngValue]="dataOption.codigoCondicion"
-                >
+                <option *ngFor="let dataOption of condiciones" [ngValue]="dataOption.codigoCondicion">
                   {{ dataOption.descripcion }}
                 </option>
               </select>
             </td>
             } @else {
 
-            <td
-              *ngIf="headTableAnalisisCompra[4].check"
-              class="center-text"
-              [ngClass]="siRowSelectedHover(i, data.codProducto)"
-            >
+            <td *ngIf="headTableAnalisisCompra[4].check" class="center-text"
+              [ngClass]="siRowSelectedHover(i, data.codProducto)">
               {{ getNameCondicion(data.condicion) }}
             </td>
             }
 
-            <td
-              *ngIf="headTableAnalisisCompra[5].check"
-              class="center-text"
-              [ngClass]="siRowSelectedHover(i, data.codProducto)"
-            >
+            <td *ngIf="headTableAnalisisCompra[5].check" class="center-text"
+              [ngClass]="siRowSelectedHover(i, data.codProducto)">
               {{ data.ABC }}
             </td>
-            <td
-              *ngIf="headTableAnalisisCompra[6].check"
-              class="center-text"
-              [ngClass]="siRowSelectedHover(i, data.codProducto)"
-            >
+            <td *ngIf="headTableAnalisisCompra[6].check" class="center-text"
+              [ngClass]="siRowSelectedHover(i, data.codProducto)">
               {{ data.mesQuinto | number : '1.2-2' }}
             </td>
-            <td
-              *ngIf="headTableAnalisisCompra[7].check"
-              class="center-text"
-              [ngClass]="siRowSelectedHover(i, data.codProducto)"
-            >
+            <td *ngIf="headTableAnalisisCompra[7].check" class="center-text"
+              [ngClass]="siRowSelectedHover(i, data.codProducto)">
               {{ data.mesCuarto | number : '1.2-2' }}
             </td>
-            <td
-              *ngIf="headTableAnalisisCompra[8].check"
-              class="center-text"
-              [ngClass]="siRowSelectedHover(i, data.codProducto)"
-            >
+            <td *ngIf="headTableAnalisisCompra[8].check" class="center-text"
+              [ngClass]="siRowSelectedHover(i, data.codProducto)">
               {{ data.mesTercero | number : '1.2-2' }}
             </td>
-            <td
-              *ngIf="headTableAnalisisCompra[9].check"
-              class="center-text"
-              [ngClass]="siRowSelectedHover(i, data.codProducto)"
-            >
+            <td *ngIf="headTableAnalisisCompra[9].check" class="center-text"
+              [ngClass]="siRowSelectedHover(i, data.codProducto)">
               {{ data.mesSegundo | number : '1.2-2' }}
             </td>
-            <td
-              *ngIf="headTableAnalisisCompra[10].check"
-              class="center-text"
-              [ngClass]="siRowSelectedHover(i, data.codProducto)"
-            >
+            <td *ngIf="headTableAnalisisCompra[10].check" class="center-text"
+              [ngClass]="siRowSelectedHover(i, data.codProducto)">
               {{ data.mesPrimero | number : '1.2-2' }}
             </td>
-            <td
-              *ngIf="headTableAnalisisCompra[11].check"
-              class="center-text"
-              [ngClass]="siRowSelectedHover(i, data.codProducto)"
-            >
+            <td *ngIf="headTableAnalisisCompra[11].check" class="center-text"
+              [ngClass]="siRowSelectedHover(i, data.codProducto)">
               {{ data.mesActual | number : '1.2-2' }}
             </td>
-            <td
-              *ngIf="headTableAnalisisCompra[12].check"
-              class="center-text"
-              [ngClass]="siRowSelectedHover(i, data.codProducto)"
-            >
+            <td *ngIf="headTableAnalisisCompra[12].check" class="center-text"
+              [ngClass]="siRowSelectedHover(i, data.codProducto)">
               {{ data.mesActualProyeccion | number : '1.2-2' }}
             </td>
-            <td
-              *ngIf="headTableAnalisisCompra[13].check"
-              class="center-text"
-              [ngClass]="siRowSelectedHover(i, data.codProducto)"
-            >
+            <td *ngIf="headTableAnalisisCompra[13].check" class="center-text"
+              [ngClass]="siRowSelectedHover(i, data.codProducto)">
               {{ data.promMes | number : '1.2-2' }}
             </td>
-            <td
-              *ngIf="headTableAnalisisCompra[14].check"
-              class="center-text"
-              [ngClass]="siRowSelectedHover(i, data.codProducto)"
-            >
+            <td *ngIf="headTableAnalisisCompra[14].check" class="center-text"
+              [ngClass]="siRowSelectedHover(i, data.codProducto)">
               {{ data.preCompra | number : '1.2-2' }}
             </td>
             <!-- Compra Final -->
             @if(isRowSelected === i){
-            <td
-              *ngIf="headTableAnalisisCompra[15].check"
-              class="center-text"
-              [ngClass]="siRowSelectedHover(i, data.codProducto)"
-            >
-              <input
-                type="number"
-                class="input-table-AC"
-                [(ngModel)]="inputCompraFinal"
-                (change)="calcular_Valores_Input(headTableAnalisisCompra[15].description, $event)"
-              />
+            <td *ngIf="headTableAnalisisCompra[15].check" class="center-text"
+              [ngClass]="siRowSelectedHover(i, data.codProducto)">
+              <input type="number" class="input-table-AC" [(ngModel)]="inputCompraFinal"
+                (change)="calcular_Valores_Input(headTableAnalisisCompra[15].description, $event)" />
             </td>
             } @else {
-            <td
-              *ngIf="headTableAnalisisCompra[15].check"
-              class="center-text"
-              [ngClass]="siRowSelectedHover(i, data.codProducto)"
-            >
-              {{ data.compraFinal | number : '1.2-2' }}
+            <td *ngIf="headTableAnalisisCompra[15].check" class="center-text"
+              [ngClass]="siRowSelectedHover(i, data.codProducto)">
+              {{ data.compraFinal | number : '1.0-0' }}
             </td>
             }
             <!-- End Compra Final -->
 
             <!-- Bonificación -->
             @if(isRowSelected === i){
-            <td
-              *ngIf="headTableAnalisisCompra[16].check"
-              class="center-text"
-              [ngClass]="siRowSelectedHover(i, data.codProducto)"
-            >
-              <input
-                type="number"
-                placeholder=""
-                (keyup.enter)="calcular_Desc()"
-                id="input-boni"
-                class="input-table-AC"
-                [(ngModel)]="data.bonificacion"
-              />
+            <td *ngIf="headTableAnalisisCompra[16].check" class="center-text"
+              [ngClass]="siRowSelectedHover(i, data.codProducto)">
+              <input type="number" placeholder="" (keyup.enter)="calcular_Desc()" id="input-boni" class="input-table-AC"
+                [(ngModel)]="data.bonificacion" />
             </td>
             } @else{
-            <td
-              *ngIf="headTableAnalisisCompra[16].check"
-              class="center-text"
-              [ngClass]="siRowSelectedHover(i, data.codProducto)"
-            >
+            <td *ngIf="headTableAnalisisCompra[16].check" class="center-text"
+              [ngClass]="siRowSelectedHover(i, data.codProducto)">
               {{ data.bonificacion | number : '1.2-2' }}
             </td>
             }
             <!-- End Bonificación -->
 
-            <td
-              *ngIf="headTableAnalisisCompra[17].check"
-              class="center-text"
-              [ngClass]="siRowSelectedHover(i, data.codProducto)"
-            >
+            <td *ngIf="headTableAnalisisCompra[17].check" class="center-text"
+              [ngClass]="siRowSelectedHover(i, data.codProducto)">
               {{ data.almacen | number : '1.2-2' }}
             </td>
-            <td
-              *ngIf="headTableAnalisisCompra[18].check"
-              class="center-text"
-              [ngClass]="siRowSelectedHover(i, data.codProducto)"
-            >
+            <td *ngIf="headTableAnalisisCompra[18].check" class="center-text"
+              [ngClass]="siRowSelectedHover(i, data.codProducto)">
               {{ data.org | number : '1.2-2' }}
             </td>
-            <td
-              *ngIf="headTableAnalisisCompra[19].check"
-              class="center-text"
-              [ngClass]="siRowSelectedHover(i, data.codProducto)"
-            >
+            <td *ngIf="headTableAnalisisCompra[19].check" class="center-text"
+              [ngClass]="siRowSelectedHover(i, data.codProducto)">
               {{ data.canje | number : '1.2-2' }}
             </td>
-            <td
-              *ngIf="headTableAnalisisCompra[20].check"
-              class="center-text"
-              [ngClass]="siRowSelectedHover(i, data.codProducto)"
-            >
+            <td *ngIf="headTableAnalisisCompra[20].check" class="center-text"
+              [ngClass]="siRowSelectedHover(i, data.codProducto)">
               {{ data.logisticaInversa | number : '1.2-2' }}
             </td>
-            <td
-              *ngIf="headTableAnalisisCompra[21].check"
-              class="center-text"
-              [ngClass]="siRowSelectedHover(i, data.codProducto)"
-            >
+            <td *ngIf="headTableAnalisisCompra[21].check" class="center-text"
+              [ngClass]="siRowSelectedHover(i, data.codProducto)">
               {{ data.oc | number : '1.2-2' }}
             </td>
-            <td
-              *ngIf="headTableAnalisisCompra[22].check"
-              class="center-text"
-              [ngClass]="siRowSelectedHover(i, data.codProducto)"
-            >
+            <td *ngIf="headTableAnalisisCompra[22].check" class="center-text"
+              [ngClass]="siRowSelectedHover(i, data.codProducto)">
               {{ data.cobOrgAct | number : '1.2-2' }}
             </td>
-            <td
-              *ngIf="headTableAnalisisCompra[23].check"
-              class="center-text"
-              [ngClass]="siRowSelectedHover(i, data.codProducto)"
-            >
+            <td *ngIf="headTableAnalisisCompra[23].check" class="center-text"
+              [ngClass]="siRowSelectedHover(i, data.codProducto)">
               {{ data.maxInfraStock | number : '1.2-2' }}
             </td>
-            <td
-              *ngIf="headTableAnalisisCompra[24].check"
-              class="center-text"
-              [ngClass]="siRowSelectedHover(i, data.codProducto)"
-            >
+            <td *ngIf="headTableAnalisisCompra[24].check" class="center-text"
+              [ngClass]="siRowSelectedHover(i, data.codProducto)">
               {{ data.VVF1 | number : '1.2-2' }}
             </td>
             <!-- VVF2 -->
             @if(isRowSelected === i){
-            <td
-              *ngIf="headTableAnalisisCompra[25].check"
-              class="center-text"
-              [ngClass]="siRowSelectedHover(i, data.codProducto)"
-            >
-              <input
-                type="number"
-                placeholder=""
-                id="input-VVF2"
-                class="input-table-AC"
-                [(ngModel)]="data.VVF2"
-                (keyup.enter)="calcular_Desc()"
-              />
+            <td *ngIf="headTableAnalisisCompra[25].check" class="center-text"
+              [ngClass]="siRowSelectedHover(i, data.codProducto)">
+              <input type="number" placeholder="" id="input-VVF2" class="input-table-AC" [(ngModel)]="data.VVF2"
+                (keyup.enter)="calcular_Desc()" />
             </td>
             } @else {
-            <td
-              *ngIf="headTableAnalisisCompra[25].check"
-              class="center-text"
-              [ngClass]="siRowSelectedHover(i, data.codProducto)"
-            >
+            <td *ngIf="headTableAnalisisCompra[25].check" class="center-text"
+              [ngClass]="siRowSelectedHover(i, data.codProducto)">
               {{ data.VVF2 | number : '1.2-2' }}
             </td>
             }
@@ -551,25 +385,14 @@
 
             <!-- Descuento1 -->
             @if(isRowSelected === i){
-            <td
-              class="center-text"
-              *ngIf="headTableAnalisisCompra[26].check"
-              [ngClass]="siRowSelectedHover(i, data.codProducto)"
-            >
-              <input
-                type="number"
-                placeholder=""
-                class="input-table-AC"
-                [(ngModel)]="data.descuento1"
-                (keyup.enter)="calcular_Desc()"
-              />
+            <td class="center-text" *ngIf="headTableAnalisisCompra[26].check"
+              [ngClass]="siRowSelectedHover(i, data.codProducto)">
+              <input type="number" placeholder="" class="input-table-AC" [(ngModel)]="data.descuento1"
+                (keyup.enter)="calcular_Desc()" />
             </td>
             }@else{
-            <td
-              *ngIf="headTableAnalisisCompra[26].check"
-              class="center-text"
-              [ngClass]="siRowSelectedHover(i, data.codProducto)"
-            >
+            <td *ngIf="headTableAnalisisCompra[26].check" class="center-text"
+              [ngClass]="siRowSelectedHover(i, data.codProducto)">
               {{ data.descuento1 | number : '1.2-2' }}
             </td>
             }
@@ -577,25 +400,14 @@
 
             <!-- Descuento2 -->
             @if(isRowSelected === i){
-            <td
-              *ngIf="headTableAnalisisCompra[27].check"
-              class="center-text"
-              [ngClass]="siRowSelectedHover(i, data.codProducto)"
-            >
-              <input
-                type="number"
-                placeholder=""
-                class="input-table-AC"
-                [(ngModel)]="data.descuento2"
-                (keyup.enter)="calcular_Desc()"
-              />
+            <td *ngIf="headTableAnalisisCompra[27].check" class="center-text"
+              [ngClass]="siRowSelectedHover(i, data.codProducto)">
+              <input type="number" placeholder="" class="input-table-AC" [(ngModel)]="data.descuento2"
+                (keyup.enter)="calcular_Desc()" />
             </td>
             } @else{
-            <td
-              *ngIf="headTableAnalisisCompra[27].check"
-              class="center-text"
-              [ngClass]="siRowSelectedHover(i, data.codProducto)"
-            >
+            <td *ngIf="headTableAnalisisCompra[27].check" class="center-text"
+              [ngClass]="siRowSelectedHover(i, data.codProducto)">
               {{ data.descuento2 | number : '1.2-2' }}
             </td>
             }
@@ -603,25 +415,14 @@
 
             <!-- Descuento3 -->
             @if(isRowSelected === i){
-            <td
-              class="center-text"
-              *ngIf="headTableAnalisisCompra[28].check"
-              [ngClass]="siRowSelectedHover(i, data.codProducto)"
-            >
-              <input
-                type="number"
-                placeholder=""
-                class="input-table-AC"
-                [(ngModel)]="data.descuento3"
-                (keyup.enter)="calcular_Desc()"
-              />
+            <td class="center-text" *ngIf="headTableAnalisisCompra[28].check"
+              [ngClass]="siRowSelectedHover(i, data.codProducto)">
+              <input type="number" placeholder="" class="input-table-AC" [(ngModel)]="data.descuento3"
+                (keyup.enter)="calcular_Desc()" />
             </td>
             }@else{
-            <td
-              *ngIf="headTableAnalisisCompra[28].check"
-              class="center-text"
-              [ngClass]="siRowSelectedHover(i, data.codProducto)"
-            >
+            <td *ngIf="headTableAnalisisCompra[28].check" class="center-text"
+              [ngClass]="siRowSelectedHover(i, data.codProducto)">
               {{ data.descuento3 | number : '1.2-2' }}
             </td>
             }
@@ -629,25 +430,14 @@
 
             <!-- Descuento4 -->
             @if(isRowSelected === i){
-            <td
-              class="center-text"
-              *ngIf="headTableAnalisisCompra[29].check"
-              [ngClass]="siRowSelectedHover(i, data.codProducto)"
-            >
-              <input
-                type="number"
-                placeholder=""
-                class="input-table-AC"
-                [(ngModel)]="data.descuento4"
-                (keyup.enter)="calcular_Desc()"
-              />
+            <td class="center-text" *ngIf="headTableAnalisisCompra[29].check"
+              [ngClass]="siRowSelectedHover(i, data.codProducto)">
+              <input type="number" placeholder="" class="input-table-AC" [(ngModel)]="data.descuento4"
+                (keyup.enter)="calcular_Desc()" />
             </td>
             }@else{
-            <td
-              *ngIf="headTableAnalisisCompra[29].check"
-              class="center-text"
-              [ngClass]="siRowSelectedHover(i, data.codProducto)"
-            >
+            <td *ngIf="headTableAnalisisCompra[29].check" class="center-text"
+              [ngClass]="siRowSelectedHover(i, data.codProducto)">
               {{ data.descuento4 | number : '1.2-2' }}
             </td>
             }
@@ -655,65 +445,39 @@
 
             <!-- CosCom -->
             @if(isRowSelected === i){
-            <td
-              class="center-text"
-              *ngIf="headTableAnalisisCompra[30].check"
-              [ngClass]="siRowSelectedHover(i, data.codProducto)"
-            >
-              <input
-                type="number"
-                placeholder=""
-                class="input-table-AC"
-                [(ngModel)]="data.cosCom"
-                (keyup.enter)="calcular_CosCom()"
-              />
+            <td class="center-text" *ngIf="headTableAnalisisCompra[30].check"
+              [ngClass]="siRowSelectedHover(i, data.codProducto)">
+              <input type="number" placeholder="" class="input-table-AC" [(ngModel)]="data.cosCom"
+                (keyup.enter)="calcular_CosCom()" />
             </td>
             }@else{
-            <td
-              *ngIf="headTableAnalisisCompra[30].check"
-              class="center-text"
-              [ngClass]="siRowSelectedHover(i, data.codProducto)"
-            >
+            <td *ngIf="headTableAnalisisCompra[30].check" class="center-text"
+              [ngClass]="siRowSelectedHover(i, data.codProducto)">
               {{ data.cosCom | number : '1.2-2' }}
             </td>
             }
             <!-- End Coscom -->
 
-            <td
-              *ngIf="headTableAnalisisCompra[31].check"
-              class="center-text"
-              [ngClass]="siRowSelectedHover(i, data.codProducto)"
-            >
+            <td *ngIf="headTableAnalisisCompra[31].check" class="center-text"
+              [ngClass]="siRowSelectedHover(i, data.codProducto)">
               {{ data.parcial | number : '1.2-2' }}
             </td>
-            <td
-              *ngIf="headTableAnalisisCompra[32].check"
-              class="center-text"
-              [ngClass]="siRowSelectedHover(i, data.codProducto)"
-            >
+            <td *ngIf="headTableAnalisisCompra[32].check" class="center-text"
+              [ngClass]="siRowSelectedHover(i, data.codProducto)">
               {{ data.igv | number : '1.2-2' }}
             </td>
-            <td
-              *ngIf="headTableAnalisisCompra[33].check"
-              class="center-text"
-              [ngClass]="siRowSelectedHover(i, data.codProducto)"
-            >
+            <td *ngIf="headTableAnalisisCompra[33].check" class="center-text"
+              [ngClass]="siRowSelectedHover(i, data.codProducto)">
               {{ data.total | number : '1.2-2' }}
             </td>
 
             @if(isRowSelected === i){
-            <td
-              class="center-text"
-              *ngIf="headTableAnalisisCompra[34].check"
-              [ngClass]="siRowSelectedHover(i, data.codProducto)"
-            >
+            <td class="center-text" *ngIf="headTableAnalisisCompra[34].check"
+              [ngClass]="siRowSelectedHover(i, data.codProducto)">
               <input placeholder="" class="input-table-AC-lg" [(ngModel)]="data.observaciones" />
             </td>
             }@else {
-            <td
-              *ngIf="headTableAnalisisCompra[34].check"
-              [ngClass]="siRowSelectedHover(i, data.codProducto)"
-            >
+            <td *ngIf="headTableAnalisisCompra[34].check" [ngClass]="siRowSelectedHover(i, data.codProducto)">
               {{ data.observaciones }}
             </td>
             }
@@ -733,31 +497,23 @@
 
 <!-- MODAL -->
 <!-- modal Generar Orden de compra basa en otra OC -->
-<div
-  class="modal fade"
-  id="generarbasadaoc"
-  data-backdrop="static"
-  data-keyboard="false"
-  tabindex="10"
-  role="dialog"
-  aria-labelledby="staticBackdropLabel"
-  aria-hidden="true"
->
+<div class="modal fade" id="generarbasadaoc" data-backdrop="static" data-keyboard="false" tabindex="10" role="dialog"
+  aria-labelledby="staticBackdropLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
-      <div
-        class="modal-header p-2 m-0 d-flex align-items-baseline justify-content-between style-header-popup"
-      >
+      <div class="modal-header p-2 m-0 d-flex align-items-baseline justify-content-between style-header-popup">
         <p class="title-modal m-0 p-0">Generar en base a una O/C</p>
-        <button type="button" class="button-cancel" data-dismiss="modal" aria-label="Close">
+        <button  id="ocAnteriorBtnClose" type="button" class="button-cancel" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
       <div class="modal-body">
-        <div class="d-flex align-items-baseline gap-2">
-          <label for="fechacreacion">Número de O/C</label>
-          <input type="number" placeholder="Orden de compra" />
-          <button class="button-style">Guardar</button>
+        <div class="d-flex align-items-baseline justify-content-center gap-2">
+          <div class="d-flex align-items-center gap-2">
+            <label class="label-text m-0 p-0" for="fechacreacion">Número de O/C</label>
+            <input class="input-modal" type="number" [(ngModel)]="ocAntrior"  (keyup.enter)="getDetalleOCAnterior()"/>
+          </div>
+          <button class="button-style" (click)="getDetalleOCAnterior()">Buscar</button>
         </div>
       </div>
     </div>
@@ -765,15 +521,7 @@
 </div>
 
 <!-- opciones de menu -->
-<app-option-click
-  (action)="handleMenuAction($event)"
-  (filter)="filterData($event)"
-></app-option-click>
-<app-alertToast
-  *ngIf="showToast"
-  [message]="toastMessage"
-  [type]="toastType"
-  [duration]="5000"
-></app-alertToast>
+<app-option-click (action)="handleMenuAction($event)" (filter)="filterData($event)"></app-option-click>
+<app-alertToast *ngIf="showToast" [message]="toastMessage" [type]="toastType" [duration]="5000"></app-alertToast>
 <loading *ngIf="loading"></loading>
 <!-- end modal -->

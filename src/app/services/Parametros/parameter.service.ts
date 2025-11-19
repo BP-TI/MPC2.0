@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { HelperService } from '../../shared/services/helper.service';
 import { environment } from '../../../environments/environment';
 import { Observable } from 'rxjs';
-import { Parameter } from '../../models/parametros';
+import { AddHeaderTableReq, GetHeaderTableReq, Parameter } from '../../models/parametros';
 import { ICondicionesPago } from '../../models/ordenCompra';
 
 @Injectable({
@@ -23,6 +23,14 @@ export class ParameterService {
 
   getCondicionesPago(reques: ICondicionesPago) {
     return this.httpClient.post<any>(`${this.REQUEST_URL}/GetCondicionesPago`, reques);
+  }
+
+  postAddHeaderTable(reques: AddHeaderTableReq) {
+    return this.httpClient.post<any>(`${this.REQUEST_URL}/AddHeaderTable`, reques);
+  }
+
+  getheaderTable(reques: GetHeaderTableReq) {
+    return this.httpClient.post<any>(`${this.REQUEST_URL}/GetHeaderTable`, reques);
   }
 
 }

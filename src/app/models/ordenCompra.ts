@@ -1,3 +1,4 @@
+
 export interface IUltimasComprasReq {
     codProveedor: string;
     codLab: string;
@@ -32,15 +33,30 @@ export interface IAdicionarProductoCalculoReq {
     codProducto: string;
 }
 
-export interface IGetPDFZip{
+export interface IAdicionarProductoCalculo2Req {
+    codProveedor: string;
+    codLab: string;
+    codProducto: string;
+    usuarioLogin: string;
+    codUusario: string;
+    flag: number;
+}
+
+export interface IDetalleOCAnterior{
+    username:string;
+    proveedor:string,
+    numeroOCs: IKeyValue[];
+}
+
+export interface IGetPDFZip {
     username: string;
     proveedor: string;
     numeroOCs: IKeyValue[]
 }
 
-export interface IKeyValue{
-    key:string;
-    value:string;
+export interface IKeyValue {
+    key: string;
+    value: string;
 }
 
 export interface IGenerarOrdenCompra {
@@ -87,15 +103,6 @@ export interface IDataPorduct {
     usuario_autoriza: string,
     cantE_Temp: string,
     cant_Unid_Empa: string
-}
-
-export interface IAdicionarProductoCalculo2Req {
-    codProveedor: string;
-    codLab: string;
-    codProducto: string;
-    usuarioLogin: string;
-    codUusario: string;
-    flag: number;
 }
 
 export interface ICondicionesPago {
