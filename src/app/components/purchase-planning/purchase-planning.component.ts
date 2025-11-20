@@ -165,7 +165,7 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
     });
 
     // verifiar que el toggle esta abiero o no
-    this.toggle.nativeElement.addEventListener('click', () => {
+    this.toggle.nativeElement.addEventListener('click', (event: any) => {
       this.isOpen = !this.isOpen;
     });
 
@@ -179,7 +179,6 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
   crearGrupoChecks() {
     this.opcionesForm = this.fb.group({
       todos: new FormControl({ value: false, disabled: true }),
-      // unico: [false]
     });
   }
 
@@ -502,6 +501,7 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
 
   saveColumn() {
     if (!this.isOpen) {
+      console.log('Entro');
       let filterColumnaSave = this.headTableAnalisisCompra.filter(p => p.check).map(x => x.description);
 
       let dataRequest: AddHeaderTableReq = {
@@ -515,6 +515,7 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
     }
   }
 
+  
   deleteColumn(headColumna: HeadTableAC) {
     headColumna.check = !headColumna.check;
   }

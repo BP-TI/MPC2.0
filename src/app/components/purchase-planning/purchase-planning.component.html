@@ -180,13 +180,13 @@
       <div class="subtitle mb-3">Análisis Compras</div>
       <div class="dropdown" id="dropdownContainer">
         <!-- Filtro de la tabla de A.Compra -->
-        <a class="dropdown-toggle" id="userDropdown" role="button" data-toggle="dropdown" #dropdownToggle>
+        <a class="dropdown-toggle" id="userDropdown" role="button" data-toggle="dropdown" (click)="saveColumn()" #dropdownToggle>
           <i class="fa-solid fa-filter .icon-filter-colunm-hidden"></i>
         </a>
         <div class="dropdown-menu dropdown-menu-right shadow filter-table" aria-labelledby="userDropdown" #menu>
           <!-- Listado de columnas filtro -->
           @for(data of headTableAnalisisCompra; track data; let index = $index){ @if(index > 2){
-          <div class="dropdown-item form-check" data-display="static" (click)="toggleFromDiv($event, checkbox)" >
+          <div class="dropdown-item form-check" data-display="static" (click)="toggleFromDiv($event, checkbox)" [class.show]="isOpen">
             <input #checkbox 
                    class="form-check-input" 
                    type="checkbox"                     
