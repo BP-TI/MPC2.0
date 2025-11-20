@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, ElementRef, OnInit, TemplateRef, ViewChild } from '@angular/core';
-import { Laboratorios, Proveedores, Condiciones } from '../../models/parametros';
-import { IAdicionarProductoCalculoReq, ICompraFinalReq, IUltimasComprasReq, IUPdateCondicionProduct, PurchaseOrder, PurchaseOrder_table_modal } from '../../models/ordenCompra';
+import { Laboratorios, Proveedores, Condiciones, AddHeaderTableReq, GetHeaderTableReq } from '../../models/parametros';
+import { IAdicionarProductoCalculoReq, ICompraFinalReq, IDetalleOCAnterior, IUltimasComprasReq, IUPdateCondicionProduct, PurchaseOrder, PurchaseOrder_table_modal } from '../../models/ordenCompra';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { PurchasePlanningService } from '../../services/PurchasePlanning/purchasePlanning.service';
 import { HttpErrorResponse } from '@angular/common/http';
@@ -10,7 +10,6 @@ import { OptionClickComponent } from '../../shared/components/option-click/optio
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { OptionsCLickHeadMenuAC, OptionsClickHeadMenuAC2 } from '../../shared/models/option-click';
 import { AppConstants } from '../../shared/constants/app.constants';
-import { AlertMail } from '../../shared/services/alert-mail';
 import { ShowSubstitutesComponent } from '../show-substitutes/show-substitutes.component';
 import { AddProductComponent } from '../add-product/add-product.component';
 import { InventoryPolicyComponent } from '../inventory-policy/inventory-policy.component';
@@ -22,6 +21,8 @@ import { saveAs } from 'file-saver';
 import { ConfirmacionClaveModalComponent } from '../../modales/confirmacion-clave-modal/confirmacion-clave-modal.component';
 import { AutorizacionModalComponent } from '../../modales/autorizacion-modal/autorizacion-modal.component';
 import { DetalleStockBoticaComponent } from '../../modales/purchase-planning/detalle-stock-botica/detalle-stock-botica.component';
+import { ParameterService } from '../../services/Parametros/parameter.service';
+import { UserDataLogin } from '../../models/persona';
 
 @Component({
   selector: 'app-purchase-planning',
@@ -40,27 +41,20 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
   headTableAnalisisCompra: HeadTableAC[] = []
   headTableUltimasCompras: string[] = []
   headTableUltimosIngresos: string[] = []
-  datosPrincipales = sessionStorage.getItem(AppConstants.SessionOption.ROWS_PRINCIPAL);
-  rows: PurchaseOrder[] = this.datosPrincipales != null ? JSON.parse(this.datosPrincipales) : [];
+  rows: PurchaseOrder[] = [];
   rowsLb: any[];
-  ultimasComprasSession = sessionStorage.getItem(AppConstants.SessionOption.ULTIMAS_COMPRAS);
-  rowsUCompras: any[] = this.ultimasComprasSession != null ? JSON.parse(this.ultimasComprasSession) : [];
-  ultimosIngresosSession = sessionStorage.getItem(AppConstants.SessionOption.ULTIMOS_INGRESOS);
-  rowsUIngresos: any[] = this.ultimosIngresosSession != null ? JSON.parse(this.ultimosIngresosSession) : [];
+  rowsUCompras: any[];
+  rowsUIngresos: any[];
   rowsDataTotal: any[];
-  coscomSession = sessionStorage.getItem(AppConstants.SessionOption.COSCOM);
-  conscom: any = this.coscomSession != null ? JSON.parse(this.coscomSession).conscom : undefined;
-  conscomImpto: any = this.coscomSession != null ? JSON.parse(this.coscomSession).conscomImpto : undefined;
+  conscom: any = undefined;
+  conscomImpto: any = undefined;
   loading: boolean = false;
   proveedores: Proveedores[];
   laboratorios: Laboratorios[];
   validaCorreo: boolean = false;
-
-  calculosTotalesSession = sessionStorage.getItem(AppConstants.SessionOption.CALCULOS_TOTALES);
-  totalParcial: number = this.calculosTotalesSession != null ? JSON.parse(this.calculosTotalesSession).totalParcial : 0;
-  totalIGV: number = this.calculosTotalesSession != null ? JSON.parse(this.calculosTotalesSession).totalIGV : 0;
-  totalPagar: number = this.calculosTotalesSession != null ? JSON.parse(this.calculosTotalesSession).totalPagar : 0;
-
+  totalParcial: number = 0;
+  totalIGV: number = 0;
+  totalPagar: number = 0;
   proveedor = "0";
   opcionesForm: FormGroup;
   condiciones: Condiciones[] = [];
@@ -70,6 +64,8 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
   idProductSelected: string = '';
   showFilterTable: boolean = false;
   tableSelectedExcel: string = '';
+  dataUsuario: UserDataLogin;
+
 
   showToast = false;
   toastMessage = '';
@@ -81,9 +77,17 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
   inputCompraFinal: string = '';
   valueCompraFinal: string = '';
   previousValueRow: PurchaseOrder;
+  isOpen = false;
+  ocAntrior: Number = 0;
+
+  isOCAnterior: boolean = false;
+
 
   @ViewChild("actionTemplate") actionTemplate: TemplateRef<any>;
   @ViewChild(OptionClickComponent) contextMenu!: OptionClickComponent;
+  @ViewChild('dropdownToggle') toggle!: ElementRef;
+  @ViewChild('menu') menu!: ElementRef;
+
 
   constructor(private fb: FormBuilder,
     private purchaseService: PurchasePlanningService,
@@ -91,16 +95,23 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
     private modalService: NgbModal,
     public global: GlobalService,
     private el: ElementRef,
+    private parameterService: ParameterService,
   ) { }
 
   ngOnInit() {
     this.addHeadeTable();
     this.cargarProveedores();
     this.getCondiciones();
+    this.loadData();
+    this.showColumn();
+  }
+
+  loadData() {
     this.global.setGlobalVar('Módulo planificación de compra');
     this.opcionesForm = this.fb.group({
       todos: [false]
     });
+    this.dataUsuario = this.global.getDataUserLogin();
   }
 
   ngAfterViewInit() {
@@ -153,12 +164,21 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
       menu.addEventListener('click', (event: MouseEvent) => event.stopPropagation());
     });
 
+    // verifiar que el toggle esta abiero o no
+    this.toggle.nativeElement.addEventListener('click', (event: any) => {
+      this.isOpen = !this.isOpen;
+    });
+
+    this.menu.nativeElement.addEventListener('click', () => {
+      this.isOpen = false;
+      this.saveColumn();
+    });
+
   }
 
   crearGrupoChecks() {
     this.opcionesForm = this.fb.group({
       todos: new FormControl({ value: false, disabled: true }),
-      // unico: [false]
     });
   }
 
@@ -168,12 +188,6 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
       (response) => {
         this.loading = false;
         this.proveedores = response;
-        const proveedorSession = sessionStorage.getItem(AppConstants.SessionOption.PROVEEDOR_PLANE);
-        this.proveedor = proveedorSession != null ? proveedorSession.toString() : "0";
-        if(this.proveedor != "0"){
-          const laboratorioSession = sessionStorage.getItem(AppConstants.SessionOption.LABORATORIO_PLANE);
-          this.laboratorios = laboratorioSession != null ?  JSON.parse(laboratorioSession) : [];
-        }
       },
       (error: HttpErrorResponse) => {
         this.loading = false;
@@ -193,23 +207,19 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
         });
       }
     }
-    sessionStorage.setItem(AppConstants.SessionOption.LABORATORIO_PLANE,'')
   }
 
   onChangeProveedor() {
     this.loading = true;
     this.rows = [];
-    sessionStorage.setItem(AppConstants.SessionOption.ROWS_PRINCIPAL,JSON.stringify(this.rows));
     this.rowsDataTotal = [];
     this.laboratorios = [];
     this.clearDataTablesSecond();
-    sessionStorage.setItem(AppConstants.SessionOption.PROVEEDOR_PLANE,this.proveedor);
 
     this.purchaseService.getLaboratorios(this.proveedor).subscribe(
       (response) => {
         this.loading = false;
         this.laboratorios = response;
-        sessionStorage.setItem(AppConstants.SessionOption.LABORATORIO_PLANE, JSON.stringify(this.laboratorios));
         if (this.laboratorios.length > 0) {
           this.opcionesForm?.get('todos')?.enable();
         }
@@ -231,7 +241,6 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
       this.AlertToast(`Warning: Debes seleccionar al menos un laboratorio para continuar.`, 'warning')
       return;
     }
-    sessionStorage.setItem(AppConstants.SessionOption.LABORATORIO_PLANE, JSON.stringify(this.laboratorios));
 
     let cadenaLab = labChecks.map(p => p.codigoLab).join(',');
 
@@ -249,11 +258,11 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
                 this.rows.push({
                   ABC: data.ABC,
                   ObservacionAutoriza: data.ObservacionAutoriza,
-                  VVF1: data.VVF1,
-                  VVF2: data.VVF2,
+                  VVF1: Number(data.VVF1).toString(),
+                  VVF2: Number(data.VVF2).toString(),
                   almacen: data.almacen,
                   asociado: data.asociado,
-                  bonificacion: data.bonificacion,
+                  bonificacion: Number(data.bonificacion.fixed(2)).toString(),
                   botica: data.botica,
                   canje: data.canje,
                   clasificacion: data.clasificacion,
@@ -262,13 +271,13 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
                   cobOrgActNoBotica: data.cobOrgActNoBotica,
                   codLaboratorio: data.codLaboratorio,
                   codProducto: data.codProducto,
-                  compraFinal: data.compraFinal,
+                  compraFinal: Number(data.compraFinal).toString(),
                   condicion: data.condicion,
-                  cosCom: data.cosCom,
-                  descuento1: data.descuento1,
-                  descuento2: data.descuento2,
-                  descuento3: data.descuento3,
-                  descuento4: data.descuento4,
+                  cosCom: Number(data.cosCom).toString(),
+                  descuento1: Number(data.descuento1).toString(),
+                  descuento2: Number(data.descuento2).toString(),
+                  descuento3: Number(data.descuento3).toString(),
+                  descuento4: Number(data.descuento4).toString(),
                   fracUnidad: data.fracUnidad,
                   igv: data.igv,
                   igvProducto: data.igvProducto,
@@ -309,7 +318,6 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
                 });
               });
               this.rows = response.detalleProductos;
-              sessionStorage.setItem(AppConstants.SessionOption.ROWS_PRINCIPAL,JSON.stringify(this.rows));
               this.rowsDataTotal = response.detalleProductos;
               this.createMenuListHeaderAC();
 
@@ -466,9 +474,57 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
     ];
   }
 
+  showColumn() {
+    let dataRequest: GetHeaderTableReq = {
+      useusr: this.dataUsuario.usuario,
+      idService: 'PLANE'
+    }
+    this.parameterService.getheaderTable(dataRequest).subscribe(response => {
+
+      if (response.estado == true) {
+
+        let listHead: string[] = JSON.parse(response.parametros)
+        this.headTableAnalisisCompra.forEach(data => {
+          let headExist = listHead.filter(p => p == data.description);
+          if (headExist.length == 0) {
+            data.check = false;
+          } else {
+            data.check = true;
+          }
+        });
+
+      } else {
+        this.AlertToast('WARNING: no se puedo cargar preferencias de las columnas', 'warning');
+      }
+    });
+  }
+
+  saveColumn() {
+    if (!this.isOpen) {
+      console.log('Entro');
+      let filterColumnaSave = this.headTableAnalisisCompra.filter(p => p.check).map(x => x.description);
+
+      let dataRequest: AddHeaderTableReq = {
+        useusr: this.dataUsuario.usuario,
+        idService: 'PLANE',
+        estado: true,
+        parametros: JSON.stringify(filterColumnaSave),
+      }
+
+      this.parameterService.postAddHeaderTable(dataRequest).subscribe(response => { });
+    }
+  }
+
+  
   deleteColumn(headColumna: HeadTableAC) {
     headColumna.check = !headColumna.check;
-    this.headTableAnalisisCompra = this.headTableAnalisisCompra.map((p: any) => p.descripcion == headColumna.description ? { ...p, check: headColumna.check } : p);
+  }
+
+  toggleFromDiv(event: MouseEvent, checkbox: HTMLInputElement) {
+    if (event.target === checkbox) {
+      return;
+    }
+    checkbox.click();
   }
 
   showMonth(mesConsultado: string): string {
@@ -537,14 +593,14 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
     this.conscom = undefined;
     this.conscomImpto = undefined;
 
-    let dataUsuario = this.global.getDataUserLogin();
+
 
     let dataRequets: IUltimasComprasReq = {
       codProveedor: this.proveedor,
       codLab: data.codLaboratorio,
       codProducto: data.codProducto,
-      usuarioLogin: dataUsuario.usuario,
-      codUsuario: Number(dataUsuario.codigoUsuario)
+      usuarioLogin: this.dataUsuario.usuario,
+      codUsuario: Number(this.dataUsuario.codigoUsuario)
     }
 
     this.ordenCompraService.getUltimasCompras(dataRequets).subscribe((response: any) => {
@@ -555,21 +611,14 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
         } else {
           if (response.ultimasCompras != null && response.ultimasCompras.length > 0) {
             this.rowsUCompras = response.ultimasCompras;
-            sessionStorage.setItem(AppConstants.SessionOption.ULTIMAS_COMPRAS,JSON.stringify(this.rowsUCompras));
           }
 
           if (response.ultimosIngresos != null && response.ultimosIngresos.length > 0) {
             this.rowsUIngresos = response.ultimosIngresos;
-            sessionStorage.setItem(AppConstants.SessionOption.ULTIMOS_INGRESOS,JSON.stringify(this.rowsUIngresos));
           }
 
           this.conscom = response.costoCompra;
           this.conscomImpto = response.costoCompraIGV;
-          const model = {
-            conscom:this.conscom,
-            conscomImpto:this.conscomImpto
-          }
-          sessionStorage.setItem(AppConstants.SessionOption.COSCOM,JSON.stringify(model));
         }
       }
       else {
@@ -615,57 +664,31 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
 
   clearField() {
     this.rowsUCompras = [];
-    sessionStorage.setItem(AppConstants.SessionOption.ULTIMAS_COMPRAS,JSON.stringify(this.rowsUCompras));
     this.rowsUIngresos = [];
-    sessionStorage.setItem(AppConstants.SessionOption.ULTIMOS_INGRESOS,JSON.stringify(this.rowsUIngresos));
     this.conscom = undefined;
     this.conscomImpto = undefined;
-
-    const model = {
-      conscom:this.conscom,
-      conscomImpto:this.conscomImpto
-    }
-    sessionStorage.setItem(AppConstants.SessionOption.COSCOM,JSON.stringify(model));
-
     this.laboratorios = [];
-    sessionStorage.setItem(AppConstants.SessionOption.LABORATORIO_PLANE, JSON.stringify(this.laboratorios));
     this.rows = [];
-    sessionStorage.setItem(AppConstants.SessionOption.ROWS_PRINCIPAL,JSON.stringify(this.rows));
     this.rowsDataTotal = [];
     this.opcionesForm.get('todos')?.disable();
     this.totalIGV = 0;
     this.totalPagar = 0;
     this.totalParcial = 0;
-
-    const modelTotales ={
-      totalIGV: this.totalIGV,
-      totalPagar: this.totalPagar,
-      totalParcial: this.totalParcial
-    }
-    sessionStorage.setItem(AppConstants.SessionOption.CALCULOS_TOTALES,JSON.stringify(modelTotales));
-
     this.proveedor = "0";
-    sessionStorage.setItem(AppConstants.SessionOption.PROVEEDOR_PLANE,this.proveedor);
     this.isRowSelected = -1;
     this.idProductSelected = '';
     this.idCondicionCbo = '';
     this.idCondicion = '';
+    this.isOCAnterior = false;
   }
 
   clearDataTablesSecond() {
     this.isRowSelected = -1;
     this.idProductSelected = '';
     this.rowsUCompras = [];
-    sessionStorage.setItem(AppConstants.SessionOption.ULTIMAS_COMPRAS,JSON.stringify(this.rowsUCompras));
     this.rowsUIngresos = [];
-    sessionStorage.setItem(AppConstants.SessionOption.ULTIMOS_INGRESOS,JSON.stringify(this.rowsUIngresos));
     this.conscom = undefined;
     this.conscomImpto = undefined;
-    const model = {
-      conscom:this.conscom,
-      conscomImpto:this.conscomImpto
-    }
-    sessionStorage.setItem(AppConstants.SessionOption.COSCOM,JSON.stringify(model));
   }
 
   calculateTotal() {
@@ -684,13 +707,6 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
     this.totalParcial = sumaParcial;
     this.totalIGV = sumaIGV;
     this.totalPagar = sumaPagar;
-
-    const modelTotales ={
-      totalIGV: this.totalIGV,
-      totalPagar: this.totalPagar,
-      totalParcial: this.totalParcial
-    }
-    sessionStorage.setItem(AppConstants.SessionOption.CALCULOS_TOTALES,JSON.stringify(modelTotales));
   }
 
   getCondiciones() {
@@ -876,7 +892,6 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
     if (dataRowDelete.length > 0) {
       if (dataRowDelete[0].isNewRow) {
         this.rows = this.rows.filter((p: any) => p.codProducto != this.idProductSelected);
-        sessionStorage.setItem(AppConstants.SessionOption.ROWS_PRINCIPAL,JSON.stringify(this.rows));
       } else {
         this.AlertToast("Warning: Solo se puede eliminar los registros nuevos.", 'warning');
       }
@@ -986,14 +1001,12 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
       this.rows = this.rows.sort((a: any, b: any) =>
         (a.nombreLaboratorio ?? "").toString().trim().localeCompare(b.nombreLaboratorio ?? "").toString().trim()
       );
-      sessionStorage.setItem(AppConstants.SessionOption.ROWS_PRINCIPAL,JSON.stringify(this.rows));
     }
 
     if (this.contextMenu.filterColumn == 'Compra final') {
       this.rows = this.rows.sort((a: any, b: any) =>
         (a.compraFinal ?? "").toString().trim().localeCompare(b.compraFinal ?? "").toString().trim()
       );
-      sessionStorage.setItem(AppConstants.SessionOption.ROWS_PRINCIPAL,JSON.stringify(this.rows));
     }
 
     this.isRowSelected = -1;
@@ -1006,28 +1019,24 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
       this.rows = this.rows.sort((a: any, b: any) =>
         b.nombreProducto.toString().trim().localeCompare(a.nombreProducto).toString().trim()
       );
-      sessionStorage.setItem(AppConstants.SessionOption.ROWS_PRINCIPAL,JSON.stringify(this.rows));
     }
 
     if (this.contextMenu.filterColumn == 'Tipo') {
       this.rows = this.rows.sort((a: any, b: any) =>
         (b.ABC ?? "").toString().trim().localeCompare(a.ABC ?? "").toString().trim()
       );
-      sessionStorage.setItem(AppConstants.SessionOption.ROWS_PRINCIPAL,JSON.stringify(this.rows));
     }
 
     if (this.contextMenu.filterColumn == 'Labora.') {
       this.rows = this.rows.sort((a: any, b: any) =>
         (b.nombreLaboratorio ?? "").toString().trim().localeCompare(a.nombreLaboratorio ?? "").toString().trim()
       );
-      sessionStorage.setItem(AppConstants.SessionOption.ROWS_PRINCIPAL,JSON.stringify(this.rows));
     }
 
     if (this.contextMenu.filterColumn == 'Compra final') {
       this.rows = this.rows.sort((a: any, b: any) =>
         (b.compraFinal ?? "").toString().trim().localeCompare(a.compraFinal ?? "").toString().trim()
       );
-      sessionStorage.setItem(AppConstants.SessionOption.ROWS_PRINCIPAL,JSON.stringify(this.rows));
     }
 
     this.isRowSelected = -1;
@@ -1045,7 +1054,6 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
       productFilter.includes(element.codProducto)
     );
     this.rows = dataFilter;
-    sessionStorage.setItem(AppConstants.SessionOption.ROWS_PRINCIPAL,JSON.stringify(this.rows));
     this.calculateTotal();
   }
 
@@ -1066,12 +1074,12 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
         if (confirm) {
           this.idCondicionCbo = nuevoValor;
           this.rows = this.rows.map((p: any) => p.codProducto == codigo ? { ...p, condicion: this.idCondicionCbo } : p);
-          sessionStorage.setItem(AppConstants.SessionOption.ROWS_PRINCIPAL,JSON.stringify(this.rows));
 
           this.loading = true;
           let dataReq: IUPdateCondicionProduct = {
             codProducto: this.rows[indexSelect].codProducto,
-            codUsuario: Number(this.global.getDataUserLogin().codigoUsuario),
+            // codUsuario: Number(this.global.getDataUserLogin().codigoUsuario),
+            codUsuario: Number(this.dataUsuario.codigoUsuario),
             codCondicion: this.idCondicionCbo,
             asociado: this.rows[indexSelect].asociado,
           }
@@ -1086,7 +1094,6 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
           this.idCondicionCbo = "";
           this.idCondicionCbo = this.idCondicion;
           this.rows = this.rows.map((p: any) => p.codProducto == codigo ? { ...p, condicion: this.idCondicion } : p);
-          sessionStorage.setItem(AppConstants.SessionOption.ROWS_PRINCIPAL,JSON.stringify(this.rows));
         }
       });
 
@@ -1350,12 +1357,12 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
     modalPurchaseOrder.componentInstance.dataRows = dataRowPurchaseOrder;
     modalPurchaseOrder.componentInstance.scodPorv = dataPorv?.codigoProveedor;
     modalPurchaseOrder.componentInstance.sdesProv = dataPorv?.descripcion;
-    
+
     let dataFilter = this.laboratorios.filter(x => x.selected == true);
-    if( dataFilter.length == 1 ){
-      modalPurchaseOrder.componentInstance.sdesProv = dataFilter[0].codigoLab;     
+    if (dataFilter.length == 1) {
+      modalPurchaseOrder.componentInstance.sdesProv = dataFilter[0].codigoLab;
     } else {
-      modalPurchaseOrder.componentInstance.sdesProv = "";     
+      modalPurchaseOrder.componentInstance.sdesProv = "";
     }
 
   }
@@ -1510,8 +1517,7 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
     this.inputCompraFinal = input.value.trim();
     let indexSelected = this.rows.findIndex(a => a.codProducto == this.idProductSelected.toString());
     let averageMonth = this.averageThreeMonth();
-    let usuario = '';
-    usuario = this.global.getDataUserLogin().usuario;
+    let usuario = this.dataUsuario.usuario;
 
     let nCompra_Final = 0;
     let dataRequest: ICompraFinalReq = {
@@ -1671,14 +1677,12 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
                   this.inputCompraFinal = '';
                   this.inputCompraFinal = this.valueCompraFinal;
                   this.rows = this.rows.map((p: any) => p.codProducto == this.idProductSelected ? { ...p, comprafinal: this.valueCompraFinal } : p);
-                  sessionStorage.setItem(AppConstants.SessionOption.ROWS_PRINCIPAL,JSON.stringify(this.rows));
                 }
               });
             } else {
               this.inputCompraFinal = '';
               this.inputCompraFinal = this.valueCompraFinal;
               this.rows = this.rows.map((p: any) => p.codProducto == this.idProductSelected ? { ...p, comprafinal: this.valueCompraFinal } : p);
-              sessionStorage.setItem(AppConstants.SessionOption.ROWS_PRINCIPAL,JSON.stringify(this.rows));
             }
 
           });
@@ -1846,8 +1850,111 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
     this.AlertToast("Success: Se actualizo los montos.", 'success');
   }
 
-  //click derecho
+  // Detalle OC Anterior
+  getDetalleOCAnterior() {
+    if (this.ocAntrior == 0) {
+      this.AlertToast("Warning: Debe de ingresar un numero de orden de compra.", 'warning');
+      return;
+    }
 
+    this.loading = true;
+    let dataRequest: IDetalleOCAnterior = {
+      username: this.dataUsuario.usuario,
+      proveedor: "prv",
+      numeroOCs: [{
+        key: this.ocAntrior.toString(),
+        value: ''
+      }]
+    }
+    this.ordenCompraService.getDetalleOXAnterior(dataRequest).subscribe(response => {
+      this.rows = [];
+      this.loading = false;
+
+      if (response.codStatus == 1) {
+        if (response.message == 'OK') {
+
+          response.detalleProductos.forEach((data: any) => {
+            this.rows.push({
+              ABC: data.ABC,
+              ObservacionAutoriza: data.ObservacionAutoriza,
+              VVF1: Number(data.VVF1).toString(),
+              VVF2: Number(data.VVF2).toString(),
+              almacen: data.almacen,
+              asociado: data.asociado,
+              bonificacion: Number(data.bonificacion).toString(),
+              botica: data.botica,
+              canje: data.canje,
+              clasificacion: data.clasificacion,
+              cobOrgAct: data.cobOrgAct,
+              cobOrgActCalcNoBotica: data.cobOrgActCalcNoBotica,
+              cobOrgActNoBotica: data.cobOrgActNoBotica,
+              codLaboratorio: data.codLaboratorio,
+              codProducto: data.codProducto,
+              compraFinal: Number(data.compraFinal).toString(),
+              condicion: data.condicion,
+              cosCom: Number(data.cosCom).toString(),
+              descuento1: Number(data.descuento1).toString(),
+              descuento2: Number(data.descuento2).toString(),
+              descuento3: Number(data.descuento3).toString(),
+              descuento4: Number(data.descuento4).toString(),
+              fracUnidad: data.fracUnidad,
+              igv: data.igv,
+              igvProducto: data.igvProducto,
+              incentivo: data.incentivo,
+              logisticaInversa: data.logisticaInversa,
+              maxBot: data.maxBot,
+              maxInfraStock: data.maxInfraStock,
+              mesActual: data.mesActual,
+              mesActualProyeccion: data.mesActualProyeccion,
+              mesCuarto: data.mesCuarto,
+              mesPrimero: data.mesPrimero,
+              mesQuinto: data.mesQuinto,
+              mesSegundo: data.mesSegundo,
+              mesTercero: data.mesTercero,
+              nombreLaboratorio: data.nombreLaboratorio,
+              nombreProducto: data.nombreProducto,
+              nroOC: data.nroOC,
+              observaciones: data.observaciones,
+              oc: data.oc,
+              ocVencido: data.ocVencido,
+              ocVigente: data.ocVigente,
+              org: data.org,
+              orgNoBotica: data.orgNoBotica,
+              parcial: data.parcial,
+              plazoPago: data.plazoPago,
+              preCompra: data.preCompra,
+              promMes: data.promMes,
+              relacionado: data.relacionado,
+              secRelacion: data.secRelacion,
+              total: data.total,
+              totalNoBotica: data.totalNoBotica,
+              totalParcial: data.totalParcial,
+              unidadEmpaque: data.unidadEmpaque,
+              usuarioAutoriza: data.usuarioAutoriza,
+              ventaSubDist: data.ventaSubDist,
+              isNewRow: false,
+            });
+
+            this.proveedor = response.observation;
+            this.laboratorios = [];
+            this.isOCAnterior = true;
+            this.ocAntrior = 0;
+          });
+          document.getElementById('ocAnteriorBtnClose')?.click();
+        } else {
+          this.AlertToast("Warning: No se encontro la orden.", 'warning');
+          return;
+        }
+      } else {
+        this.AlertToast("Warning: No se encontro la orden.", 'warning');
+        return;
+      }
+
+    });
+
+  }
+
+  //click derecho
   compraFinalcero() {
     this.rows.forEach(datarow => {
       datarow.compraFinal = "0";

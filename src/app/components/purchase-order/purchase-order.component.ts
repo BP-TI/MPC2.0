@@ -318,7 +318,7 @@ export class PurchaseOrderComponent implements OnInit {
       this.AlertToast(`WARNING: La fecha de Entrega deben de ser mayor a hoy.`, 'warning');
       return true;
     }
-
+    today.setDate(today.getDate() - 1);
     if (diaGenerarOC < today) {
       this.AlertToast(`WARNING: La fecha de creación deben de ser mayor a hoy.`, 'warning');
       return true;
@@ -379,7 +379,6 @@ export class PurchaseOrderComponent implements OnInit {
   }
 
   addRow() {
-
     const modalAddProd = this.modalService.open(AddProductComponent, {
       windowClass: "modal-product",
       backdrop: false,
@@ -501,11 +500,7 @@ export class PurchaseOrderComponent implements OnInit {
     this.calculateTotal();
   }
 
-  filterData(filter: string) {
-    this.contextMenu.closeHeadTableAC();
-  }
-
-  openContextMenu(event: MouseEvent, opcionMenu: number) {
+  openContextMenuGOC(event: MouseEvent, opcionMenu: number) {
     event.preventDefault();
     this.contextMenu.open(event.pageX, event.pageY, opcionMenu);
   }
@@ -1048,7 +1043,7 @@ export class PurchaseOrderComponent implements OnInit {
   }
   // End Hover
   // -----
-  async openOutlook() {
+   openOutlook() {
 
     this.loading = true;
     let todayFormat = this.today.getDate() + '-' + (this.today.getMonth() + 1) + '-' + this.today.getFullYear();
@@ -1079,19 +1074,16 @@ export class PurchaseOrderComponent implements OnInit {
         });
         dataRequestPDF.numeroOCs = dataNrOC;
 
-        this.orderCompraService.getPDFsZip(dataRequestPDF).subscribe(async responsePDF => {
-          let base64 = await this.blobToBase64(responsePDF);
+        this.orderCompraService.getPDFsZip(dataRequestPDF).subscribe(responsePDF => {
           let body: AgentOutlook = {
             subject: massageAsunto,
             body: massageBody,
             isBodyHtml: 'true',
             recipients: [
-              // "tu@correo.com",
-              // "tu2@correo.com"
             ],
             attachments: [{
               filename: "ordenComra.zip",
-              dataBase64: base64
+              dataBase64: responsePDF.valorZipByte
             }]
           }
 
@@ -1099,7 +1091,7 @@ export class PurchaseOrderComponent implements OnInit {
           }, error => {
             console.log('error');
           });
-
+          this.closeModal();
         });
 
       });
@@ -1107,15 +1099,6 @@ export class PurchaseOrderComponent implements OnInit {
     }, 3000);
   }
 
-  blobToBase64(blob: Blob): Promise<string> {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onloadend = () =>
-        resolve((reader.result as string).split(',')[1]);
-      reader.onerror = reject;
-      reader.readAsDataURL(blob);
-    });
-  }
 
   closeModal() {
     this.activeModal.close();

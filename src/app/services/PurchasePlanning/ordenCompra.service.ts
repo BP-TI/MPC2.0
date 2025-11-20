@@ -3,7 +3,7 @@ import { HelperService } from '../../shared/services/helper.service';
 import { environment } from '../../../environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { bodyMail, IAdicionarProductoCalculo2Req, IAdicionarProductoCalculoReq, IAdicionarProductosReq, ICompraFinalReq, IDetalleStockBotica, IGenerarOrdenCompra, IGetPDFZip, IUltimasComprasReq, IUPdateCondicionProduct } from '../../models/ordenCompra';
+import { bodyMail, IAdicionarProductoCalculo2Req, IAdicionarProductoCalculoReq, IAdicionarProductosReq, ICompraFinalReq, IDetalleOCAnterior, IDetalleStockBotica, IGenerarOrdenCompra, IGetPDFZip, IUltimasComprasReq, IUPdateCondicionProduct } from '../../models/ordenCompra';
 
 @Injectable({
   providedIn: 'root'
@@ -91,10 +91,11 @@ export class OrdenCompraService {
   }
   
   getPDFsZip(reques: IGetPDFZip){
-    // return this.httpClient.post<any>(`${this.REQUEST_URL}/GetPDFsZip`, reques);
-    return this.httpClient.post(`${this.REQUEST_URL}/GetPDFsZip`, reques, { responseType: 'blob' as 'blob' } );
-
+    return this.httpClient.post<any>(`${this.REQUEST_URL}/GetPDFsZipByte`, reques);
   }
-
+  
+  getDetalleOXAnterior(reques: IDetalleOCAnterior){
+    return this.httpClient.post<any>(`${this.REQUEST_URL}/GetDetalleOCAnterior`, reques);    
+  }
 
 }

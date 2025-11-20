@@ -29,7 +29,7 @@
             <td>{{ data.establecimiento_ventas6 }}</td>
             <td>{{ data.stock_botica }}</td>
             <td>{{ data.establecimiento_stockMaximo }}</td>
-            <td>{{ data.max_Infrastock }}</td>
+            <td>{{ data.max_Infrastock | number : '1.0-0' }}</td>
             <td>{{ data.clasif_botica }}</td>
           </tr>
           <tr class="border border-2 border-primary">
@@ -42,7 +42,7 @@
             <td class="fw-bold">{{ totalMontg2 | number : '1.2-2' }}</td>
             <td class="fw-bold">{{ totalMontg1 | number : '1.2-2' }}</td>
             <td class="fw-bold">{{ totalStockBoticas | number : '1.2-2' }}</td>
-            <td class="fw-bold">{{ totalMaxBoticas | number : '1.2-2' }}</td>
+            <td class="fw-bold">{{ totalMaxBoticas | number : '1.0-0' }}</td>
             <td class="fw-bold">{{ totalInfrastock | number : '1.2-2' }}</td>
             <td></td>
           </tr>

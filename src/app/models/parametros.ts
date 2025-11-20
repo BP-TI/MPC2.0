@@ -2,23 +2,23 @@ export class Laboratorios {
     codigoLab: string;
     descripcion: string;
     selected: boolean = false;
-  
+
 }
 export class Proveedores {
     codigoProveedor: string;
-    descripcion: string;    
+    descripcion: string;
 }
 
-export class Politicas{
-    ABC:string;
-    puntoVenta:number;
-    MaxAlmacen:number;
-    Total:number;
+export class Politicas {
+    ABC: string;
+    puntoVenta: number;
+    MaxAlmacen: number;
+    Total: number;
 }
-export class Boticas{
+export class Boticas {
     codAlmacen: String
     descripcionAlmacen: String
-    selected: boolean =false;
+    selected: boolean = false;
 }
 
 export class Condiciones {
@@ -27,9 +27,9 @@ export class Condiciones {
 }
 
 export class Substitutes {
-    codigoProveedor:string;
-    codigoLaboratorio:string;
-    codigoProducto:string;
+    codigoProveedor: string;
+    codigoLaboratorio: string;
+    codigoProducto: string;
 }
 
 export class Parameter {
@@ -46,4 +46,17 @@ export class Parameter {
     tabDet008: string;
     tabDet009: string;
 
+}
+
+export class AddHeaderTableReq {
+    useusr: string;
+    idService: string;
+    estado: boolean = true;
+    parametros: string;
+}
+
+
+export class GetHeaderTableReq{
+    useusr:string;
+    idService: string;
 }

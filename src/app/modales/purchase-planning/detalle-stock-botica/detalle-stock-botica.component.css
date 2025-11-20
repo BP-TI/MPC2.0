@@ -1,7 +1,8 @@
 .modal-detalleStock .modal-dialog {
     max-width: 3000px !important;
-    width: 700px !important;
-    height: 900px !important;
+    width: 800px !important;
+    height: auto !important;
+    max-height: 900px !important;
     position: absolute !important;
     z-index: 1060;
     padding: 0px !important;
@@ -23,9 +24,13 @@
 }
 
 .header-modal {
+    position: sticky;
+    top: 0;
+    z-index: 2000;
     background: #134B97;
     color: white;
     cursor: move;
+    margin: 0px 0px 20px 0px !important;
 }
 
 .button-cancel:hover {
@@ -90,7 +95,7 @@
 
 .table-scroll-show-Det {
     width: 100%;
-    height:490px;
+    height: 600px;
     padding: 0px;
     overflow-y: auto !important;
     overflow-x: auto !important;
@@ -105,6 +110,12 @@
     top: 0;
     z-index: 2;
     margin: 0px;
+    background: #134B97;
+    color: white;
+}
+
+.table-style-show-Det thead tr {
+    height: 5px !important;
 }
 
 .table-style-show-Det {
@@ -112,10 +123,6 @@
     min-height: auto;
 }
 
-.table-style-show-Det thead th {
-    background: #134B97;
-    color: white;
-}
 
 .table-style-show-Det th,
 td {

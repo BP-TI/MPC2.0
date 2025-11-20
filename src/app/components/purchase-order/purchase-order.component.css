@@ -1,14 +1,14 @@
 .modal-PurchaseOrder .modal-dialog {
   max-width: 2000px;
   width: 1070px !important;
-  height: 1000px !important;
+  height: auto !important;
+  max-height: 1000px !important;
   position: absolute !important;
   z-index: 1060;
   padding: 0px !important;
   margin: 0px;
-  ;
   top: 2%;
-  left: 5%;
+  left: 15%;
 }
 
 .modal {

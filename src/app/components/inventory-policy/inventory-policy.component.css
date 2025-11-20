@@ -98,9 +98,12 @@
 }
 
 .table-style-Inventory-Policy {
-  width: 200%;
   min-height: auto;
-  max-height: 300px;
+  max-height: 250px;
+}
+
+.table-style-Inventory-Policy thead tr {
+  height: 5px !important;
 }
 
 .table-style-Inventory-Policy thead th {
@@ -113,7 +116,9 @@ td {
   width: 135px;
   font-family: 'Montserrat' !important;
   font-style: normal;
-  line-height: 22px;
+  height: 20px;
+  padding: 0px;
+  margin: 0px;
 }
 
 .table-style-Inventory-Policy th {

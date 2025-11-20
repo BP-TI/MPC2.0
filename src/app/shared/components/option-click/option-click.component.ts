@@ -1,6 +1,8 @@
 import { Component, EventEmitter, HostListener, OnInit, Output } from '@angular/core';
 import { OptionsCLickHeadMenuAC, OptionsClickHeadMenuAC2 } from '../../models/option-click';
 import { AppConstants } from '../../constants/app.constants';
+import { HeadTableAC } from '../../../models/ordenCompra';
+import { ParameterService } from '../../../services/Parametros/parameter.service';
 
 @Component({
   selector: 'app-option-click',
@@ -21,10 +23,13 @@ export class OptionClickComponent implements OnInit {
   menuLisTipo: OptionsClickHeadMenuAC2[] = [];
   menuListCompraFinal: OptionsClickHeadMenuAC2[] = [];
   menuListCondiciones: OptionsClickHeadMenuAC2[] = [];
+  menuListHeadTableAC: string[];
 
   checkAllDescription: boolean = true;
 
-  constructor() { }
+  constructor(
+    private parameterService: ParameterService,
+  ) { }
 
   ngOnInit() {
   }
@@ -90,11 +95,14 @@ export class OptionClickComponent implements OnInit {
     this.visible = false;
     this.visible2 = false;
     this.visible3 = false;
-    this.visible5 = false;
   }
-
+  
   closeHeadTableAC() {
     this.visible4 = false;
+  }
+  
+  cloaseHeadTableGOC(){
+    this.visible5 = false;
   }
 
   onAction(type: string) {

@@ -125,7 +125,7 @@
   <!-- end formulario -->
 
   <!-- tabla -->
-  <div class="table-scroll-PO col-12 m-0 pr-3 pl-3 pt-2 pb-2" (contextmenu)="openContextMenu($event, 5)">
+  <div class="table-scroll-PO col-12 m-0 pr-3 pl-3 pt-2 pb-2" (contextmenu)="openContextMenuGOC($event, 5)">
     <table id="tablaAnalisiCompra" class="table-style-PO">
       <thead>
         <tr>
@@ -219,6 +219,6 @@
   </div>
 </div>
 
-<app-option-click (action)="handleMenuAction($event)" (filter)="filterData($event)"></app-option-click>
+<app-option-click (action)="handleMenuAction($event)" ></app-option-click>
 <app-alertToast *ngIf="showToast" [message]="toastMessage" [type]="toastType" [duration]="5000"></app-alertToast>
 <loading *ngIf="loading"></loading>
