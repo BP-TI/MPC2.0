@@ -1,0 +1,22 @@
+<div class="modal-body">
+
+    <div class="header-modal p-2 m-0 d-flex align-items-baseline justify-content-between"
+        (mousedown)="startDrag($event)">
+        <p class="title-modal m-0 p-0">Ver Ordenes de compras</p>
+        <button type="button" class="button-cancel" (click)="closeModal()">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+
+    <div class="col-12 m-0 p-0">
+        <div class="container-button_showOC">
+            <button class="button-header" (click)="CalcularCompra()">
+                <i class="fa-solid fa-calculator"></i>
+                Buscar
+            </button>
+        </div>
+    </div>
+
+</div>
+
+<loading *ngIf="loading"></loading>

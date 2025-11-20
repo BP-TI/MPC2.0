@@ -36,6 +36,7 @@ import { ShowSubstitutesAbadiComponent } from './components/show-substitutesAbad
 import { DetalleStockBoticaComponent } from './modales/purchase-planning/detalle-stock-botica/detalle-stock-botica.component';
 import { AutorizacionModalComponent } from './modales/autorizacion-modal/autorizacion-modal.component';
 import { NgbDatepickerModule, NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { ShowOCsComponent } from './modales/purchase-planning/show-ocs/show-ocs.component';
 
 
 @NgModule({
@@ -62,6 +63,7 @@ import { NgbDatepickerModule, NgbModule } from '@ng-bootstrap/ng-bootstrap';
     AddProductAbadiComponent,
     DetalleStockBoticaComponent,
     AutorizacionModalComponent,
+    ShowOCsComponent,
   ],
   imports: [
     NgbModalModule,
@@ -92,7 +94,7 @@ import { NgbDatepickerModule, NgbModule } from '@ng-bootstrap/ng-bootstrap';
     ShowSubstitutesAbadiComponent,
     DetalleStockBoticaComponent,
     AutorizacionModalComponent,
-
+    ShowOCsComponent,
   ],
   bootstrap: [App],
 })

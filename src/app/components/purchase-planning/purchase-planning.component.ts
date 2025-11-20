@@ -23,6 +23,7 @@ import { AutorizacionModalComponent } from '../../modales/autorizacion-modal/aut
 import { DetalleStockBoticaComponent } from '../../modales/purchase-planning/detalle-stock-botica/detalle-stock-botica.component';
 import { ParameterService } from '../../services/Parametros/parameter.service';
 import { UserDataLogin } from '../../models/persona';
+import { ShowOCsComponent } from '../../modales/purchase-planning/show-ocs/show-ocs.component';
 
 @Component({
   selector: 'app-purchase-planning',
@@ -515,7 +516,7 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
     }
   }
 
-  
+
   deleteColumn(headColumna: HeadTableAC) {
     headColumna.check = !headColumna.check;
   }
@@ -1425,6 +1426,16 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
     modalDetalleStock.componentInstance.title = 'Detalle InfraStock';
     modalDetalleStock.componentInstance.option = AppConstants.DetalleStockBotica.DETALLEINFRASTOCK;
     modalDetalleStock.componentInstance.codPro = this.idProductSelected;
+
+  }
+
+  showOCs() {
+
+    let modalShowOCs = this.modalService.open(ShowOCsComponent, {
+      windowClass: "modal-showOCs",
+      backdrop: false,
+      scrollable: true
+    });
 
   }
 
