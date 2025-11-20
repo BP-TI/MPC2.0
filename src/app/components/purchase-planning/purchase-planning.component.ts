@@ -963,6 +963,8 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
   // Filtro tabla Analisis de compra
   createMenuListHeaderAC() {
     let dataMenUfilterComplete: OptionsCLickHeadMenuAC[] = [];
+    if(this.rowsDataTotal == undefined)
+      this.rowsDataTotal = this.rows;
 
     this.rowsDataTotal.forEach((element: any) => {
       dataMenUfilterComplete.push({
@@ -1302,6 +1304,12 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
     let nCom: number = 0;
     let accion_restriccion: Number = 0;
 
+    const modalConfirmacionClave = this.modalService.open(ConfirmacionClaveModalComponent, {
+              windowClass: "modal-confirmacion-clave",
+              backdrop: false,
+              scrollable: true
+            });
+
     for (const data of this.rows) {
       if ((Number(data.compraFinal) + Number(data.bonificacion)) > 0) {
         let prom_mes: number = 0;
@@ -1315,11 +1323,7 @@ export class PurchasePlanningComponent implements OnInit, AfterViewInit {
           (accion_restriccion == 0 || accion_restriccion == 2)) {
           if (accion_restriccion == 0) {
 
-            const modalConfirmacionClave = this.modalService.open(ConfirmacionClaveModalComponent, {
-              windowClass: "modal-confirmacion-clave",
-              backdrop: false,
-              scrollable: true
-            });
+            
 
             try {
               const dataconfirm: any = await modalConfirmacionClave.result;
